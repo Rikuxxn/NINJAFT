@@ -1,1 +1,6 @@
 ﻿  1>Checking Build System
+  CMake is re-running because generate.stamp.list is missing.
+CUSTOMBUILD : CMake error : The source directory "C:/Users/student/Desktop/bullet3" does not appear to contain CMakeLists.txt.
+  Specify --help for usage, or press the help button on the CMake GUI.
+  指定されたバッチ ラベルが見つかりません - VCEnd
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(224,5): error MSB8066: 'C:\Users\student\Desktop\bullet3\build_x86\CMakeFiles\13767dc0e561164fab1f644d1c7ad6ae\generate.stamp.rule' のカスタム ビルドがコード 1 で終了しました。

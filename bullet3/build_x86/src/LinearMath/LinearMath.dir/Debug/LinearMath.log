@@ -1,17 +1,6 @@
-﻿  Building Custom Rule C:/Users/student/Desktop/bullet3/src/LinearMath/CMakeLists.txt
-  btAlignedAllocator.cpp
-  btConvexHull.cpp
-  btConvexHullComputer.cpp
-  btGeometryUtil.cpp
-  btPolarDecomposition.cpp
-  btQuickprof.cpp
-  btReducedVector.cpp
-  btSerializer.cpp
-  btSerializer64.cpp
-  btThreads.cpp
-  btVector3.cpp
-  btTaskScheduler.cpp
-  btThreadSupportPosix.cpp
-  btThreadSupportWin32.cpp
-  コードを生成中...
-  LinearMath.vcxproj -> C:\Users\student\Desktop\bullet3\build_x86\lib\Debug\LinearMath_Debug.lib
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\ZERO_CHECK.vcxproj' does not exist.
+  Building Custom Rule C:/Users/student/Desktop/bullet3/src/LinearMath/CMakeLists.txt
+  CMake is re-running because C:/Users/student/Desktop/bullet3/build_x86/src/LinearMath/CMakeFiles/generate.stamp dependency file is missing.
+CUSTOMBUILD : CMake error : The source directory "C:/Users/student/Desktop/bullet3" does not appear to contain CMakeLists.txt.
+  Specify --help for usage, or press the help button on the CMake GUI.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(241,5): error MSB8066: 'C:\Users\student\Desktop\bullet3\src\LinearMath\CMakeLists.txt' のカスタム ビルドがコード 1 で終了しました。

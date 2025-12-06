@@ -131,15 +131,14 @@ HRESULT CGame::Init(void)
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
-	//// UI生成
-	//auto ui = CUIBase::Create(210.0f, 855.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 160.0f, 35.0f);
-	//auto enemyName = CUIBase::Create("data/TEXTURE/ui_enemyname.png", 880.0f, 60.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 130.0f, 30.0f);
-	//auto enemyName = CUIText::Create("宮本 武蔵", 880.0f, 60.0f, 28, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f));
+	// UI生成
+	auto mission = CUIBase::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
-	//// UI登録
-	//CUIManager::GetInstance()->AddUI("test", ui);
-	//CUIManager::GetInstance()->AddUI("EnemyName", enemyName);
-	//CUIManager::GetInstance()->AddUI("EnemyName", enemyName);
+	// UI登録
+	CUIManager::GetInstance()->AddUI("Mission", mission);
+
+	// 生成直後に非表示
+	mission->SetVisible(false);
 
 	//// ポーズUIの生成
 	//m_pUi = CUi::Create<CPauseUi>("data/TEXTURE/ui_pause.png",D3DXVECTOR3(210.0f, 855.0f, 0.0f), 160.0f, 35.0f);

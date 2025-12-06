@@ -53,17 +53,17 @@ public:
 
 private:
 	int* m_nIdxTexture;
-	D3DXVECTOR3 m_pos;					// 位置
-	D3DXVECTOR3 m_rot;					// 向き
-	D3DXVECTOR3 m_move;					// 移動量
-	LPD3DXMESH m_pMesh;					// メッシュへのポインタ
-	LPD3DXBUFFER m_pBuffMat;			// マテリアルへのポインタ
-	DWORD m_dwNumMat;					// マテリアル数
-	D3DXMATRIX m_mtxWorld;				// ワールドマトリックス
-	CModel* m_pParent;					// 親モデルへのポインタ
-	char m_Path[MAX_PATH];				// ファイルパス
-	D3DXVECTOR3 m_OffsetPos;			// オフセット
-	D3DXVECTOR3 m_OffsetRot;			// オフセット
+	D3DXVECTOR3 m_pos;						// 位置
+	D3DXVECTOR3 m_rot;						// 向き
+	D3DXVECTOR3 m_move;						// 移動量
+	LPD3DXMESH m_pMesh;						// メッシュへのポインタ
+	LPD3DXBUFFER m_pBuffMat;				// マテリアルへのポインタ
+	DWORD m_dwNumMat;						// マテリアル数
+	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
+	CModel* m_pParent;						// 親モデルへのポインタ
+	char m_Path[MAX_PATH];					// ファイルパス
+	D3DXVECTOR3 m_OffsetPos;				// オフセット
+	D3DXVECTOR3 m_OffsetRot;				// オフセット
 	LPDIRECT3DVERTEXSHADER9 m_pOutlineVS;
 	LPDIRECT3DPIXELSHADER9  m_pOutlinePS;
 	LPD3DXCONSTANTTABLE     m_pVSConsts;

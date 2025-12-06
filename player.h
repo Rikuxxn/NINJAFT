@@ -69,6 +69,7 @@ public:
 	//*****************************************************************************
 	void SetInGrass(bool flag) { m_isInGrass = flag; }
 	void SetInTorch(bool flag) { m_isInTorch = flag; }
+	void SetControlFlag(bool flag) { m_canControl = flag; }
 
 	//*****************************************************************************
 	// getter関数
@@ -108,6 +109,8 @@ private:
 	bool m_isInTorch;					// 灯籠の範囲内か
 	bool m_isStealth;					// ステルス状態か
 	bool m_prevIn;						// 直前に入ったか
+	int m_deleyTime;					// 移動までの遅延時間(演出等で使用)
+	bool m_canControl;					// 操作フラグ
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CPlayer> m_stateMachine;

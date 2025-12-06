@@ -37,6 +37,7 @@ CPlayer::CPlayer()
 	m_isInTorch			= false;						// 灯籠の範囲内か
 	m_isStealth			= false;						// ステルス状態か
 	m_prevIn			= false;						// 直前に入ったか
+	//m_canControl		= false;						// 操作フラグ
 }
 //=============================================================================
 // デストラクタ
@@ -84,8 +85,8 @@ HRESULT CPlayer::Init(void)
 	// パーツ数を代入
 	m_nNumModel = nNumModels;
 
-	// 最初の向き
-	SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
+	// 目標の向きを設定
+	SetRotDest(D3DXVECTOR3(0.0f, D3DXToRadian(180.0f), 0.0f));
 
 	// カプセルコライダーの設定
 	CreatePhysics(CAPSULE_RADIUS, CAPSULE_HEIGHT, 2.0f);
@@ -467,7 +468,7 @@ InputData CPlayer::GatherInput(void)
 	CCamera* pCamera = CManager::GetCamera();					// カメラの取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();						// カメラ角度の取得
 
-	if (this == nullptr)
+	if (this == nullptr || !m_canControl)
 	{
 		return input;
 	}

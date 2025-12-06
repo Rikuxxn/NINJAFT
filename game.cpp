@@ -41,6 +41,9 @@ CGame::CGame() : CScene(CScene::MODE_GAME)
 	m_pRankingManager = nullptr;
 	m_pLight = nullptr;
 	m_timer = 0;// パーティクル生成タイマー
+	m_startState = StartState::WaitStart;
+	m_stateTimer = 0.0f;// UI遅延タイマー
+	m_canControl = false;
 }
 //=============================================================================
 // デストラクタ
@@ -85,7 +88,7 @@ HRESULT CGame::Init(void)
 	CCharacterManager characterManager;
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
 	characterManager.AddCharacter(m_pPlayer);
 
 	// リーダー敵の生成
@@ -131,14 +134,18 @@ HRESULT CGame::Init(void)
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
-	// UI生成
+	// 任務開始UI生成
 	auto mission = CUIBase::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
-	// UI登録
+	// 任務開始UI登録
 	CUIManager::GetInstance()->AddUI("Mission", mission);
 
 	// 生成直後に非表示
 	mission->SetVisible(false);
+
+	m_startState = StartState::WaitStart;
+	m_stateTimer = 120;   // 開始時の初期待機 2秒間
+	m_canControl = false;
 
 	//// ポーズUIの生成
 	//m_pUi = CUi::Create<CPauseUi>("data/TEXTURE/ui_pause.png",D3DXVECTOR3(210.0f, 855.0f, 0.0f), 160.0f, 35.0f);
@@ -236,6 +243,43 @@ void CGame::Update(void)
 
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
+
+	switch (m_startState)
+	{
+	case StartState::WaitStart:
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			// UI表示
+			auto mission = CUIManager::GetInstance()->GetUI("Mission");
+			mission->SetVisible(true);
+
+			m_startState = StartState::ShowMission;
+			m_stateTimer = 180;  // UI表示時間
+		}
+		break;
+
+	case StartState::ShowMission:
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			// UI非表示
+			auto mission = CUIManager::GetInstance()->GetUI("Mission");
+			mission->SetVisible(false);
+
+			// 操作フラグをtrueにする
+			m_pPlayer->SetControlFlag(true);
+			m_pEnemy->SetControlFlag(true);
+
+			m_startState = StartState::StartGame;
+		}
+		break;
+
+	case StartState::StartGame:
+		break;
+	}
 
 	// --- 脱出したか確認 ---
 	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();

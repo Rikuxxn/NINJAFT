@@ -65,6 +65,13 @@ public:
 			return;
 		}
 
+		if (!pEnemy->GetControlFlag())
+		{
+			// 待機状態
+			m_pMachine->ChangeState<CEnemyLeader_StandState>();
+			return;
+		}
+
 		// AIリクエストに応じて状態を変更
 		switch (pEnemy->GetRequestedAction())
 		{
@@ -84,6 +91,13 @@ public:
 		// 待機モーションが終わっていたら
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::NEUTRAL))
 		{
+			if (!pEnemy->GetControlFlag())
+			{
+				// 待機状態
+				m_pMachine->ChangeState<CEnemyLeader_StandState>();
+				return;
+			}
+
 			// 移動状態
 			m_pMachine->ChangeState<CEnemyLeader_MoveState>();
 		}

@@ -667,27 +667,17 @@ public:
 
 	void OnUpdate(CEnemySub* pEnemy)override
 	{
-		// 移動状態リクエストされていたら
-		if (pEnemy->GetRequestedAction() == CEnemy::AI_MOVE)
+		switch (pEnemy->GetRequestedAction())
 		{
-			// 移動状態
-			m_pMachine->ChangeState<CEnemySub_MoveState>();
-			return; // すぐに切り替え
-		}
-
-		// 調査状態リクエストされていたら
-		if (pEnemy->GetRequestedAction() == CEnemy::AI_INVESTIGATE)
-		{
-			// 調査状態
+		case CEnemy::EEnemyAction::AI_INVESTIGATE:// 調査状態
 			m_pMachine->ChangeState<CEnemySub_InvestigateState>();
-			return; // すぐに切り替え
-		}
-
-		// 追跡状態リクエストされていたら
-		if (pEnemy->GetRequestedAction() == CEnemy::AI_CHASE)
-		{
+			break;
+		case CEnemy::EEnemyAction::AI_CHASE:// 追跡状態
 			m_pMachine->ChangeState<CEnemySub_ChaseState>();
-			return; // すぐに切り替え
+			break;
+		case CEnemy::EEnemyAction::AI_MOVE:// 移動状態
+			m_pMachine->ChangeState<CEnemySub_MoveState>();
+			break;
 		}
 
 		D3DXVECTOR3 offpos = pEnemy->GetPos();
@@ -700,7 +690,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 1.0f), 40, 1);
 		}
 
 		if (CEnemy* leader = pEnemy->GetLeader())

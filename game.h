@@ -34,6 +34,13 @@ public:
 	CGame();
 	~CGame();
 
+	enum StartState
+	{
+		WaitStart,      // 少し待つ → UIまだ表示しない
+		ShowMission,    // UI表示中 → 操作禁止
+		StartGame       // UI非表示 → 操作OK
+	};
+
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -68,6 +75,9 @@ private:
 	std::unique_ptr<CRankingManager> m_pRankingManager;			// ランキングへのポインタ
 	CLight* m_pLight;
 	int m_timer;								// パーティクル生成タイマー
+	StartState m_startState;					
+	float m_stateTimer;							// UI遅延タイマー
+	bool m_canControl;
 };
 
 #endif

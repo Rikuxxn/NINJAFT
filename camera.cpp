@@ -313,7 +313,7 @@ void CCamera::GameCamera(void)
 	m_posR = D3DXVECTOR3(0.0f, -55.8f, -30.0f);
 
 	// 見下ろし用角度（少し斜め）
-	m_rot.x = 0.88f;
+	m_rot.x = 0.89f;
 	m_rot.y = D3DX_PI;
 
 	// 距離設定

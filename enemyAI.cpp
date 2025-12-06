@@ -134,7 +134,7 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 30)
+            if (m_logTimer <= 40)
             {
                 return;
             }
@@ -264,7 +264,7 @@ void CEnemyAI_Sub::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 30)
+            if (m_logTimer <= 40)
             {
                 return;
             }

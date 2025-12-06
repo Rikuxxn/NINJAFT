@@ -42,15 +42,15 @@ CItem* CItem::Create(ITEM type, D3DXVECTOR3 pos, float fWidth, float fHeight)
 	{
 	case ITEM_ID_PLAY:
 		pItem = new CPlay;
-		pItem->SetPath("data/TEXTURE/play_button.png");
+		pItem->SetPath("data/TEXTURE/ui_start.png");
 		break;
 	case ITEM_ID_TUTORIAL:
 		pItem = new CTutorialItem;
-		pItem->SetPath("data/TEXTURE/tutorial_button.png");
+		pItem->SetPath("data/TEXTURE/ui_tutorial.png");
 		break;
 	case ITEM_ID_EXIT:
 		pItem = new CExit;
-		pItem->SetPath("data/TEXTURE/exit_button.png");
+		pItem->SetPath("data/TEXTURE/ui_exit.png");
 		break;
 	default:
 		pItem = new CItem;

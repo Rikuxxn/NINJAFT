@@ -242,6 +242,7 @@ public:
 	void SetLeader(CEnemy* leader) { m_pLeader = leader; }
 	void SetSub(CEnemy* sub) { m_pSub.push_back(sub); }
 	void SetAI(std::unique_ptr<IEnemyAI> ai) { m_pAI = std::move(ai); }
+	void SetControlFlag(bool flag) { m_canControl = flag; }
 
 	//*****************************************************************************
 	// getter関数
@@ -258,6 +259,7 @@ public:
 	CEnemy* GetLeader(void) const { return m_pLeader; }
 	std::vector<CEnemy*> GetSub(void) const { return m_pSub; }
 	IEnemyAI* GetAI(void) { return m_pAI.get(); }
+	bool GetControlFlag(void) { return m_canControl; }
 
 private:
 	static constexpr int MAX_PARTS = 32;	// 最大パーツ数
@@ -277,6 +279,7 @@ private:
 	D3DXVECTOR3 m_lastHeardSoundPos;		// 最後に聞いた音の座標
 	bool m_hasHeardSound;					// 音を聞いたかどうか
 	bool m_returnToPatrol;					// 最寄りの巡回ポイントに戻るフラグ
+	bool m_canControl;						// 操作フラグ
 
 	CEnemy* m_pLeader = nullptr;
 	std::vector<CEnemy*> m_pSub;
@@ -372,8 +375,8 @@ public:
 
 private:
 	static constexpr int MAX_PARTS = 32;			// 最大パーツ数
-	static constexpr float CAPSULE_RADIUS = 8.0f;	// カプセルコライダーの半径
-	static constexpr float CAPSULE_HEIGHT = 60.0f;	// カプセルコライダーの高さ
+	static constexpr float CAPSULE_RADIUS = 3.0f;	// カプセルコライダーの半径
+	static constexpr float CAPSULE_HEIGHT = 65.0f;	// カプセルコライダーの高さ
 
 	CMotion* m_pMotion;								// モーションへのポインタ
 

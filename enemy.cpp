@@ -31,8 +31,9 @@ CEnemy::CEnemy()
 	m_sightRange		= 255.0f;						// 視界距離
 	m_sightAngle		= D3DXToRadian(110.0f);			// 視界範囲
 	m_lastHeardSoundPos = INIT_VEC3;					// 最後に聞いた音の座標
-	m_hasHeardSound = false;							// 音を聞いたかどうか
-	m_returnToPatrol = false;							// 最寄りの巡回ポイントに戻るフラグ
+	m_hasHeardSound		= false;						// 音を聞いたかどうか
+	m_returnToPatrol	= false;						// 最寄りの巡回ポイントに戻るフラグ
+	//m_canControl		= false;						// 操作フラグ
 }
 //=============================================================================
 // デストラクタ

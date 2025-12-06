@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\Release\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\BasicDemo\Release\AppBasicExampleGui.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\BasicDemo\Release\App_BasicExample.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\ExampleBrowser\Release\App_ExampleBrowser.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\RobotSimulator\Release\App_HelloBulletRobotics.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\HelloWorld\Release\App_HelloWorld.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\SharedMemory\Release\App_PhysicsServer_SharedMemory.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\SharedMemory\Release\App_PhysicsServer_SharedMemory_GUI.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\RobotSimulator\Release\App_RobotSimulator.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\RobotSimulator\Release\App_RobotSimulator_NoGUI.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\examples\TwoJoint\Release\App_TwoJoint.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\Extras\obj2sdf\Release\App_obj2sdf.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\BulletDynamics\pendulum\Release\Test_BulletDynamics.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\InverseDynamics\Release\Test_BulletInverseDynamics.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\InverseDynamics\Release\Test_BulletInverseDynamicsJacobian.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\InverseDynamics\Release\Test_BulletInverseForwardDynamics.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\collision\Release\Test_Collision.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\SharedMemory\Release\Test_PhysicsClientServer.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\test\BulletDynamics\Release\Test_btKinematicCharacterController.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\student\Desktop\bullet3\build_x86\Release\ALL_BUILD</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

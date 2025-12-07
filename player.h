@@ -111,6 +111,8 @@ private:
 	bool m_prevIn;						// 直前に入ったか
 	int m_deleyTime;					// 移動までの遅延時間(演出等で使用)
 	bool m_canControl;					// 操作フラグ
+	bool m_smokeActive;					// 煙フラグ
+	int m_smokeTimer;					// 煙生成時間
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CPlayer> m_stateMachine;

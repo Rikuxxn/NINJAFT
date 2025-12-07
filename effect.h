@@ -24,6 +24,7 @@ struct EffectDesc
 	int           nLife			= 0;
 	float         fGravity		= 0.0f;
 	float         fDecRadius	= 0.0f;
+	bool		  bBlend		= true;
 };
 
 //*****************************************************************************
@@ -40,11 +41,14 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	void SetLife(int nLife) { m_nLife = nLife; }
 	void SetRadius(float fRadius) { m_fRadius = fRadius; }
 	void SetGravity(float fGrav) { m_fGravity = fGrav; }
 	void SetDecRadius(float fDecRad) { m_fDecRadius = fDecRad; }
+	void SetBlend(bool enable) { m_bBlend = enable; }
+
 	float GetRadius(void) { return m_fRadius; }
 	float GetGravity(void) { return m_fGravity; }
 
@@ -55,6 +59,7 @@ private:
 	int m_nIdxTexture;		// テクスチャインデックス
 	float m_fGravity;		// 重力
 	float m_fDecRadius;		// 半径の減衰量
+	bool m_bBlend;	// アルファブレンドするかどうが
 };
 
 //*****************************************************************************

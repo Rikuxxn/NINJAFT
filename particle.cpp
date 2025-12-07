@@ -696,3 +696,83 @@ void COnibiParticle::Update(void)
 	// パーティクルの更新処理
 	CParticle::Update();
 }
+
+
+//=============================================================================
+// 煙パーティクルのコンストラクタ
+//=============================================================================
+CSmokeParticle::CSmokeParticle()
+{
+
+}
+//=============================================================================
+// 煙パーティクルのデストラクタ
+//=============================================================================
+CSmokeParticle::~CSmokeParticle()
+{
+	// なし
+}
+//=============================================================================
+// 煙パーティクルの初期化処理
+//=============================================================================
+HRESULT CSmokeParticle::Init(void)
+{
+	// テクスチャを設定しておく
+	SetPath("data/TEXTURE/smoke_05.png");
+
+	// パーティクルの初期化処理
+	CParticle::Init();
+
+	return S_OK;
+}
+//=============================================================================
+// 煙パーティクルの更新処理
+//=============================================================================
+void CSmokeParticle::Update(void)
+{
+	int nMaxParticle = GetMaxParticle();
+
+	// パーティクル生成
+	for (int nCnt = 0; nCnt < nMaxParticle; nCnt++)//発生させたい粒子の数
+	{
+		EffectDesc desc;
+
+		// テクスチャの指定
+		desc.path = "data/TEXTURE/smoke_05.png";
+
+		// 位置
+		desc.pos = GetPos();
+
+		// ランダムな角度で横に広がる
+		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
+		float speed = (rand() % 260) / 300.0f + 0.2f;
+
+		desc.move.x = cosf(angle) * speed;
+		desc.move.z = sinf(angle) * speed;
+		desc.move.y = (rand() % 150) / 100.0f + 0.9f; // 上方向
+
+		// 色の設定
+		desc.col = GetCol();
+
+		// 半径の設定
+		desc.fRadius = 14.0f + (rand() % 15);
+
+		// 寿命の設定
+		desc.nLife = GetLife();
+
+		// 重力の設定
+		desc.fGravity = 0.0f;
+
+		// 半径の減衰量の設定
+		desc.fDecRadius = 0.35f;
+
+		// アルファブレンドの設定フラグ
+		desc.bBlend = false;
+		
+		// エフェクトの設定
+		CEffect::Create(desc);
+	}
+
+	// パーティクルの更新処理
+	CParticle::Update();
+}

@@ -23,6 +23,7 @@ CEffect::CEffect(int nPriority) : CObjectBillboard(nPriority)
 	m_nLife			= 0;		// 寿命
 	m_nIdxTexture	= 0;		// テクスチャインデックス
 	m_fGravity		= 0.0f;		// 重力
+	m_bBlend		= true;		// アルファブレンドするかどうが
 }
 //=============================================================================
 // デストラクタ
@@ -51,6 +52,7 @@ CEffect* CEffect::Create(const EffectDesc& desc)
 	pEffect->SetLife(desc.nLife);
 	pEffect->SetGravity(desc.fGravity);
 	pEffect->SetDecRadius(desc.fDecRadius);
+	pEffect->SetBlend(desc.bBlend);
 
 	return pEffect;
 }
@@ -119,17 +121,20 @@ void CEffect::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);         // ライトを無効にする
+	if (m_bBlend)
+	{
+		pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);         // ライトを無効にする
 
-	// αブレンディングを加算合成に設定
-	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		// αブレンディングを加算合成に設定
+		pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
-	// αテストを有効
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);//デフォルトはfalse
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);//0より大きかったら描画
+		// αテストを有効
+		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);//デフォルトはfalse
+		pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+		pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);//0より大きかったら描画
+	}
 
 	// テクスチャの設定
 	pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
@@ -137,15 +142,18 @@ void CEffect::Draw(void)
 	// ビルボードオブジェクトの描画処理
 	CObjectBillboard::Draw();
 
-	// αテストを無効に戻す
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);//デフォルトはfalse
+	if (m_bBlend)
+	{
+		// αテストを無効に戻す
+		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);//デフォルトはfalse
 
-	// αブレンディングを元に戻す
-	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		// αブレンディングを元に戻す
+		pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);          // ライトを有効にする
+		pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);          // ライトを有効にする
+	}
 }
 
 

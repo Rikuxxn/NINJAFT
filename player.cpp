@@ -38,6 +38,8 @@ CPlayer::CPlayer()
 	m_isStealth			= false;						// ステルス状態か
 	m_prevIn			= false;						// 直前に入ったか
 	m_canControl		= false;						// 操作フラグ
+	m_smokeTimer		= 30;							// 煙生成時間
+	m_smokeActive		= true;							// 煙フラグ
 }
 //=============================================================================
 // デストラクタ
@@ -170,6 +172,25 @@ void CPlayer::Update(void)
 	}
 
 #endif
+	
+	if (m_smokeActive)
+	{
+		D3DXVECTOR3 offPos = GetPos();
+		offPos.y += 40.0f;
+
+		for (int n = 0; n < 10; n++)
+		{
+			// 煙パーティクルの生成
+			CParticle::Create<CSmokeParticle>(INIT_VEC3, offPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120, 1);
+		}
+
+		m_smokeTimer--;
+
+		if (m_smokeTimer <= 0)
+		{
+			m_smokeActive = false;
+		}
+	}
 
 	// 向きの更新処理
 	UpdateRotation(0.09f);

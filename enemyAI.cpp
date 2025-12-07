@@ -212,17 +212,11 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     float prob = CalcSoundProbability();
     float threshold = 0.9f;
 
-    // 時間の割合を取得
-    float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
-    bool isNight = progress < 0.30f && progress >= 0.90f;
-
     // 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
     CBlockManager* pBlockManager = CGame::GetBlockManager();
 
     // 特定のブロックに当たっているか判定する
     bool playerInGrass = pBlockManager->IsPlayerInGrass();
-    bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
-    bool playerInWater = pBlockManager->IsPlayerInWater();
 
     // 判定距離
     float threshold_dis = 150.0f;

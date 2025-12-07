@@ -144,7 +144,7 @@ HRESULT CGame::Init(void)
 	mission->SetVisible(false);
 
 	m_startState = StartState::WaitStart;
-	m_stateTimer = 120;   // 開始時の初期待機 2秒間
+	m_stateTimer = 210;   // 開始時の初期待機
 	m_canControl = false;
 
 	//// ポーズUIの生成

@@ -203,4 +203,20 @@ private:
 
 };
 
+//*****************************************************************************
+// 煙パーティクルクラス
+//*****************************************************************************
+class CSmokeParticle : public CParticle
+{
+public:
+	CSmokeParticle();
+	~CSmokeParticle();
+
+	HRESULT Init(void);
+	void Update(void);
+
+private:
+
+};
+
 #endif

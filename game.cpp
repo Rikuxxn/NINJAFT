@@ -273,6 +273,9 @@ void CGame::Update(void)
 			m_pPlayer->SetControlFlag(true);
 			m_pEnemy->SetControlFlag(true);
 
+			// タイマーも開始
+			m_pTime->SetActiveFlag(true);
+
 			m_startState = StartState::StartGame;
 		}
 		break;

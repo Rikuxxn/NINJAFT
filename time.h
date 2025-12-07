@@ -36,6 +36,8 @@ public:
 
 	bool IsTimeUp(void) { return m_isTimeUp; }
 
+	void SetActiveFlag(bool flag) { m_isActive = flag; }
+
 	float GetProgress(void) const;
 	D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(); }
 	int GetMinutes(void) { return m_nMinutes; }
@@ -55,7 +57,7 @@ private:
 	int m_nStartMinutes;
 	int m_nStartSeconds;
 	bool m_isTimeUp;						// タイムアップフラグ
-
+	bool m_isActive;						// アクティブフラグ
 };
 
 //*****************************************************************************

@@ -33,7 +33,7 @@ CEnemy::CEnemy()
 	m_lastHeardSoundPos = INIT_VEC3;					// 最後に聞いた音の座標
 	m_hasHeardSound		= false;						// 音を聞いたかどうか
 	m_returnToPatrol	= false;						// 最寄りの巡回ポイントに戻るフラグ
-	//m_canControl		= false;						// 操作フラグ
+	m_canControl		= false;						// 操作フラグ
 }
 //=============================================================================
 // デストラクタ
@@ -230,6 +230,7 @@ CEnemyLeader::CEnemyLeader()
 	m_pTipModel = nullptr;			// 武器コライダー用モデル
 	m_pBaseModel = nullptr;			// 武器コライダー用モデル
 	m_pWeaponCollider = nullptr;	// 武器の当たり判定へのポインタ
+	m_Cooldown = 0.0f;              // クールダウン残り時間
 }
 //=============================================================================
 // リーダー敵のデストラクタ
@@ -323,6 +324,16 @@ void CEnemyLeader::Update(void)
 	{
 		// ステンシルシャドウの位置設定
 		m_pShadowS->SetPosition(GetPos());
+	}
+
+	if (m_Cooldown > 0.0f)
+	{
+		m_Cooldown--;// クールダウンを減らす
+
+		if (m_Cooldown < 0.0f)
+		{
+			m_Cooldown = 0.0f;
+		}
 	}
 
 	// プレイヤーの取得

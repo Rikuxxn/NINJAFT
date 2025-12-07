@@ -33,6 +33,7 @@ CTime::CTime(int nPriority) : CObject(nPriority)
 	m_nStartMinutes = 0;						// 経過時間の割合の結果代入用
 	m_nStartSeconds = 0;						// 経過時間の割合の結果代入用
 	m_isTimeUp = false;							// タイムアップフラグ
+	m_isActive = false;							// アクティブフラグ
 }
 //=============================================================================
 // デストラクタ
@@ -137,8 +138,11 @@ void CTime::Uninit(void)
 //=============================================================================
 void CTime::Update(void)
 {
-	// タイマーカウントダウン処理
-	Countdown();
+	if (m_isActive)
+	{
+		// タイマーカウントダウン処理
+		Countdown();
+	}
 
 	// 各桁の表示値を計算
 	int min10 = m_nMinutes / 10;
@@ -162,11 +166,6 @@ void CTime::Update(void)
 //=============================================================================
 void CTime::Countup(void)
 {
-	if (CManager::GetMode() == MODE_RESULT)
-	{
-		return;
-	}
-
 	// フレームカウント
 	m_nFrameCount++;
 
@@ -190,11 +189,6 @@ void CTime::Countup(void)
 //=============================================================================
 void CTime::Countdown(void)
 {
-	if (CManager::GetMode() == MODE_RESULT)
-	{
-		return;
-	}
-
 	// フレームカウント
 	m_nFrameCount++;
 

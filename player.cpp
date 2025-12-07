@@ -37,7 +37,7 @@ CPlayer::CPlayer()
 	m_isInTorch			= false;						// 灯籠の範囲内か
 	m_isStealth			= false;						// ステルス状態か
 	m_prevIn			= false;						// 直前に入ったか
-	//m_canControl		= false;						// 操作フラグ
+	m_canControl		= false;						// 操作フラグ
 }
 //=============================================================================
 // デストラクタ

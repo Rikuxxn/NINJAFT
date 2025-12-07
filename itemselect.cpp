@@ -43,9 +43,9 @@ void CItemSelect::Init(void)
     // äeçÄñ⁄ÇÃà íu
     std::vector<D3DXVECTOR3> Positions =
     {
-        D3DXVECTOR3(420.0f, 470.0f, 0.0f),
-        D3DXVECTOR3(420.0f, 580.0f, 0.0f),
-        D3DXVECTOR3(420.0f, 690.0f, 0.0f)
+        D3DXVECTOR3(420.0f, 490.0f, 0.0f),
+        D3DXVECTOR3(420.0f, 600.0f, 0.0f),
+        D3DXVECTOR3(420.0f, 710.0f, 0.0f)
     };
 
     for (int i = 0; i < (int)Positions.size(); i++)

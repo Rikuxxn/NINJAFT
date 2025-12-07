@@ -65,7 +65,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     }
     else if (playerInGrass)
     {
-        range = 120.0f;
+        range = 150.0f;
         angle = 100.0f;
     }
 
@@ -73,7 +73,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     pEnemy->SetSightRange(range);
     pEnemy->SetSightAngle(D3DXToRadian(angle));
 
-    // 視界に入るか 一定距離近づいたら
+    // 視界に入ったら
     if (pEnemy->IsPlayerInSight(pPlayer))
     {
         // 発見状態
@@ -212,6 +212,27 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     float prob = CalcSoundProbability();
     float threshold = 0.9f;
 
+    // 時間の割合を取得
+    float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
+    bool isNight = progress < 0.30f && progress >= 0.90f;
+
+    // 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
+    CBlockManager* pBlockManager = CGame::GetBlockManager();
+
+    // 特定のブロックに当たっているか判定する
+    bool playerInGrass = pBlockManager->IsPlayerInGrass();
+    bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
+    bool playerInWater = pBlockManager->IsPlayerInWater();
+
+    // 判定距離
+    float threshold_dis = 150.0f;
+
+    // プレイヤーが草にいるときは視界を狭める
+    if (playerInGrass)
+    {
+        threshold_dis = 90.0f;
+    }
+
     // 独自行動へ移行する確率判定
     if (threshold <= prob)
     {
@@ -221,7 +242,7 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     }
 
     //  一定距離近づいたら
-    if (distance < 150.0f)
+    if (distance < threshold_dis)
     {
         // 追跡状態
         pEnemy->SetRequestedAction(CEnemy::AI_CHASE);

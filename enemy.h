@@ -321,6 +321,10 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	// クールダウン設定
+	void SetCooldown(float time) { m_Cooldown = time * 60.0f; }
+	bool IsCooldown(void) const { return m_Cooldown > 0.0f; }
+
 	CWeaponCollider* GetWeaponCollider(void) { return m_pWeaponCollider.get(); }
 	CMotion* GetMotion(void) { return m_pMotion; }
 	StateMachine<CEnemyLeader> GetStateMachine(void) { return m_stateMachine; }
@@ -330,11 +334,12 @@ private:
 	static constexpr float CAPSULE_RADIUS = 14.0f;	// カプセルコライダーの半径
 	static constexpr float CAPSULE_HEIGHT = 60.0f;	// カプセルコライダーの高さ
 
-	CMotion* m_pMotion;								// モーションへのポインタ
-	CShadowS* m_pShadowS;							// ステンシルシャドウへのポインタ
-	CObjectX* m_pTipModel;							// 武器コライダー用モデル
-	CObjectX* m_pBaseModel;							// 武器コライダー用モデル
-	std::unique_ptr<CWeaponCollider> m_pWeaponCollider;// 武器の当たり判定へのポインタ
+	CMotion* m_pMotion;									// モーションへのポインタ
+	CShadowS* m_pShadowS;								// ステンシルシャドウへのポインタ
+	CObjectX* m_pTipModel;								// 武器コライダー用モデル
+	CObjectX* m_pBaseModel;								// 武器コライダー用モデル
+	std::unique_ptr<CWeaponCollider> m_pWeaponCollider;	// 武器の当たり判定へのポインタ
+	float m_Cooldown;									// クールダウン残り時間
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CEnemyLeader> m_stateMachine;
@@ -375,7 +380,7 @@ public:
 
 private:
 	static constexpr int MAX_PARTS = 32;			// 最大パーツ数
-	static constexpr float CAPSULE_RADIUS = 3.0f;	// カプセルコライダーの半径
+	static constexpr float CAPSULE_RADIUS = 1.0f;	// カプセルコライダーの半径
 	static constexpr float CAPSULE_HEIGHT = 65.0f;	// カプセルコライダーの高さ
 
 	CMotion* m_pMotion;								// モーションへのポインタ

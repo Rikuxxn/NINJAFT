@@ -57,18 +57,19 @@ public:
 		velocity.setZ(move.z);
 		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
-		// サブ敵が追跡状態だったら
-		if (pEnemy->IsSubAction(CEnemy::AI_CHASE))
-		{
-			// 追跡状態
-			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
-			return;
-		}
-
+		// 操作フラグがtrueじゃなかったら
 		if (!pEnemy->GetControlFlag())
 		{
 			// 待機状態
 			m_pMachine->ChangeState<CEnemyLeader_StandState>();
+			return;
+		}
+
+		// サブ敵が追跡状態だったら
+		if (pEnemy->IsSubAction(CEnemy::AI_CHASE) && !pEnemy->IsCooldown())
+		{
+			// 追跡状態
+			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
 			return;
 		}
 
@@ -92,6 +93,13 @@ public:
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::NEUTRAL))
 		{
 			if (!pEnemy->GetControlFlag())
+			{
+				// 待機状態
+				m_pMachine->ChangeState<CEnemyLeader_StandState>();
+				return;
+			}
+
+			if (pEnemy->IsCooldown())
 			{
 				// 待機状態
 				m_pMachine->ChangeState<CEnemyLeader_StandState>();
@@ -355,15 +363,17 @@ public:
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::ATTACK_01))
 		{// 攻撃モーションが終わっていたら
+
 			// 待機状態
 			m_pMachine->ChangeState<CEnemyLeader_StandState>();
 			return;
 		}
 	}
 
-	void OnExit(CEnemyLeader* /*pEnemy*/)override
+	void OnExit(CEnemyLeader* pEnemy)override
 	{
-
+		// クールダウンの設定
+		pEnemy->SetCooldown(3.0f);
 	}
 
 private:
@@ -416,7 +426,7 @@ public:
 		// 正規化
 		D3DXVec3Normalize(&dir, &dir);
 
-		float dashPower = 20.0f;// スライドパワー
+		float dashPower = 50.0f;// スライドパワー
 
 		D3DXVECTOR3 move = dir * dashPower;
 
@@ -443,7 +453,7 @@ public:
 			D3DXVECTOR3 forwardDir = pEnemy->GetForward();
 			D3DXVec3Normalize(&forwardDir, &forwardDir);
 
-			float forwardPower = 10.0f; // 滑る速度
+			float forwardPower = 20.0f; // 滑る速度
 			move = forwardDir * forwardPower;
 		}
 		else
@@ -595,9 +605,10 @@ public:
 		}
 	}
 
-	void OnExit(CEnemyLeader* /*pEnemy*/)override
+	void OnExit(CEnemyLeader* pEnemy)override
 	{
-
+		// クールダウンの設定
+		pEnemy->SetCooldown(3.0f);
 	}
 
 private:
@@ -1014,9 +1025,18 @@ public:
 		// 一定距離になったら
 		if (distance < 130.0f)
 		{
-			// 攻撃状態
-			m_pMachine->ChangeState<CEnemyLeader_AttackState1>();
-			return; // すぐに切り替え
+			if (!pEnemy->IsCooldown()) // クールダウン中でなければ攻撃へ
+			{
+				// 近距離攻撃状態1へ
+				m_pMachine->ChangeState<CEnemyLeader_CloseAttackState1>();
+				return;
+			}
+			else
+			{
+				// クールダウン中は攻撃せず待機状態
+				m_pMachine->ChangeState<CEnemyLeader_StandState>();
+				return;
+			}
 		}
 
 		// 目標速度計算
@@ -1136,8 +1156,16 @@ public:
 		// 発見モーションが終わっていたら
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::DISCOVER))
 		{
-			// 追跡状態
-			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
+			if (!pEnemy->IsCooldown())
+			{
+				// 追跡状態
+				m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
+			}
+			else
+			{// クールダウン中は待機
+				// 待機状態
+				m_pMachine->ChangeState<CEnemyLeader_StandState>();
+			}
 		}
 	}
 

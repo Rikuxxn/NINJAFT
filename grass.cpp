@@ -47,11 +47,12 @@ void CGrassBlock::Update(void)
 	D3DXVECTOR3 nearestDiff(0, 0, 0);
 
 	CPlayer* pPlayer = CGame::GetPlayer();
+	CEnemy* pEnemy = CGame::GetEnemy();
 
 	// --- ƒvƒŒƒCƒ„[ ---
 	if (pPlayer)
 	{
-		D3DXVECTOR3 diff = CGame::GetPlayer()->GetPos() - thisPos;
+		D3DXVECTOR3 diff = pPlayer->GetPos() - thisPos;
 		float dist = D3DXVec3Length(&diff);
 		if (dist < nearestDist)
 		{
@@ -61,9 +62,9 @@ void CGrassBlock::Update(void)
 	}
 
 	// --- “G ---
-	if (CGame::GetEnemy())
+	if (pEnemy)
 	{
-		D3DXVECTOR3 diff = CGame::GetEnemy()->GetPos() - thisPos;
+		D3DXVECTOR3 diff = pEnemy->GetPos() - thisPos;
 		float dist = D3DXVec3Length(&diff);
 		if (dist < nearestDist)
 		{

@@ -1102,7 +1102,10 @@ void CBlockManager::CreateClusterElement(const D3DXVECTOR3& pos, float AREA_SIZE
 	if (!IsCollidingWithWater(pos, AREA_SIZE, waterPositions))
 	{
 		CBlock* block = CreateBlock(type, pos);
-		if (!block) return;
+		if (!block)
+		{
+			return;
+		}
 
 		if (type == CBlock::TYPE_TORCH_01)
 		{
@@ -1123,14 +1126,33 @@ void CBlockManager::EnsureTorchCount(int GRID_X, int GRID_Z, float AREA_SIZE,
 	float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
 	std::vector<D3DXVECTOR3>& torchPositions)
 {
-	// 灯籠同士の最低距離
 	const float MIN_TORCH_DISTANCE = 5.0f * AREA_SIZE;
 
-	while ((int)torchPositions.size() < 3)
+	const int MAX_ATTEMPTS = 50;// 試行回数
+	int attempts = 0;
+	int setNum = 3;// 設置数
+
+	// 中央禁止エリア計算
+	float centerX = offsetX + (GRID_X * AREA_SIZE) * 0.5f;
+	float centerZ = offsetZ + (GRID_Z * AREA_SIZE) * 0.5f;
+
+	float centerRadius = AREA_SIZE * 5.0f; // 敵巡回エリアに合わせて調整
+
+	while ((int)torchPositions.size() < setNum && attempts < MAX_ATTEMPTS)
 	{
+		attempts++;
+
 		float randX = offsetX + (rand() % GRID_X) * AREA_SIZE;
 		float randZ = offsetZ + (rand() % GRID_Z) * AREA_SIZE;
 		D3DXVECTOR3 pos(randX, 0.0f, randZ);
+
+		// 中央付近なら配置禁止
+		float dx_c = pos.x - centerX;
+		float dz_c = pos.z - centerZ;
+		if (dx_c * dx_c + dz_c * dz_c < (centerRadius * centerRadius))
+		{
+			continue;
+		}
 
 		if (IsCollidingWithWater(pos, AREA_SIZE, waterPositions))
 		{
@@ -1149,14 +1171,12 @@ void CBlockManager::EnsureTorchCount(int GRID_X, int GRID_Z, float AREA_SIZE,
 			}
 		}
 
-		// 近すぎたら飛ばす
 		if (tooClose)
 		{
 			continue;
 		}
 
 		CBlock* torch = CreateBlock(CBlock::TYPE_TORCH_01, pos);
-
 		if (torch)
 		{
 			D3DXVECTOR3 offPos = torch->GetPos();
@@ -1164,6 +1184,11 @@ void CBlockManager::EnsureTorchCount(int GRID_X, int GRID_Z, float AREA_SIZE,
 			torch->SetPos(offPos);
 			torchPositions.push_back(pos);
 		}
+	}
+
+	if ((int)torchPositions.size() < setNum)
+	{
+		MessageBox(nullptr, "灯籠の配置に失敗しました。", "エラー", MB_OK | MB_ICONERROR);
 	}
 }
 //=============================================================================
@@ -1174,10 +1199,16 @@ void CBlockManager::EnsureBuriedTreasureCount(int GRID_X, int GRID_Z, float AREA
 	const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& treasurePositions)
 {
 	// 埋蔵金同士の最低距離
-	const float MIN_TORCH_DISTANCE = 5.0f * AREA_SIZE;
+	const float MIN_TORCH_DISTANCE = 4.0f * AREA_SIZE;
 
-	while ((int)treasurePositions.size() < 4)
+	const int MAX_ATTEMPTS = 50;// 配置できなかったときの試行回数
+	int attempts = 0;
+	int setNum = 4;// 設置数
+
+	while ((int)treasurePositions.size() < setNum && attempts < MAX_ATTEMPTS)
 	{
+		attempts++;
+
 		float randX = offsetX + (rand() % GRID_X) * AREA_SIZE;
 		float randZ = offsetZ + (rand() % GRID_Z) * AREA_SIZE;
 		D3DXVECTOR3 pos(randX, 0.0f, randZ);
@@ -1221,6 +1252,11 @@ void CBlockManager::EnsureBuriedTreasureCount(int GRID_X, int GRID_Z, float AREA
 			treasure->SetPos(offPos);
 			treasurePositions.push_back(pos);
 		}
+	}
+
+	if ((int)treasurePositions.size() < setNum)
+	{
+		MessageBox(nullptr, "埋蔵金の配置に失敗しました。", "エラー", MB_OK | MB_ICONERROR);
 	}
 }
 //=============================================================================
@@ -1279,7 +1315,7 @@ void CBlockManager::GenerateOuterGrassBelt(int GRID_X, int GRID_Z, float AREA_SI
 	float offsetX, float offsetZ,
 	const std::vector<D3DXVECTOR3>& waterPositions)
 {
-	const float startX = offsetX + AREA_SIZE * 0.2f; // 内側に少しずらす
+	const float startX = offsetX + AREA_SIZE * 0.2f;// 内側に少しずらす
 	const float startZ = offsetZ + AREA_SIZE * 0.2f;
 	const float endX = offsetX + (GRID_X - 1) * AREA_SIZE;
 	const float endZ = offsetZ + (GRID_Z - 1) * AREA_SIZE;
@@ -1461,7 +1497,9 @@ void CBlockManager::GeneratePatrolPoints(
 			float dz = pos.z - obs.z;
 			float distSq = dx * dx + dz * dz;
 			if (distSq < safeDistance * safeDistance)
+			{
 				return true;
+			}
 		}
 		return false;
 	};
@@ -1473,14 +1511,6 @@ void CBlockManager::GeneratePatrolPoints(
 			D3DXVECTOR3 pos = origin;
 			pos.x += offsets[x];
 			pos.z += offsets[z];
-
-			//// 障害物と近すぎたら少しずらす
-			//if (isNearObstacle(pos))
-			//{
-			//	float shift = safeDistance * 0.7f;
-			//	pos.x += ((rand() / (float)RAND_MAX) - 0.5f) * 2.0f * shift;
-			//	pos.z += ((rand() / (float)RAND_MAX) - 0.5f) * 2.0f * shift;
-			//}
 
 			outPatrolPoints.push_back(pos);
 

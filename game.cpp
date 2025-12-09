@@ -94,14 +94,14 @@ HRESULT CGame::Init(void)
 	// リーダー敵の生成
 	CEnemyLeader* pLeader =
 		CEnemy::CreateTyped<CEnemyLeader>(
-			D3DXVECTOR3(0.0f, 30.0f, 300.0f),
+			D3DXVECTOR3(0.0f, 20.0f, 300.0f),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 			);
 	m_pEnemy = pLeader;
 	characterManager.AddCharacter(pLeader);
 
 	// サブ敵生成
-	constexpr int NUM_SUB_ENEMIES = 50;
+	constexpr int NUM_SUB_ENEMIES = 60;
 	std::vector<CEnemy*> subEnemies;
 	for (int i = 0; i < NUM_SUB_ENEMIES; i++)
 	{
@@ -137,14 +137,21 @@ HRESULT CGame::Init(void)
 	// 任務開始UI生成
 	auto mission = CUIBase::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
+	// 任務失敗UI生成
+	auto mission_failure = CUIBase::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+
 	// 任務開始UI登録
 	CUIManager::GetInstance()->AddUI("Mission", mission);
 
+	// 任務失敗UI登録
+	CUIManager::GetInstance()->AddUI("MissionFailure", mission_failure);
+
 	// 生成直後に非表示
 	mission->SetVisible(false);
+	mission_failure->SetVisible(false);
 
 	m_startState = StartState::WaitStart;
-	m_stateTimer = 210;   // 開始時の初期待機
+	m_stateTimer = 190;   // 開始時の初期待機
 	m_canControl = false;
 
 	//// ポーズUIの生成
@@ -255,12 +262,12 @@ void CGame::Update(void)
 			auto mission = CUIManager::GetInstance()->GetUI("Mission");
 			mission->SetVisible(true);
 
-			m_startState = StartState::ShowMission;
+			m_startState = StartState::Hidden;
 			m_stateTimer = 180;  // UI表示時間
 		}
 		break;
 
-	case StartState::ShowMission:
+	case StartState::Hidden:
 		m_stateTimer--;
 
 		if (m_stateTimer <= 0.0f)
@@ -276,11 +283,13 @@ void CGame::Update(void)
 			// タイマーも開始
 			m_pTime->SetActiveFlag(true);
 
-			m_startState = StartState::StartGame;
+			m_startState = StartState::Idle;
 		}
 		break;
 
-	case StartState::StartGame:
+	case StartState::Idle:
+
+
 		break;
 	}
 
@@ -309,8 +318,10 @@ void CGame::Update(void)
 	if (pFade->GetFade() == CFade::FADE_NONE && m_pTime->IsTimeUp() ||
 		m_pPlayer->IsDead())
 	{// 時間切れ または プレイヤー死亡
-		// ゲームオーバー画面に移行
-		pFade->SetFade(MODE_GAMEOVER);
+
+
+		//// ゲームオーバー画面に移行
+		//pFade->SetFade(MODE_GAMEOVER);
 	}
 
 #ifdef _DEBUG

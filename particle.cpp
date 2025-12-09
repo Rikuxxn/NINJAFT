@@ -718,7 +718,7 @@ CSmokeParticle::~CSmokeParticle()
 HRESULT CSmokeParticle::Init(void)
 {
 	// テクスチャを設定しておく
-	SetPath("data/TEXTURE/smoke_05.png");
+	SetPath("data/TEXTURE/smoke_01.png");
 
 	// パーティクルの初期化処理
 	CParticle::Init();
@@ -738,7 +738,7 @@ void CSmokeParticle::Update(void)
 		EffectDesc desc;
 
 		// テクスチャの指定
-		desc.path = "data/TEXTURE/smoke_05.png";
+		desc.path = "data/TEXTURE/smoke_01.png";
 
 		// 位置
 		desc.pos = GetPos();

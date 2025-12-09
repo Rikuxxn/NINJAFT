@@ -346,8 +346,16 @@ public:
 
 		if (pPlayer->GetMotion()->IsCurrentMotionEnd(CPlayer::DAMAGE))
 		{
-			// ‘Ò‹@ó‘Ô
-			m_pMachine->ChangeState<CPlayer_StandState>();
+			// Ž€‚ñ‚¾‚ç
+			if (pPlayer->IsDead())
+			{
+				pPlayer->SetIsDead(true);
+			}
+			else
+			{
+				// ‘Ò‹@ó‘Ô
+				m_pMachine->ChangeState<CPlayer_StandState>();
+			}
 		}
 	}
 

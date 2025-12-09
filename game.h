@@ -36,9 +36,9 @@ public:
 
 	enum StartState
 	{
-		WaitStart,      // 少し待つ → UIまだ表示しない
-		ShowMission,    // UI表示中 → 操作禁止
-		StartGame       // UI非表示 → 操作OK
+		WaitStart,      // 少し待つ
+		Hidden,			// UI非表示
+		Idle			// アイドリング
 	};
 
 	HRESULT Init(void);

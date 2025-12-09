@@ -40,6 +40,7 @@ CPlayer::CPlayer()
 	m_canControl		= false;						// 操作フラグ
 	m_smokeTimer		= 30;							// 煙生成時間
 	m_smokeActive		= true;							// 煙フラグ
+	m_isDead			= false;						// 死亡したか
 }
 //=============================================================================
 // デストラクタ
@@ -239,11 +240,25 @@ void CPlayer::Update(void)
 
 	if (playerInTorch)// 灯籠に近づく
 	{
-		outlineColor = D3DXVECTOR4(1, 1, 0, 1); // 黄色
+		if (!m_isStealth && m_bIsMoving)
+		{
+			outlineColor = D3DXVECTOR4(1, 0, 0, 1); // 赤色
+		}
+		else
+		{
+			outlineColor = D3DXVECTOR4(1, 1, 0, 1); // 黄色
+		}
 	}
 	else if (playerInGrass)// 草に入る
 	{
-		outlineColor = D3DXVECTOR4(1, 1, 1, 1);	// 白
+		if (!m_isStealth && m_bIsMoving)
+		{
+			outlineColor = D3DXVECTOR4(1, 0, 0, 1); // 赤色
+		}
+		else
+		{
+			outlineColor = D3DXVECTOR4(1, 1, 1, 1);	// 白
+		}
 	}
 
 	// 色を適用

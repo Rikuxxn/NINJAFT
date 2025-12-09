@@ -60,12 +60,12 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     // プレイヤーが草にいるときは視界を狭める
     if (playerInTorch)
     {
-        range = 200.0f;
+        range = 220.0f;
         angle = 100.0f;
     }
     else if (playerInGrass)
     {
-        range = 150.0f;
+        range = 170.0f;
         angle = 100.0f;
     }
 
@@ -81,9 +81,14 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         return;
     }
     
-    // 音を立てた回数に応じて命令(サブ敵をそこに向かわせる)確率を上げていく
-    float prob = CalcSoundProbability();
+    // 音を立てた回数に応じて命令(サブ敵をそこに向かわせる)確率を上げる
+    float prob = CalcSoundProbability(m_log.makeSoundCount);
+
+    //// 視界に入った回数に応じて前回の音の位置を調べる確率を上げる
+    //float probInsight = CalcSoundProbability(m_log.insightCount);
+
     float threshold = 0.9f;
+    //float threshold_insight = 0.5f;
 
     // 一定範囲内かつ特定のオブジェクトに接触かつ忍び足じゃなかったら
     if (/*distance < 330.0f &&*/ !pPlayer->IsStealth() &&
@@ -105,8 +110,20 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     }
     else
     {
-        // 移動状態
-        pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
+        //// 視界カウントが一定数に達する かつ 一定確率になると
+        //if (threshold_insight <= probInsight)
+        //{// 前回の音の位置にサブ敵を向かわせる
+        //    // 前回の音の位置を設定
+        //    pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
+
+        //    // 命令状態
+        //    pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
+        //}
+        //else
+        {
+            // 移動状態
+            pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
+        }
     }
 }
 //=============================================================================
@@ -134,7 +151,7 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 40)
+            if (m_logTimer <= 50)
             {
                 return;
             }
@@ -167,9 +184,9 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
 //=============================================================================
 // リーダー敵AIの確率取得処理(0.0～1.0)
 //=============================================================================
-float CEnemyAI_Leader::CalcSoundProbability(void)
+float CEnemyAI_Leader::CalcSoundProbability(int targetCount)
 {
-    float x = (float)m_log.makeSoundCount;
+    float x = (float)targetCount;
 
     return 1.0f / (1.0f + expf(-0.5f * (x - 5.0f)));
 }
@@ -247,7 +264,7 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     if (pEnemy->IsLeaderAction(CEnemy::AI_ORDER))
     {
         // 音の位置を設定
-        pEnemy->OnSoundHeard(pPlayer->GetPos());
+        pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
 
         // 調査状態
         pEnemy->SetRequestedAction(CEnemy::AI_INVESTIGATE);
@@ -279,7 +296,7 @@ void CEnemyAI_Sub::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 40)
+            if (m_logTimer <= 50)
             {
                 return;
             }

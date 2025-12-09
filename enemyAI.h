@@ -47,7 +47,7 @@ public:
 
 	void Update(CEnemy* pEnemy, CPlayer* pPlayer) override;
 	void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) override;
-	float CalcSoundProbability(void);
+	float CalcSoundProbability(int targetCount);
 
 private:
 	PlayerBehaviorLog m_log;

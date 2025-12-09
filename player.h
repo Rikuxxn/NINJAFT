@@ -70,6 +70,7 @@ public:
 	void SetInGrass(bool flag) { m_isInGrass = flag; }
 	void SetInTorch(bool flag) { m_isInTorch = flag; }
 	void SetControlFlag(bool flag) { m_canControl = flag; }
+	void SetIsDead(bool flag) { m_isDead = flag; }
 
 	//*****************************************************************************
 	// getter関数
@@ -113,6 +114,7 @@ private:
 	bool m_canControl;					// 操作フラグ
 	bool m_smokeActive;					// 煙フラグ
 	int m_smokeTimer;					// 煙生成時間
+	bool m_isDead;						// 死亡したか
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CPlayer> m_stateMachine;

@@ -171,7 +171,7 @@ public:
 		if (pEnemy->IsLeaderAction(CEnemy::AI_ORDER))
 		{
 			// 音の位置を設定
-			pEnemy->OnSoundHeard(pPlayer->GetPos());
+			pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
 
 			// 調査状態
 			m_pMachine->ChangeState<CEnemySub_InvestigateState>();
@@ -690,7 +690,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 1.0f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.7f, 0.6f, 1.0f, 0.5f), 40, 1);
 		}
 
 		if (CEnemy* leader = pEnemy->GetLeader())

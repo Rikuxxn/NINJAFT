@@ -225,12 +225,12 @@ CEnemyLeader::CEnemyLeader()
 	SetAI(std::make_unique<CEnemyAI_Leader>());
 
 	// 値のクリア
-	m_pMotion = nullptr;			// モーションへのポインタ
-	m_pShadowS = nullptr;			// ステンシルシャドウへのポインタ
-	m_pTipModel = nullptr;			// 武器コライダー用モデル
-	m_pBaseModel = nullptr;			// 武器コライダー用モデル
-	m_pWeaponCollider = nullptr;	// 武器の当たり判定へのポインタ
-	m_Cooldown = 0.0f;              // クールダウン残り時間
+	m_pMotion			= nullptr;	// モーションへのポインタ
+	m_pShadowS			= nullptr;	// ステンシルシャドウへのポインタ
+	m_pTipModel			= nullptr;	// 武器コライダー用モデル
+	m_pBaseModel		= nullptr;	// 武器コライダー用モデル
+	m_pWeaponCollider	= nullptr;	// 武器の当たり判定へのポインタ
+	m_Cooldown			= 0.0f;     // クールダウン残り時間
 }
 //=============================================================================
 // リーダー敵のデストラクタ
@@ -394,7 +394,7 @@ HRESULT CEnemySub::Init(void)
 	SetupModels(pModels, nNumModels);
 
 	// カプセルコライダーの設定
-	CreatePhysics(CAPSULE_RADIUS, CAPSULE_HEIGHT, 0.1f);
+	CreatePhysics(0.0f, CAPSULE_HEIGHT, 0.1f);
 
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);

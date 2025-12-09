@@ -486,7 +486,7 @@ public:
 			}
 
 			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 1.0f);
+			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.0f);
 		}
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::CLOSE_ATTACK_01))
@@ -595,7 +595,7 @@ public:
 			}
 
 			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 1.0f);
+			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.0f);
 		}
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::CLOSE_ATTACK_02))

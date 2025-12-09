@@ -114,7 +114,7 @@ void CObjectBillboard::Update(void)
 
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
+	
 	// 頂点座標の設定
 	pVtx[0].pos = D3DXVECTOR3(-m_fSize, +m_fSize + m_fHeight, 0.0f);
 	pVtx[1].pos = D3DXVECTOR3(+m_fSize, +m_fSize + m_fHeight, 0.0f);

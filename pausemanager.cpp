@@ -77,14 +77,13 @@ void CPauseManager::Init(void)
     // 頂点バッファをアンロックする
     m_pVtxBuff->Unlock();
 
-
     // 空にする
     m_Items.clear();
 
     // ポーズの生成
-    m_Items.push_back(CPause::Create(CPause::MENU_CONTINUE, D3DXVECTOR3(860.0f, 310.0f, 0.0f), 200.0f, 60.0f));
-    m_Items.push_back(CPause::Create(CPause::MENU_RETRY, D3DXVECTOR3(860.0f, 510.0f, 0.0f), 200.0f, 60.0f));
-    m_Items.push_back(CPause::Create(CPause::MENU_QUIT, D3DXVECTOR3(860.0f, 710.0f, 0.0f), 200.0f, 60.0f));
+    m_Items.push_back(CPause::Create(CPause::MENU_CONTINUE, D3DXVECTOR3(860.0f, 310.0f, 0.0f), 200.0f, 80.0f));
+    m_Items.push_back(CPause::Create(CPause::MENU_RETRY, D3DXVECTOR3(860.0f, 510.0f, 0.0f), 200.0f, 80.0f));
+    m_Items.push_back(CPause::Create(CPause::MENU_QUIT, D3DXVECTOR3(860.0f, 710.0f, 0.0f), 200.0f, 80.0f));
 
     for (auto item : m_Items)
     {

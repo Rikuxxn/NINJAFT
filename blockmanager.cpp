@@ -179,7 +179,7 @@ IDirect3DTexture9* CBlockManager::RenderThumbnail(CBlock* pBlock)
 	// プロジェクションマトリックスの作成
 	D3DXMatrixPerspectiveFovLH(&matProj,
 		D3DXToRadian(60.0f),						// 視野角
-		m_thumbWidth / m_thumbHeight, // アスペクト比
+		m_thumbWidth / m_thumbHeight,				// アスペクト比
 		1.0f,										// 近クリップ面
 		1000.0f);									// 遠クリップ面
 
@@ -213,6 +213,7 @@ IDirect3DTexture9* CBlockManager::RenderThumbnail(CBlock* pBlock)
 	pDevice->SetRenderTarget(0, pOldRT);
 	pDevice->SetDepthStencilSurface(pOldZ);
 
+	// 破棄
 	if (pOldRT) pOldRT->Release();
 	if (pOldZ)  pOldZ->Release();
 	if (pNewRT) pNewRT->Release();

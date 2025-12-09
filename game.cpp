@@ -18,6 +18,7 @@
 #include "ui.h"
 #include "meshdome.h"
 #include "blocklist.h"
+#include "resultsoundcount.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -135,10 +136,10 @@ HRESULT CGame::Init(void)
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
 	// 任務開始UI生成
-	auto mission = CUIBase::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	auto mission = CUITexture::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
 	// 任務失敗UI生成
-	auto mission_failure = CUIBase::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
 	// 任務開始UI登録
 	CUIManager::GetInstance()->AddUI("Mission", mission);
@@ -146,9 +147,11 @@ HRESULT CGame::Init(void)
 	// 任務失敗UI登録
 	CUIManager::GetInstance()->AddUI("MissionFailure", mission_failure);
 
-	// 生成直後に非表示
+	// 生成直後に各UIの設定をする
 	mission->SetVisible(false);
+
 	mission_failure->SetVisible(false);
+	//mission_failure->SetUseAlphaIncreaseFlag(true);
 
 	m_startState = StartState::WaitStart;
 	m_stateTimer = 190;   // 開始時の初期待機
@@ -289,6 +292,35 @@ void CGame::Update(void)
 
 	case StartState::Idle:
 
+		// タイムアップまたはプレイヤーが死んだら
+		if (m_pTime->IsTimeUp() || m_pPlayer->IsDead())
+		{
+			m_stateTimer = 120;
+			m_startState = StartState::Failure;
+		}
+		break;
+	case StartState::Failure:// 失敗時
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			m_stateTimer = 120;
+
+			// UI表示
+			auto mission_failure = CUIManager::GetInstance()->GetUI("MissionFailure");
+			mission_failure->SetVisible(true);
+			m_startState = StartState::WaitEnd;
+		}
+
+		break;
+	case StartState::WaitEnd:// 終了までの待機時間
+		m_stateTimer--;
+
+		if (pFade->GetFade() == CFade::FADE_NONE && m_stateTimer <= 0.0f)
+		{
+			// タイトル画面に移行
+			pFade->SetFade(MODE_TITLE);
+		}
 
 		break;
 	}
@@ -310,18 +342,15 @@ void CGame::Update(void)
 			CResult::SetClearRank(rankIndex);// アニメーション用に順位のインデックスを渡す
 			CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
 
+			// 音発生数の取得
+			int count = m_pEnemy->GetSoundCount();
+
+			// 音発生数の設定
+			CResult::SetSoundCount(count);
+
 			// リザルト画面に移行
 			pFade->SetFade(MODE_RESULT);
 		}
-	}
-
-	if (pFade->GetFade() == CFade::FADE_NONE && m_pTime->IsTimeUp() ||
-		m_pPlayer->IsDead())
-	{// 時間切れ または プレイヤー死亡
-
-
-		//// ゲームオーバー画面に移行
-		//pFade->SetFade(MODE_GAMEOVER);
 	}
 
 #ifdef _DEBUG
@@ -338,6 +367,12 @@ void CGame::Update(void)
 		// リザルトにセット
 		CResult::SetClearRank(rankIndex);// アニメーション用に順位のインデックスを渡す
 		CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+
+		// 音発生数の取得
+		int count = m_pEnemy->GetSoundCount();
+
+		// 音発生数の設定
+		CResult::SetSoundCount(count);
 
 		// リザルト画面に移行
 		pFade->SetFade(MODE_RESULT);

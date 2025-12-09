@@ -228,6 +228,7 @@
     <ClCompile Include="raycast.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
+    <ClCompile Include="resultsoundcount.cpp" />
     <ClCompile Include="resulttime.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="shadowS.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="raycast.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="result.h" />
+    <ClInclude Include="resultsoundcount.h" />
     <ClInclude Include="resulttime.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="shadowS.h" />

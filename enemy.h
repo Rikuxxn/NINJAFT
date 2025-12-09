@@ -243,6 +243,7 @@ public:
 	void SetSub(CEnemy* sub) { m_pSub.push_back(sub); }
 	void SetAI(std::unique_ptr<IEnemyAI> ai) { m_pAI = std::move(ai); }
 	void SetControlFlag(bool flag) { m_canControl = flag; }
+	void SetSoundCount(int nCount) { m_makeSoundCount = nCount; }
 
 	//*****************************************************************************
 	// getter関数
@@ -260,6 +261,7 @@ public:
 	std::vector<CEnemy*> GetSub(void) const { return m_pSub; }
 	IEnemyAI* GetAI(void) { return m_pAI.get(); }
 	bool GetControlFlag(void) { return m_canControl; }
+	int GetSoundCount(void) { return m_makeSoundCount; }
 
 private:
 	static constexpr int MAX_PARTS = 32;	// 最大パーツ数
@@ -280,6 +282,7 @@ private:
 	bool m_hasHeardSound;					// 音を聞いたかどうか
 	bool m_returnToPatrol;					// 最寄りの巡回ポイントに戻るフラグ
 	bool m_canControl;						// 操作フラグ
+	int m_makeSoundCount;					// 音発生数
 
 	CEnemy* m_pLeader = nullptr;
 	std::vector<CEnemy*> m_pSub;

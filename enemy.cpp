@@ -34,6 +34,7 @@ CEnemy::CEnemy()
 	m_hasHeardSound		= false;						// 音を聞いたかどうか
 	m_returnToPatrol	= false;						// 最寄りの巡回ポイントに戻るフラグ
 	m_canControl		= false;						// 操作フラグ
+	m_makeSoundCount	= 0;							// 音発生数
 }
 //=============================================================================
 // デストラクタ

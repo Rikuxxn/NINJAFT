@@ -12,6 +12,8 @@
 #include "input.h"
 #include "manager.h"
 #include "dummyPlayer.h"
+#include "resultsoundcount.h"
+#include "ui.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -20,6 +22,7 @@ CResultTime* CResult::m_pTime = nullptr;					// タイムへのポインタ
 int CResult::m_nClearMinutes = 0;
 int CResult::m_nClearSeconds = 0;
 int CResult::m_clearRankIndex = 0;
+int CResult::m_soundCount = 0;
 
 //=============================================================================
 // コンストラクタ
@@ -83,6 +86,18 @@ HRESULT CResult::Init(void)
 
 	// タイムの生成
 	m_pTime = CResultTime::Create(clearMinutes, clearSeconds, 1100.0f, 695.0f, 72.0f, 88.0f);
+
+	// 音発生数の表示
+	CResultSoundCount::Create(1100.0f, 295.0f, 50.0f, 60.0f);
+
+	// 音発生数の設定
+	CResultSoundCount::SetSoundCount(m_soundCount);
+
+	//// 音発生数UI生成
+	//auto soundCount = CUITexture::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+
+	//// 音発生数UI登録
+	//CUIManager::GetInstance()->AddUI("SoundCount", soundCount);
 
 	return S_OK;
 }

@@ -234,7 +234,6 @@ void CPlayer::Update(void)
 	// 特定のブロックに当たっているか判定する
 	bool playerInGrass = pBlockManager->IsPlayerInGrass();
 	bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
-	bool playerInWater = pBlockManager->IsPlayerInWater();
 
 	D3DXVECTOR4 outlineColor = D3DXVECTOR4(0, 0, 0, 1); // 通常は黒
 
@@ -267,21 +266,6 @@ void CPlayer::Update(void)
 	{
 		models[i]->SetOutlineColor(outlineColor);
 	}
-
-	// 入ったら瞬間(1回)だけ通す
-	bool n = !m_isStealth && (playerInGrass || playerInTorch || playerInWater);
-
-	if (n && !m_prevIn)
-	{
-		// プレイヤーの頭上に生成
-		D3DXVECTOR3 pos = GetPos();
-		pos.y += 60.0f;
-
-		// 波紋の生成
-		CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 8.0f, 0.6f, 120, 0.008f);
-	}
-
-	m_prevIn = n;
 
 	// モーションの更新処理
 	m_pMotion->Update(m_apModel, m_nNumModel);

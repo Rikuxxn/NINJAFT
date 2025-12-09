@@ -101,7 +101,7 @@ HRESULT CResultTime::Init(void)
 
 	// テクスチャ割り当て
 	CTexture* pTexture = CManager::GetTexture();
-	m_nIdxTexture = pTexture->RegisterDynamic("data/TEXTURE/time.png");
+	m_nIdxTexture = pTexture->RegisterDynamic("data/TEXTURE/num_01.png");
 
 	return S_OK;
 }

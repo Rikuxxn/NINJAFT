@@ -38,7 +38,9 @@ public:
 	{
 		WaitStart,      // 少し待つ
 		Hidden,			// UI非表示
-		Idle			// アイドリング
+		Idle,			// アイドリング
+		Failure,		// 失敗時
+		WaitEnd,		// 終了までの待機
 	};
 
 	HRESULT Init(void);
@@ -73,6 +75,8 @@ private:
 	static bool m_isPaused;						// trueならポーズ中
 	static int m_nSeed;							// マップのシード値
 	std::unique_ptr<CRankingManager> m_pRankingManager;			// ランキングへのポインタ
+
+
 	CLight* m_pLight;
 	int m_timer;								// パーティクル生成タイマー
 	StartState m_startState;					

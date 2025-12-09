@@ -27,6 +27,7 @@ public:
 
 	virtual void Update(class CEnemy* enemy, CPlayer* player) = 0;
 	virtual void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) = 0;
+
 };
 
 //*****************************************************************************
@@ -53,6 +54,8 @@ private:
 	PlayerBehaviorLog m_log;
 	int m_logTimer;				// 記録タイマー
 	bool m_prevInSight;			// 直前に視界に入ったか
+	int m_soundTimer;			// 波紋生成タイマー
+	int m_soundCount;			// 音発生数
 };
 
 //*****************************************************************************

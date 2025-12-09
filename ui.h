@@ -54,7 +54,6 @@ public:
 	virtual ~CUIBase();
 
     static CUIBase* Create(float x, float y, D3DXCOLOR col, float width, float height);
-    static CUIBase* Create(const char* path, float x, float y, D3DXCOLOR col, float width, float height);
 
     virtual HRESULT Init(void);
     virtual void Uninit(void);
@@ -93,6 +92,33 @@ private:
     std::vector<CUIBase*> m_children;
 };
 
+//*****************************************************************************
+// UIテクスチャクラス
+//*****************************************************************************
+class CUITexture : public CUIBase
+{
+public:
+    CUITexture();
+    ~CUITexture();
+
+    static CUITexture* Create(const char* path, float x, float y, D3DXCOLOR col, float width, float height);
+
+    virtual HRESULT Init(void) override;
+    virtual void Uninit(void) override;
+    virtual void Update(void) override;
+    virtual void Draw(void) override;
+
+    void SetUseAlphaIncreaseFlag(bool flag) { m_bUseIncrease = flag; }
+    void SetUseAlphaDecreaseFlag(bool flag) { m_bUseDecrease = flag; }
+
+    bool UseAlphaIncrease(void) { return m_bUseIncrease; }
+    bool UseAlphaDecrease(void) { return m_bUseDecrease; }
+
+private:
+    float m_fAlpha;         // アルファ値
+    bool m_bUseIncrease;    // アルファ値増加を使用するか
+    bool m_bUseDecrease;    // アルファ値減少を使用するか 
+};
 
 //*****************************************************************************
 // UI文字クラス

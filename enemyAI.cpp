@@ -11,6 +11,7 @@
 #include "enemyAI.h"
 #include "player.h"
 #include "enemy.h"
+#include "meshcylinder.h"
 
 //=============================================================================
 // リーダー敵AIコンストラクタ
@@ -20,6 +21,8 @@ CEnemyAI_Leader::CEnemyAI_Leader()
 	// 値のクリア
     m_logTimer = 0;                 // 記録タイマー
     m_prevInSight = false;			// 直前に視界に入ったか
+    m_soundTimer = 0;
+    m_soundCount = 0;
 }
 //=============================================================================
 // リーダー敵AIデストラクタ
@@ -90,10 +93,28 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     float threshold = 0.9f;
     //float threshold_insight = 0.5f;
 
-    // 一定範囲内かつ特定のオブジェクトに接触かつ忍び足じゃなかったら
-    if (/*distance < 330.0f &&*/ !pPlayer->IsStealth() &&
+    // 特定のオブジェクトに接触かつ忍び足じゃなかったら
+    if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
         (playerInGrass || playerInWater || playerInTorch))
     {
+        m_soundTimer++;
+
+        // プレイヤーの頭上に生成
+        D3DXVECTOR3 pos = pPlayer->GetPos();
+        pos.y += 60.0f;
+
+        if (m_soundTimer >= 20)
+        {
+            m_soundTimer = 0;
+            m_soundCount++;
+
+            // 音発生数の設定
+            pEnemy->SetSoundCount(m_soundCount);
+
+            // 波紋の生成
+            CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 8.0f, 0.6f, 120, 0.008f);
+        }
+
         // 音の位置を設定
         pEnemy->OnSoundHeard(pPlayer->GetPos());
 
@@ -111,7 +132,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     else
     {
         //// 視界カウントが一定数に達する かつ 一定確率になると
-        //if (threshold_insight <= probInsight)
+        //if (threshold_insight <= probInsight && (rand() % 100) < 10)
         //{// 前回の音の位置にサブ敵を向かわせる
         //    // 前回の音の位置を設定
         //    pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
@@ -146,7 +167,7 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
     // 音カウントの加算
     {
         // 音を立てていたら一定間隔で音カウントを増やす
-        if (!pPlayer->IsStealth() &&
+        if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
             (playerInGrass || playerInWater || playerInTorch))
         {
             m_logTimer++;// フレーム加算
@@ -291,7 +312,7 @@ void CEnemyAI_Sub::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
     // 音カウントの加算
     {
         // 音を立てていたら一定間隔で音カウントを増やす
-        if (!pPlayer->IsStealth() &&
+        if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
             (playerInGrass || playerInWater || playerInTorch))
         {
             m_logTimer++;// フレーム加算

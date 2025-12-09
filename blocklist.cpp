@@ -282,8 +282,8 @@ HRESULT CBuriedTreasureBlock::Init(void)
 	CBlock::Init();
 
 	// ゲージ生成（任意サイズ・色）
-	m_pFrame = C3DGuage::Create(C3DGuage::TYPE_FRAME, D3DXVECTOR3(0.0f, 110.0f, 0.0f), 70.0f, 6.0f);
-	m_pGuage = C3DGuage::Create(C3DGuage::TYPE_GUAGE, D3DXVECTOR3(0.0f, 110.0f, 0.0f), 70.0f, 6.0f);
+	m_pFrame = C3DGuage::Create(C3DGuage::TYPE_FRAME, D3DXVECTOR3(0.0f, 110.0f, 0.0f), 70.0f, 4.0f);
+	m_pGuage = C3DGuage::Create(C3DGuage::TYPE_GUAGE, D3DXVECTOR3(0.0f, 110.0f, 0.0f), 70.0f, 4.0f);
 
 	// 最初は非表示
 	m_pFrame->SetActive(false);
@@ -527,7 +527,9 @@ bool CExitBlock::IsHitPlayer(CPlayer* pPlayer)
 
 	// 軸は念のため正規化
 	for (int i = 0; i < 3; i++)
+	{
 		D3DXVec3Normalize(&obb.axis[i], &obb.axis[i]);
+	}
 
 	// モデルサイズとスケール適用
 	D3DXVECTOR3 modelSize = GetModelSize();

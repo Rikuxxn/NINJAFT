@@ -238,6 +238,7 @@ void CTime::Draw(void)
 			// テクスチャの設定
 			pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
 
+			// ナンバーの描画処理
 			m_apNumber[nCnt]->Draw();
 		}
 	}

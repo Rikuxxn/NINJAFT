@@ -9,12 +9,11 @@
 // インクルードファイル
 //*****************************************************************************
 #include "blocklist.h"
-#include "blockmanager.h"
 #include "player.h"
 #include "game.h"
 #include "manager.h"
 #include "particle.h"
-#include <algorithm>
+#include "algorithm"
 #include "meshcylinder.h"
 #include "collisionUtils.h"
 
@@ -254,6 +253,10 @@ void CWaterBlock::Update(void)
 	}
 }
 
+//*****************************************************************************
+// 埋蔵金ブロックの静的メンバ変数宣言
+//*****************************************************************************
+int CBuriedTreasureBlock::m_getCount = 0;
 
 //=============================================================================
 // 埋蔵金ブロックのコンストラクタ
@@ -265,6 +268,7 @@ CBuriedTreasureBlock::CBuriedTreasureBlock()
 	m_guageRate;		// ゲージの最大量
 	m_guageDecreaseSpeed;// ゲージの減る量
 	m_bUiActive = false;
+	m_getCount = 0;
 }
 //=============================================================================
 // 埋蔵金ブロックのデストラクタ
@@ -290,7 +294,7 @@ HRESULT CBuriedTreasureBlock::Init(void)
 	m_pGuage->SetActive(false);
 
 	m_guageRate = 100.0f;
-	m_guageDecreaseSpeed = 0.18f; // 1フレームで減る割合
+	m_guageDecreaseSpeed = 0.2f; // 1フレームで減る割合
 
 	return S_OK;
 }
@@ -345,8 +349,13 @@ void CBuriedTreasureBlock::Update(void)
 			m_bUiActive = true; // 表示中フラグ
 		}
 
-		// ゲージが溜まったら
-		if (pMouse->GetPress(0) || pJoypad->GetPress(CInputJoypad::JOYKEY_A))
+		// ダメージ状態中または移動入力があるときはゲージを溜めれないようにする
+		bool isDamage = pPlayer->GetMotion()->IsCurrentMotion(CPlayer::DAMAGE);
+		bool isMoving = pPlayer->GetIsMoving();
+
+		// ゲージを溜める
+		if (!isDamage && !isMoving && 
+			(pMouse->GetPress(0) || pJoypad->GetPress(CInputJoypad::JOYKEY_A)))
 		{
 			m_guageRate -= m_guageDecreaseSpeed;
 
@@ -387,14 +396,22 @@ void CBuriedTreasureBlock::Update(void)
 	// ゲージがゼロになったらブロック削除
 	if (m_guageRate <= 0.0f)
 	{
+		// 取得カウントを増やす
+		m_getCount++;
+
+		// 削除予約
 		Kill();
 
 		// ゲージも削除する
 		m_pGuage->Uninit();
 		m_pFrame->Uninit();
-		return;
 	}
 }
+
+//*****************************************************************************
+// 扉ブロックの静的メンバ変数宣言
+//*****************************************************************************
+bool CDoorBlock::m_isOpen = false;
 
 //=============================================================================
 // 扉ブロックのコンストラクタ
@@ -402,8 +419,8 @@ void CBuriedTreasureBlock::Update(void)
 CDoorBlock::CDoorBlock()
 {
 	// 値のクリア
-	m_baseRotY;	// 基準の角度
-	m_rotY;		// Y角度
+	m_baseRotY = 0.0f;	// 基準の角度
+	m_rotY = 0.0f;		// Y角度
 }
 //=============================================================================
 // 扉ブロックのデストラクタ
@@ -420,13 +437,12 @@ void CDoorBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
-	// --- 埋蔵金ブロックが全て消えたか確認 ---
-	auto buriedTreasureBlocks = CBlockManager::GetBlocksOfType<CBuriedTreasureBlock>();
-
-	if (!buriedTreasureBlocks.empty())
+	if (!DoorOpen())
 	{
 		return;
 	}
+
+	m_isOpen = true;
 
 	// 初期角度が正なら -90°回転、負なら +90°回転
 	float targetRotY = m_baseRotY + ((m_baseRotY >= 0.0f) ? -ROT_LIMIT : +ROT_LIMIT);
@@ -491,10 +507,8 @@ void CExitBlock::Update(void)
 		return;
 	}
 
-	// --- 埋蔵金ブロックが全て消えたか確認 ---
-	auto buriedTreasureBlocks = CBlockManager::GetBlocksOfType<CBuriedTreasureBlock>();
-
-	if (buriedTreasureBlocks.empty())
+	// 脱出可能だったら
+	if (AvailableExit())
 	{
 		// 対象との距離を求めるためにプレイヤーの位置を取得
 		D3DXVECTOR3 playerPos = pPlayer->GetPos();

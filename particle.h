@@ -12,8 +12,8 @@
 //*****************************************************************************
 #include "main.h"
 #include "effect.h"
-#include <unordered_map>
-#include <functional>
+#include "unordered_map"
+#include "functional"
 
 // ‘O•ûéŒ¾
 class CParticle;

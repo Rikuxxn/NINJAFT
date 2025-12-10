@@ -128,13 +128,13 @@ public:
 
 	void OnStart(CEnemyLeader* pEnemy)override
 	{
+
 		// 移動モーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::MOVE, 10);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
-
 		// サブ敵が追跡状態だったら
 		if (pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
@@ -236,8 +236,20 @@ public:
 			}
 			else
 			{
-				// 次の巡回ポイントに向かう
-				pEnemy->ChooseNextPatrolPoint();
+				//// 確率で前回立てた音の場所に調査に向かう
+				//if ((rand() % 100) < 45)
+				//{
+				//	// 音の位置を設定
+				//	pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
+
+				//	// 調査状態
+				//	m_pMachine->ChangeState<CEnemyLeader_InvestigateState>();
+				//}
+				//else
+				{
+					// 次の巡回ポイントに向かう
+					pEnemy->ChooseNextPatrolPoint();
+				}
 			}
 		}
 	}
@@ -1014,7 +1026,7 @@ public:
 		if (!pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
 			// サブ敵が追跡していなくて、距離が離れたら警戒へ
-			if (distance > 280.0f)
+			if (distance > 300.0f)
 			{
 				// 警戒状態
 				m_pMachine->ChangeState<CEnemyLeader_CautionState>();

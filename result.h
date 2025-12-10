@@ -31,6 +31,7 @@ public:
 	static void SetClearTime(int min, int sec) { m_nClearMinutes = min; m_nClearSeconds = sec; }
 	static void SetClearRank(int idx) { m_clearRankIndex = idx; }
 	static void SetSoundCount(int nCount) { m_soundCount = nCount; }
+	static void SetTreasureCount(int nCount) { m_treasureCount = nCount; }
 
 	static int GetClearMinutes(void) { return m_nClearMinutes; }
 	static int GetClearSeconds(void) { return m_nClearSeconds; }
@@ -47,7 +48,7 @@ private:
 	static int m_nClearSeconds;				// クリアタイム(秒)
 	static int m_clearRankIndex;			// クリア時のランクインデックス
 	static int m_soundCount;				// 音の発生数
-
+	static int m_treasureCount;				// 宝の数
 	CLight* m_pLight;						// ライトへのポインタ
 	CBlockManager* m_pBlockManager;			// ブロックマネージャーへのポインタ
 };

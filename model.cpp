@@ -12,7 +12,7 @@
 #include "texture.h"
 #include "renderer.h"
 #include "manager.h"
-#include <cstdio>
+#include "cstdio"
 
 //=============================================================================
 // コンストラクタ

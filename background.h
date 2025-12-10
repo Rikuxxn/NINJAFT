@@ -26,7 +26,15 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
+	void SetPath(const char* path)
+	{
+		if (path == nullptr)
+		{
+			path = " ";
+		}
+
+		strcpy_s(m_szPath, MAX_PATH, path); 
+	}
 
 private:
 	int m_nIdxTexture;		// テクスチャインデックス

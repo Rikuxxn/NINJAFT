@@ -57,16 +57,15 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     bool playerInWater = pBlockManager->IsPlayerInWater();
 
     // 視界距離と角度
-    float range = 255.0f;
-    float angle = 110.0f;
+    float range = 285.0f;
+    float angle = 115.0f;
 
-    // プレイヤーが草にいるときは視界を狭める
-    if (playerInTorch)
+    if (playerInTorch)// 灯籠の近くにいるときは視界を広げる
     {
         range = 220.0f;
         angle = 100.0f;
     }
-    else if (playerInGrass)
+    else if (playerInGrass)// プレイヤーが草にいるときは視界を狭める
     {
         range = 170.0f;
         angle = 100.0f;
@@ -84,14 +83,12 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         return;
     }
     
-    // 音を立てた回数に応じて命令(サブ敵をそこに向かわせる)確率を上げる
+    // 音を立てた または 視界に入った回数に応じて命令(サブ敵をそこに向かわせる)確率を上げる
     float prob = CalcSoundProbability(m_log.makeSoundCount);
-
-    //// 視界に入った回数に応じて前回の音の位置を調べる確率を上げる
-    //float probInsight = CalcSoundProbability(m_log.insightCount);
+    float prob_insight = CalcSoundProbability(m_log.insightCount);
 
     float threshold = 0.9f;
-    //float threshold_insight = 0.5f;
+    float threshold_insight = 0.1f;
 
     // 特定のオブジェクトに接触かつ忍び足じゃなかったら
     if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
@@ -99,11 +96,11 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     {
         m_soundTimer++;
 
-        // プレイヤーの頭上に生成
+        // プレイヤーの位置を取得
         D3DXVECTOR3 pos = pPlayer->GetPos();
-        pos.y += 60.0f;
+        pos.y += 60.0f;// 少し上げる
 
-        if (m_soundTimer >= 20)
+        if (m_soundTimer >= 10)
         {
             m_soundTimer = 0;
             m_soundCount++;
@@ -112,39 +109,27 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
             pEnemy->SetSoundCount(m_soundCount);
 
             // 波紋の生成
-            CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 8.0f, 0.6f, 120, 0.008f);
-        }
+            CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.008f);
 
-        // 音の位置を設定
-        pEnemy->OnSoundHeard(pPlayer->GetPos());
+            // 音の位置を設定
+            pEnemy->OnSoundHeard(pPlayer->GetPos());
 
-        if (threshold <= prob)
-        {
-            // 命令状態
-            pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
-        }
-        else
-        {
-            // 疑い状態
-            pEnemy->SetRequestedAction(CEnemy::AI_DOUBT);
+            if (threshold <= prob)
+            {
+                // 命令状態
+                pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
+            }
+            else
+            {
+                // 疑い状態
+                pEnemy->SetRequestedAction(CEnemy::AI_DOUBT);
+            }
         }
     }
     else
     {
-        //// 視界カウントが一定数に達する かつ 一定確率になると
-        //if (threshold_insight <= probInsight && (rand() % 100) < 10)
-        //{// 前回の音の位置にサブ敵を向かわせる
-        //    // 前回の音の位置を設定
-        //    pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
-
-        //    // 命令状態
-        //    pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
-        //}
-        //else
-        {
-            // 移動状態
-            pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
-        }
+        // 移動状態
+        pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
     }
 }
 //=============================================================================
@@ -172,7 +157,7 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 50)
+            if (m_logTimer <= 30)
             {
                 return;
             }
@@ -257,12 +242,12 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     bool playerInGrass = pBlockManager->IsPlayerInGrass();
 
     // 判定距離
-    float threshold_dis = 150.0f;
+    float threshold_dis = 70.0f;
 
     // プレイヤーが草にいるときは視界を狭める
     if (playerInGrass)
     {
-        threshold_dis = 90.0f;
+        threshold_dis = 30.0f;
     }
 
     // 独自行動へ移行する確率判定
@@ -317,7 +302,7 @@ void CEnemyAI_Sub::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 50)
+            if (m_logTimer <= 30)
             {
                 return;
             }

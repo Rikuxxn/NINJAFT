@@ -345,6 +345,12 @@ void CGame::Update(void)
 			// ‰¹”­¶”‚Ìæ“¾
 			int count = m_pEnemy->GetSoundCount();
 
+			// •ó‚ÌŠl“¾”‚Ìæ“¾
+			int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+
+			// •ó‚ÌŠl“¾”‚Ìİ’è
+			CResult::SetTreasureCount(treasureCount);
+
 			// ‰¹”­¶”‚Ìİ’è
 			CResult::SetSoundCount(count);
 

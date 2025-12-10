@@ -17,7 +17,7 @@
 #include "game.h"
 #include "blocklist.h"
 #include "guiInfo.h"
-#include <random>
+#include "random"
 #include "grass.h"
 #include "player.h"
 
@@ -1200,11 +1200,11 @@ void CBlockManager::EnsureBuriedTreasureCount(int GRID_X, int GRID_Z, float AREA
 	const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& treasurePositions)
 {
 	// 埋蔵金同士の最低距離
-	const float MIN_TORCH_DISTANCE = 4.0f * AREA_SIZE;
+	const float MIN_TORCH_DISTANCE = 2.0f * AREA_SIZE;
 
 	const int MAX_ATTEMPTS = 50;// 配置できなかったときの試行回数
 	int attempts = 0;
-	int setNum = 4;// 設置数
+	int setNum = 3;// 設置数
 
 	while ((int)treasurePositions.size() < setNum && attempts < MAX_ATTEMPTS)
 	{

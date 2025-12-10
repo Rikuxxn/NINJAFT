@@ -222,6 +222,9 @@
     <ClCompile Include="resultsoundcount.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="resulttreasurecount.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h">
@@ -446,9 +449,20 @@
     <ClInclude Include="resultsoundcount.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resulttreasurecount.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="data\shader\OutlinePS.hlsl" />
     <FxCompile Include="data\shader\OutlineVS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C++game2.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

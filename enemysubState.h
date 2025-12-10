@@ -255,8 +255,20 @@ public:
 			}
 			else
 			{
-				// 次の巡回ポイントに向かう
-				pEnemy->ChooseNextPatrolPoint();
+				// 確率で前回立てた音の場所に調査に向かう
+				if ((rand() % 100) < 55)
+				{
+					// 音の位置を設定
+					pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
+
+					// 調査状態
+					m_pMachine->ChangeState<CEnemySub_InvestigateState>();
+				}
+				else
+				{
+					// 次の巡回ポイントに向かう
+					pEnemy->ChooseNextPatrolPoint();
+				}
 			}
 		}
 	}
@@ -325,7 +337,7 @@ public:
 		pEnemy->UpdateRotation(0.05f);
 
 		// 一定距離離れたら追跡終了
-		if (distance > 180.0f)
+		if (distance > 110.0f)
 		{
 			// 最初の巡回ポイントを決めておく
 			pEnemy->ReturnToPatrol();
@@ -523,7 +535,7 @@ public:
 		// 到達したら次の目標に切り替える
 		if (pEnemy->HasReachedSoundTarget())
 		{
-			// 巡回ポイントに到達したら移動状態に戻す
+			// 巡回ポイントに到達したら警戒状態
 			if (!pEnemy->IsInvestigating())
 			{
 				m_pMachine->ChangeState<CEnemySub_CautionState>();
@@ -766,9 +778,6 @@ public:
 			velocity.setZ(currentMove.z);
 			pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 		}
-
-
-
 	}
 
 	void OnExit(CEnemySub* /*pEnemy*/)override

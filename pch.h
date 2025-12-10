@@ -17,19 +17,19 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include<windows.h>
+#include "windows.h"
 #include "d3dx9.h"												// 描画処理に必要
 #include "dinput.h"												// 入力処理に必要
 #include "Xinput.h"												// ジョイパッド処理に必要
 #include "xaudio2.h"											// 2Dサウンド処理に必要
-#include <X3DAudio.h>											// 3Dサウンド処理に必要
-#include <array>
-#include <string>
-#include <vector>
-#include <stdio.h>
-#include <fstream>
-#include <commdlg.h>
-#include <functional>
+#include "X3DAudio.h"											// 3Dサウンド処理に必要
+#include "array"
+#include "string"
+#include "vector"
+#include "stdio.h"
+#include "fstream"
+#include "commdlg.h"
+#include "functional"
 
 //*****************************************************************************
 // ライブラリのリンク

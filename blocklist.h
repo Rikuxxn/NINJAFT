@@ -12,6 +12,7 @@
 //*****************************************************************************
 #include "block.h"
 #include "guage.h"
+#include "blockmanager.h"
 
 // 前方宣言
 class CPlayer;
@@ -106,20 +107,33 @@ public:
 
 	HRESULT Init(void);
 	void Update(void);
+	bool IsGet(void)
+	{
+		// 一定数手に入れたら
+		if (m_getCount >= GET_THRESHOLD)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	static int GetTreasureCount(void) { return m_getCount; }
 
 	int GetCollisionFlags(void) const override { return btCollisionObject::CF_NO_CONTACT_RESPONSE; }
 
 private:
 	static constexpr float TRIGGER_DISTANCE = 40.0f;	// 判定距離
 	static constexpr int SPAWN_TIME = 180;				// 生成までの時間
+	static constexpr int GET_THRESHOLD = 2;				// 取得数閾値
 
 	int m_effectTimer;									// エフェクト生成タイマー
-	C3DGuage* m_pFrame;	// 枠
-	C3DGuage* m_pGuage; // メインゲージ
-	float m_guageRate;		// ゲージの最大量
-	float m_guageDecreaseSpeed;// ゲージの減る量
-	bool m_bUiActive;
-
+	C3DGuage* m_pFrame;									// 枠
+	C3DGuage* m_pGuage;									// メインゲージ
+	float m_guageRate;									// ゲージの最大量
+	float m_guageDecreaseSpeed;							// ゲージの減る量
+	bool m_bUiActive;									// UIの表示・非表示フラグ
+	static int m_getCount;								// 取得数
 };
 
 //*****************************************************************************
@@ -146,14 +160,31 @@ public:
 	}
 
 	void Update(void);
+	bool DoorOpen(void)
+	{
+		// --- 埋蔵金ブロックが一定数取得されたか確認 ---
+		auto buriedTreasureBlocks = CBlockManager::GetBlocksOfType<CBuriedTreasureBlock>();
+
+		for (CBuriedTreasureBlock* treasure : buriedTreasureBlocks)
+		{
+			if (treasure->IsGet() || buriedTreasureBlocks.empty())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool IsOpen(void) { return m_isOpen; }
 
 private:
 	static constexpr float ROT_LIMIT = 90.0f;
 	static constexpr float ROT_SPEED = 0.5f;
 
-	float m_baseRotY;	// 基準の角度
-	float m_rotY;		// Y角度
-
+	float m_baseRotY;		// 基準の角度
+	float m_rotY;			// Y角度
+	static bool m_isOpen;	// 開いたかどうか
 };
 
 //*****************************************************************************
@@ -171,8 +202,25 @@ public:
 	bool IsHitPlayer(CPlayer* pPlayer);
 
 	bool IsEscape(void) { return m_isEscape; }
+	bool AvailableExit(void)
+	{
+		// --- ドアブロックが開いたか確認 ---
+		auto doorBlocks = CBlockManager::GetBlocksOfType<CDoorBlock>();
+
+		for (CDoorBlock* door : doorBlocks)
+		{
+			if (door->IsOpen())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 private:
 	static constexpr float TRIGGER_DISTACE = 100.0f;
+	static constexpr int GET_THRESHOLD = 2;
 
 	bool m_isEscape;	// 脱出したかどうか
 };

@@ -230,6 +230,7 @@
     <ClCompile Include="result.cpp" />
     <ClCompile Include="resultsoundcount.cpp" />
     <ClCompile Include="resulttime.cpp" />
+    <ClCompile Include="resulttreasurecount.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="shadowS.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -302,9 +303,11 @@
     <ClInclude Include="ranktime.h" />
     <ClInclude Include="raycast.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="resultsoundcount.h" />
     <ClInclude Include="resulttime.h" />
+    <ClInclude Include="resulttreasurecount.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="shadowS.h" />
     <ClInclude Include="sound.h" />
@@ -332,6 +335,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">3.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C++game2.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,11 +12,11 @@
 #include "renderer.h"
 #include "object.h"
 #include "object2D.h"
-#include <stdlib.h>
-#include <crtdbg.h>
+#include "stdlib.h"
+#include "crtdbg.h"
 #include "manager.h"
-#include <tchar.h>
-#include <stdio.h>
+#include "tchar.h"
+#include "stdio.h"
 #include "imguimaneger.h"
 
 //*****************************************************************************

@@ -14,15 +14,18 @@
 #include "dummyPlayer.h"
 #include "resultsoundcount.h"
 #include "ui.h"
+#include "background.h"
+#include "resulttreasurecount.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-CResultTime* CResult::m_pTime = nullptr;					// タイムへのポインタ
-int CResult::m_nClearMinutes = 0;
-int CResult::m_nClearSeconds = 0;
-int CResult::m_clearRankIndex = 0;
-int CResult::m_soundCount = 0;
+CResultTime* CResult::m_pTime = nullptr;	// タイムへのポインタ
+int CResult::m_nClearMinutes = 0;			// クリアタイム(分)
+int CResult::m_nClearSeconds = 0;			// クリアタイム(秒)
+int CResult::m_clearRankIndex = 0;			// クリア時のランクインデックス
+int CResult::m_soundCount = 0;				// 音の発生数
+int CResult::m_treasureCount = 0;			// 宝の数
 
 //=============================================================================
 // コンストラクタ
@@ -63,8 +66,8 @@ HRESULT CResult::Init(void)
 	// ライトの再設定処理
 	ResetLight();
 
-	//// 背景の生成
-	//CBackground::Create(D3DXVECTOR3(960.0f, 540.0f, 0.0f), 960.0f, 540.0f, "data/TEXTURE/resultBG.png");
+	// 背景の生成
+	CBackground::Create(D3DXVECTOR3(360.0f, 540.0f, 0.0f), 360.0f, 540.0f, "data/TEXTURE/.png");
 
 	// ダミープレイヤーの生成
 	CDummyPlayer::Create(D3DXVECTOR3(300.0f, 110.0f, -10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::NEUTRAL);
@@ -85,19 +88,38 @@ HRESULT CResult::Init(void)
 	int clearSeconds = totalClear % 60;
 
 	// タイムの生成
-	m_pTime = CResultTime::Create(clearMinutes, clearSeconds, 1100.0f, 695.0f, 72.0f, 88.0f);
+	m_pTime = CResultTime::Create(clearMinutes, clearSeconds, 1100.0f, 695.0f, 72.0f, 88.0f); 
 
 	// 音発生数の表示
-	CResultSoundCount::Create(1100.0f, 295.0f, 50.0f, 60.0f);
+	CResultSoundCount::Create(1100.0f, 395.0f, 50.0f, 60.0f);
+
+	// 宝獲得数の表示
+	CResultTreasureCount::Create(1100.0f, 295.0f, 50.0f, 60.0f);
 
 	// 音発生数の設定
 	CResultSoundCount::SetSoundCount(m_soundCount);
 
-	//// 音発生数UI生成
-	//auto soundCount = CUITexture::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	// 宝獲得数の設定
+	CResultTreasureCount::SetTreasureCount(m_treasureCount);
 
-	//// 音発生数UI登録
-	//CUIManager::GetInstance()->AddUI("SoundCount", soundCount);
+	// 「埋蔵金の数」UI生成
+	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 280.0f, 120.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 250.0f, 50.0f);
+
+	// 「音の発生数」UI生成
+	auto soundCount = CUITexture::Create("data/TEXTURE/ui_soundcount.png", 280.0f, 420.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 250.0f, 50.0f);
+
+	// 「クリアタイム」UI生成
+	auto clearTime = CUITexture::Create("data/TEXTURE/ui_cleartime.png", 280.0f, 720.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 250.0f, 50.0f);
+
+
+	// 「埋蔵金の数」UI登録
+	CUIManager::GetInstance()->AddUI("TreasureCount", treasureCount);
+
+	// 「音の発生数」UI登録
+	CUIManager::GetInstance()->AddUI("SoundCount", soundCount);
+
+	// 「クリアタイム」UI登録
+	CUIManager::GetInstance()->AddUI("ClearTime", clearTime);
 
 	return S_OK;
 }
@@ -130,8 +152,8 @@ void CResult::Update(void)
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
 
-	CInputMouse* pInputMouse = CManager::GetInputMouse();
-	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+	CInputMouse* pInputMouse = CManager::GetInputMouse();	// マウスの入力取得
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();		// ゲームパッドの入力取得
 	CFade* pFade = CManager::GetFade();
 
 	if (pFade->GetFade() == CFade::FADE_NONE && (pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))

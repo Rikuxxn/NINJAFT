@@ -4,14 +4,14 @@
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
-#include "meshcylinder.h"
 #ifndef _PLAYERSTATE_H_// このマクロ定義がされていなかったら
 #define _PLAYERSTATE_H_// 2重インクルード防止のマクロ定義
 
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-
+#include "meshcylinder.h"
+#include "blocklist.h"
 
 // 前方宣言
 class CPlayer_StandState;
@@ -99,8 +99,11 @@ public:
 		// フラグ更新
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
+		//// 埋蔵金の取得数に応じてスピードを遅くする
+		//int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+
 		// 目標速度計算
-		float moveSpeed = CPlayer::PLAYER_SPEED;
+		float moveSpeed = CPlayer::PLAYER_SPEED/* * (treasureCount * 0.9f)*/;
 
 		D3DXVECTOR3 targetMove = input.moveDir;
 

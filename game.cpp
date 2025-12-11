@@ -19,6 +19,7 @@
 #include "meshdome.h"
 #include "blocklist.h"
 #include "resultsoundcount.h"
+#include "grid.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -148,17 +149,12 @@ HRESULT CGame::Init(void)
 	CUIManager::GetInstance()->AddUI("MissionFailure", mission_failure);
 
 	// 生成直後に各UIの設定をする
-	mission->SetVisible(false);
-
-	mission_failure->SetVisible(false);
-	//mission_failure->SetUseAlphaIncreaseFlag(true);
+	mission->Hide();
+	mission_failure->Hide();
 
 	m_startState = StartState::WaitStart;
 	m_stateTimer = 190;   // 開始時の初期待機
 	m_canControl = false;
-
-	//// ポーズUIの生成
-	//m_pUi = CUi::Create<CPauseUi>("data/TEXTURE/ui_pause.png",D3DXVECTOR3(210.0f, 855.0f, 0.0f), 160.0f, 35.0f);
 
 	// ポーズマネージャーの生成
 	m_pPauseManager = new CPauseManager();
@@ -263,7 +259,7 @@ void CGame::Update(void)
 		{
 			// UI表示
 			auto mission = CUIManager::GetInstance()->GetUI("Mission");
-			mission->SetVisible(true);
+			mission->Show();
 
 			m_startState = StartState::Hidden;
 			m_stateTimer = 180;  // UI表示時間
@@ -277,7 +273,7 @@ void CGame::Update(void)
 		{
 			// UI非表示
 			auto mission = CUIManager::GetInstance()->GetUI("Mission");
-			mission->SetVisible(false);
+			mission->FadeOut(60.0f);
 
 			// 操作フラグをtrueにする
 			m_pPlayer->SetControlFlag(true);
@@ -304,11 +300,12 @@ void CGame::Update(void)
 
 		if (m_stateTimer <= 0.0f)
 		{
-			m_stateTimer = 120;
+			m_stateTimer = 180;
 
 			// UI表示
 			auto mission_failure = CUIManager::GetInstance()->GetUI("MissionFailure");
-			mission_failure->SetVisible(true);
+			mission_failure->FadeIn(120.0f);
+
 			m_startState = StartState::WaitEnd;
 		}
 

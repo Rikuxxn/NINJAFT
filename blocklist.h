@@ -10,12 +10,12 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include "block.h"
 #include "guage.h"
 #include "blockmanager.h"
 
 // 前方宣言
 class CPlayer;
+class CBlock;
 
 //*****************************************************************************
 // 木箱ブロッククラス
@@ -34,9 +34,10 @@ public:
 
 	bool IsDynamicBlock(void) const override { return true; }
 	btVector3 GetAngularFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
-	btScalar GetMass(void) const { return 1.0f; }  // 質量の取得
+	btScalar GetMass(void) const { return MASS; }  // 質量の取得
 
 private:
+	static constexpr float MASS = 1.0f;
 	static constexpr float RESPAWN_HEIGHT = -810.0f;
 	D3DXVECTOR3 m_ResPos;	// リスポーン位置
 };
@@ -126,6 +127,8 @@ private:
 	static constexpr float TRIGGER_DISTANCE = 40.0f;	// 判定距離
 	static constexpr int SPAWN_TIME = 180;				// 生成までの時間
 	static constexpr int GET_THRESHOLD = 2;				// 取得数閾値
+	static constexpr float GUAGE_RATE = 100.0f;			// ゲージの最大量
+	static constexpr float GUAGE_DECREASE_SPEED = 0.2f;	// ゲージの減る量
 
 	int m_effectTimer;									// エフェクト生成タイマー
 	C3DGuage* m_pFrame;									// 枠

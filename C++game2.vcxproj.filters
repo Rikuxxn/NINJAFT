@@ -19,24 +19,45 @@
     <Filter Include="ヘッダー ファイル\ImGui">
       <UniqueIdentifier>{62a3d0c2-2f86-4abb-9213-0aa0df222c74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Ranking">
+      <UniqueIdentifier>{c0498b44-2e0b-4827-b21e-710742c5664a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Ranking">
+      <UniqueIdentifier>{522505ea-3e89-44d6-a464-396c29dcb8d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scenes">
+      <UniqueIdentifier>{0e01b5ae-9520-41eb-9947-395d0576e906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scenes">
+      <UniqueIdentifier>{b19084da-42e8-445e-9eeb-1ec97b7372b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Debug">
+      <UniqueIdentifier>{0a14d714-d1e2-4778-ac95-5de547c2583d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Debug">
+      <UniqueIdentifier>{78f3cf7f-1bc9-497d-b841-c8ac6f391888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Block">
+      <UniqueIdentifier>{dfad0b7b-e16f-4c53-ad2c-1b4cd757ea77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Block">
+      <UniqueIdentifier>{89cb5c0b-6589-4e2d-98cb-5213d522fb3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Objects">
+      <UniqueIdentifier>{45a37c63-5604-4a26-a19d-53b2fcad99d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Objects">
+      <UniqueIdentifier>{15127391-5fd6-40a7-80d9-fbe93e2a1bf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Character">
+      <UniqueIdentifier>{d1abf4e2-6cce-4a85-b4ea-435b82643811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Character">
+      <UniqueIdentifier>{38a3a934-6406-445e-8ecf-244be329bfa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="block.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="blocklist.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="blockmanager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="debugproc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="debugproc3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="effect.cpp">
@@ -46,9 +67,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="FileDialogUtils.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="guiInfo.cpp">
@@ -75,21 +93,6 @@
     <ClCompile Include="number.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="object2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="object3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="objectBillboard.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="objectX.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -102,19 +105,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="raycast.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="renderer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="result.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="scene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="shadowS.cpp">
@@ -127,9 +121,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="time.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="title.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
@@ -156,15 +147,6 @@
     <ClCompile Include="imguimaneger.cpp">
       <Filter>ソース ファイル\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="grass.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="meshcylinder.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -180,18 +162,6 @@
     <ClCompile Include="weaponcollider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="rank.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ranking.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="rankingmanager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ranktime.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="enemyAI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -199,9 +169,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="gameover.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="dummyPlayer.cpp">
@@ -225,24 +192,78 @@
     <ClCompile Include="resulttreasurecount.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="rank.cpp">
+      <Filter>ソース ファイル\Ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="rankingmanager.cpp">
+      <Filter>ソース ファイル\Ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="ranktime.cpp">
+      <Filter>ソース ファイル\Ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="gameover.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="title.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ranking.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="debugproc.cpp">
+      <Filter>ソース ファイル\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="debugproc3D.cpp">
+      <Filter>ソース ファイル\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>ソース ファイル\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="block.cpp">
+      <Filter>ソース ファイル\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="blocklist.cpp">
+      <Filter>ソース ファイル\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="blockmanager.cpp">
+      <Filter>ソース ファイル\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="grass.cpp">
+      <Filter>ソース ファイル\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>ソース ファイル\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="object2D.cpp">
+      <Filter>ソース ファイル\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="object3D.cpp">
+      <Filter>ソース ファイル\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="objectBillboard.cpp">
+      <Filter>ソース ファイル\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="objectX.cpp">
+      <Filter>ソース ファイル\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="block.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="blocklist.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="blockmanager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="debugproc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="debugproc3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="easing.h">
@@ -257,13 +278,7 @@
     <ClInclude Include="FileDialogUtils.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="guiInfo.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="imconfig.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
@@ -290,21 +305,6 @@
     <ClInclude Include="number.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="object2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="object3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="objectBillboard.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="objectX.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -317,19 +317,10 @@
     <ClInclude Include="pch.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="raycast.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="result.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="shadowS.h">
@@ -345,9 +336,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="time.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="title.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="imgui.h">
@@ -377,12 +365,6 @@
     <ClInclude Include="grass.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="grid.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="meshcylinder.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -396,18 +378,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="weaponcollider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="rank.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ranking.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="rankingmanager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ranktime.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="enemyAI.h">
@@ -454,6 +424,72 @@
     </ClInclude>
     <ClInclude Include="resulttreasurecount.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="rank.h">
+      <Filter>ヘッダー ファイル\Ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="rankingmanager.h">
+      <Filter>ヘッダー ファイル\Ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="ranktime.h">
+      <Filter>ヘッダー ファイル\Ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="debugproc.h">
+      <Filter>ヘッダー ファイル\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="debugproc3D.h">
+      <Filter>ヘッダー ファイル\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="grid.h">
+      <Filter>ヘッダー ファイル\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>ヘッダー ファイル\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="blocklist.h">
+      <Filter>ヘッダー ファイル\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="blockmanager.h">
+      <Filter>ヘッダー ファイル\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>ヘッダー ファイル\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="object2D.h">
+      <Filter>ヘッダー ファイル\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="object3D.h">
+      <Filter>ヘッダー ファイル\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="objectBillboard.h">
+      <Filter>ヘッダー ファイル\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="objectX.h">
+      <Filter>ヘッダー ファイル\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ヘッダー ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ヘッダー ファイル\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

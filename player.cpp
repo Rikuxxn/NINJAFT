@@ -15,6 +15,8 @@
 #include "manager.h"
 #include "enemy.h"
 #include "playerState.h"
+#include "time.h"
+#include "shadowS.h"
 
 // –¼‘O‹óŠÔstd‚ÌŽg—p
 using namespace std;

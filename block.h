@@ -19,6 +19,7 @@
 // ‘O•ûéŒ¾
 class CBlock;
 
+
 using BlockCreateFunc = std::function<CBlock* ()>;
 
 // JSON‚Ìg—p

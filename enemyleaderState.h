@@ -57,14 +57,6 @@ public:
 		velocity.setZ(move.z);
 		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
-		// 操作フラグがtrueじゃなかったら
-		if (!pEnemy->GetControlFlag())
-		{
-			// 待機状態
-			m_pMachine->ChangeState<CEnemyLeader_StandState>();
-			return;
-		}
-
 		// サブ敵が追跡状態だったら
 		if (pEnemy->IsSubAction(CEnemy::AI_CHASE) && !pEnemy->IsCooldown())
 		{
@@ -92,14 +84,8 @@ public:
 		// 待機モーションが終わっていたら
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::NEUTRAL))
 		{
-			if (!pEnemy->GetControlFlag())
-			{
-				// 待機状態
-				m_pMachine->ChangeState<CEnemyLeader_StandState>();
-				return;
-			}
-
-			if (pEnemy->IsCooldown())
+			// 操作フラグがfalse または クールダウンが設定されているときは待機状態にする
+			if (!pEnemy->GetControlFlag() || pEnemy->IsCooldown())
 			{
 				// 待機状態
 				m_pMachine->ChangeState<CEnemyLeader_StandState>();
@@ -236,20 +222,8 @@ public:
 			}
 			else
 			{
-				//// 確率で前回立てた音の場所に調査に向かう
-				//if ((rand() % 100) < 45)
-				//{
-				//	// 音の位置を設定
-				//	pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
-
-				//	// 調査状態
-				//	m_pMachine->ChangeState<CEnemyLeader_InvestigateState>();
-				//}
-				//else
-				{
-					// 次の巡回ポイントに向かう
-					pEnemy->ChooseNextPatrolPoint();
-				}
+				// 次の巡回ポイントに向かう
+				pEnemy->ChooseNextPatrolPoint();
 			}
 		}
 	}

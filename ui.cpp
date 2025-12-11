@@ -115,6 +115,9 @@ CUIBase::CUIBase(int nPriority) : CObject2D(nPriority)
     m_nIdxTexture = 0;
     m_bVisible = true;
     m_parent = nullptr;
+    m_alpha = 0.0f;
+    m_fadeSpeed = 0.0f;
+    m_fadeMode = FadeMode::None;
 }
 //=============================================================================
 // デストラクタ
@@ -170,9 +173,31 @@ void CUIBase::Uninit(void)
 //=============================================================================
 void CUIBase::Update(void)
 {
-    if (!m_bVisible)
+    // フェード制御
+    if (m_fadeMode == FadeMode::FadeIn)
     {
-        return;
+        m_alpha += m_fadeSpeed;
+
+        if (m_alpha >= 1.0f)
+        {
+            m_alpha = 1.0f;
+            m_fadeMode = FadeMode::None;
+        }
+
+        ApplyAlpha();
+    }
+    else if (m_fadeMode == FadeMode::FadeOut)
+    {
+        m_alpha -= m_fadeSpeed;
+
+        if (m_alpha <= 0.0f)
+        {
+            m_alpha = 0.0f;
+            m_fadeMode = FadeMode::None;
+            m_bVisible = false; // 完全に消えたら非表示状態に
+        }
+
+        ApplyAlpha();
     }
 
     // 2Dオブジェクトの更新処理
@@ -188,11 +213,6 @@ void CUIBase::Update(void)
 //=============================================================================
 void CUIBase::Draw(void)
 {
-    if (!m_bVisible)
-    {
-        return;
-    }
-
     // デバイスの取得
     LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -206,6 +226,53 @@ void CUIBase::Draw(void)
     {
         child->Draw();
     }
+}
+//=============================================================================
+// アルファ値適用処理
+//=============================================================================
+void CUIBase::ApplyAlpha(void)
+{
+    SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_alpha));
+}
+//=============================================================================
+// 表示・非表示処理(即時)
+//=============================================================================
+void CUIBase::Show(void)
+{
+    m_bVisible = true;
+    m_alpha = 1.0f;
+    m_fadeMode = FadeMode::None;
+    ApplyAlpha();
+}
+void CUIBase::Hide(void)
+{
+    m_bVisible = false;
+    m_alpha = 0.0f;
+    m_fadeMode = FadeMode::None;
+    ApplyAlpha();
+}
+//=============================================================================
+// 表示・非表示処理(フェード)
+//=============================================================================
+void CUIBase::FadeIn(float duration)
+{
+    m_bVisible = true;
+
+    // フェード開始時にアルファを0にする
+    m_alpha = 0.0f;
+    ApplyAlpha();
+
+    m_fadeMode = FadeMode::FadeIn;
+    m_fadeSpeed = 1.0f / duration;
+}
+void CUIBase::FadeOut(float duration)
+{
+    // フェード開始時にアルファを1にする
+    m_alpha = 1.0f;
+    ApplyAlpha();
+
+    m_fadeMode = FadeMode::FadeOut;
+    m_fadeSpeed = 1.0f / duration;
 }
 //=============================================================================
 // マウスカーソル判定
@@ -244,9 +311,6 @@ bool CUIBase::IsMouseOver(void)
 CUITexture::CUITexture()
 {
     // 値のクリア
-    m_fAlpha = 0.0f;
-    m_bUseIncrease = false;
-    m_bUseDecrease = false;
 }
 //=============================================================================
 // UIテクスチャのデストラクタ
@@ -295,39 +359,6 @@ void CUITexture::Uninit(void)
 //=============================================================================
 void CUITexture::Update(void)
 {
-    if (!IsVisible())
-    {
-        return;
-    }
-
-    // アルファ値増加を使用する場合
-    if (m_bUseIncrease)
-    {
-        m_fAlpha += 0.005f;
-
-        if (m_fAlpha >= 1.0f)
-        {
-            m_fAlpha = 1.0f;
-        }
-
-        // 徐々に透明度を上げる
-        SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
-    }
-
-    // アルファ値減少を使用する場合
-    if (m_bUseDecrease)
-    {
-        m_fAlpha -= 0.002f;
-
-        if (m_fAlpha <= 0.0f)
-        {
-            m_fAlpha = 0.0f;
-        }
-
-        // 徐々に透明度を下げる
-        SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_fAlpha));
-    }
-
     // UIベースの更新
     CUIBase::Update();
 }
@@ -336,11 +367,6 @@ void CUITexture::Update(void)
 //=============================================================================
 void CUITexture::Draw(void)
 {
-    if (!IsVisible())
-    {
-        return;
-    }
-
     // UIベースの描画
     CUIBase::Draw();
 }

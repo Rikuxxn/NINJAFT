@@ -13,6 +13,10 @@
 #include "enemyleaderState.h"
 #include "enemysubState.h"
 #include "ui.h"
+#include "shadowS.h"
+#include "game.h"
+#include "input.h"
+#include "manager.h"
 
 // –¼‘O‹óŠÔstd‚ÌŽg—p
 using namespace std;

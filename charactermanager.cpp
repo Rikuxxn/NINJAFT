@@ -9,7 +9,8 @@
 // インクルードファイル
 //*****************************************************************************
 #include "charactermanager.h"
-
+#include "manager.h"
+#include "guage.h"
 
 //=============================================================================
 // コンストラクタ
@@ -141,4 +142,22 @@ void CCharacter::UpdateRotation(float fInterpolationSpeed)
 
     // 補間して滑らかに回転
     m_rot.y += (m_rotDest.y - m_rot.y) * fInterpolationSpeed;
+}
+//=============================================================================
+// HPゲージの設定処理
+//=============================================================================
+void CCharacter::SetGuages(D3DXVECTOR3 pos, D3DXCOLOR colHP, D3DXCOLOR colBack, float fWidth, float fHeight)
+{
+    m_pFrame = CGuage::Create(CGuage::TYPE_FRAME, pos, fWidth, fHeight);// 枠
+    m_pBackGuage = CGuage::Create(CGuage::TYPE_BACKGUAGE, pos, fWidth, fHeight);// バックゲージ
+    m_pHpGuage = CGuage::Create(CGuage::TYPE_GUAGE, pos, fWidth, fHeight);// HPゲージ
+
+    // HPを個別管理するためにゲージのターゲットを設定
+    m_pFrame->SetTargetCharacter(this);
+    m_pBackGuage->SetTargetCharacter(this);
+    m_pHpGuage->SetTargetCharacter(this);
+
+    // 色の設定
+    m_pHpGuage->SetCol(colHP);
+    m_pBackGuage->SetCol(colBack);
 }

@@ -10,17 +10,16 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include "model.h"
-#include "motion.h"
-#include "debugproc3D.h"
-#include "block.h"
-#include "shadowS.h"
-#include "effect.h"
 #include "state.h"
 #include "charactermanager.h"
 #include "weaponcollider.h"
-#include "game.h"
 
+// 前方宣言
+class CBlock;
+class CDebugProc3D;
+class CShadowS;
+class CMotion;
+class CModel;
 
 // 入力データ構造体
 struct InputData

@@ -16,6 +16,8 @@
 #include "algorithm"
 #include "meshcylinder.h"
 #include "collisionUtils.h"
+#include "motion.h"
+#include "time.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -293,8 +295,8 @@ HRESULT CBuriedTreasureBlock::Init(void)
 	m_pFrame->SetActive(false);
 	m_pGuage->SetActive(false);
 
-	m_guageRate = 100.0f;
-	m_guageDecreaseSpeed = 0.2f; // 1フレームで減る割合
+	m_guageRate = GUAGE_RATE;
+	m_guageDecreaseSpeed = GUAGE_DECREASE_SPEED; // 1フレームで減る割合
 
 	return S_OK;
 }

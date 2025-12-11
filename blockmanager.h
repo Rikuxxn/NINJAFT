@@ -11,7 +11,6 @@
 // インクルードファイル
 //*****************************************************************************
 #include "block.h"
-#include "debugproc3D.h"
 #include "cassert"
 
 //*****************************************************************************
@@ -34,29 +33,29 @@ public:
     void LoadFromJson(const char* filename);
     void LoadConfig(const std::string& filename);
     void GenerateRandomMap(int seed);
-    void GenerateRiver(int GRID_X, int GRID_Z, float AREA_SIZE,
+    void GenerateRiver(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, std::vector<D3DXVECTOR3>& outWaterPositions);
-    void GenerateClusters(int GRID_X, int GRID_Z, float AREA_SIZE,
+    void GenerateClusters(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
         std::vector<D3DXVECTOR3>& torchPositions);
     void CreateClusterElement(const D3DXVECTOR3& pos, float AREA_SIZE,
         int GRID_X, int GRID_Z, float offsetX, float offsetZ,
         const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& torchPositions,
         int& torchRemaining);
-    void EnsureTorchCount(int GRID_X, int GRID_Z, float AREA_SIZE,
+    void EnsureTorchCount(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
         std::vector<D3DXVECTOR3>& torchPositions);
-    void EnsureBuriedTreasureCount(int GRID_X, int GRID_Z, float AREA_SIZE,
+    void EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& torchPositions,
         const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& treasurePositions);
-    void CreateGrassCluster(const D3DXVECTOR3& centerPos, float AREA_SIZE,
-        int GRID_X, int GRID_Z, float offsetX, float offsetZ,
+    void CreateGrassCluster(const D3DXVECTOR3& centerPos, float areaSize,
+        int gridX, int gridZ, float offsetX, float offsetZ,
         const std::vector<D3DXVECTOR3>& waterPositions);
-    bool IsCollidingWithWater(const D3DXVECTOR3& pos, float AREA_SIZE, const std::vector<D3DXVECTOR3>& waterPositions);
-    bool IsCollidingWithTorch(const D3DXVECTOR3& pos, float AREA_SIZE, const std::vector<D3DXVECTOR3>& torchPositions);
+    bool IsCollidingWithWater(const D3DXVECTOR3& pos, float areaSize, const std::vector<D3DXVECTOR3>& waterPositions);
+    bool IsCollidingWithTorch(const D3DXVECTOR3& pos, float areaSize, const std::vector<D3DXVECTOR3>& torchPositions);
     void ApplyRandomGrassTransform(CBlock* block);
-    void FillFloor(int GRID_X, int GRID_Z, float AREA_SIZE);
-    void GenerateOuterGrassBelt(int GRID_X, int GRID_Z, float AREA_SIZE,
+    void FillFloor(int gridX, int gridZ, float areaSize);
+    void GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions);
     void GeneratePatrolPoints(
         const D3DXVECTOR3& origin,   // 中心点
@@ -136,6 +135,15 @@ public:
     }
 
 private:
+    static constexpr int MAX_ATTEMPTS = 50;     // 試行回数
+    static constexpr int MAX_TORCH = 3;         // 灯籠の設置数
+    static constexpr int MAX_TREASURE = 12;     // 埋蔵金の設置数
+
+    // マップ生成パラメータ
+    static constexpr int GRID_X = 10;           // Xサイズ
+    static constexpr int GRID_Z = 10;           // Zサイズ
+    static constexpr float AREA_SIZE = 80.0f;   // 1エリアの広さ
+
     static std::vector<CBlock*> m_blocks;   // ブロック情報
     static std::unordered_map<CBlock::TYPE, std::vector<CBlock*>> m_blocksByType;
     static CBlock* m_draggingBlock;         // ドラッグ中のブロック情報

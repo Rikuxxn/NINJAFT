@@ -12,10 +12,7 @@
 //*****************************************************************************
 #include "model.h"
 #include "motion.h"
-#include "shadowS.h"
-#include "effect.h"
 #include "state.h"
-#include "manager.h"
 #include "debugproc3D.h"
 #include "charactermanager.h"
 #include "weaponcollider.h"

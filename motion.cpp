@@ -423,6 +423,36 @@ void CMotion::Update(CModel** pModel, int& nNumModel)
 	}
 }
 //=============================================================================
+// 補間関数(位置)
+//=============================================================================
+inline D3DXVECTOR3 CMotion::LerpPos(const KEY& a, const KEY& b, float t)
+{
+	return D3DXVECTOR3(
+		a.fPosX + (b.fPosX - a.fPosX) * t,
+		a.fPosY + (b.fPosY - a.fPosY) * t,
+		a.fPosZ + (b.fPosZ - a.fPosZ) * t
+	);
+}
+//=============================================================================
+// 補間関数(向き)
+//=============================================================================
+inline D3DXVECTOR3 CMotion::LerpRot(const KEY& a, const KEY& b, float t)
+{
+	auto delta = [](float from, float to)
+	{
+		float d = to - from;
+		if (d > D3DX_PI) d -= D3DX_PI * 2.0f;
+		else if (d < -D3DX_PI) d += D3DX_PI * 2.0f;
+		return d;
+	};
+
+	return D3DXVECTOR3(
+		a.fRotX + delta(a.fRotX, b.fRotX) * t,
+		a.fRotY + delta(a.fRotY, b.fRotY) * t,
+		a.fRotZ + delta(a.fRotZ, b.fRotZ) * t
+	);
+}
+//=============================================================================
 // モーションブレンド開始処理
 //=============================================================================
 void CMotion::StartBlendMotion(int  motionTypeBlend, int nFrameBlend)

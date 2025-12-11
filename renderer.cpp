@@ -17,6 +17,8 @@
 #include "guiInfo.h"
 #include "title.h"
 #include "ui.h"
+#include "debugproc.h"
+#include "debugproc3D.h"
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾

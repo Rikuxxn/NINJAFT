@@ -12,6 +12,8 @@
 #include "player.h"
 #include "enemy.h"
 #include "meshcylinder.h"
+#include "time.h"
+#include "blockmanager.h"
 
 //=============================================================================
 // リーダー敵AIコンストラクタ
@@ -85,14 +87,15 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     
     // 音を立てた または 視界に入った回数に応じて命令(サブ敵をそこに向かわせる)確率を上げる
     float prob = CalcSoundProbability(m_log.makeSoundCount);
-    float prob_insight = CalcSoundProbability(m_log.insightCount);
 
     float threshold = 0.9f;
-    float threshold_insight = 0.1f;
+
+    // プレイヤーの条件
+    bool playerCondition = !pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
+        !pPlayer->GetMotion()->IsCurrentMotion(CPlayer::DAMAGE);
 
     // 特定のオブジェクトに接触かつ忍び足じゃなかったら
-    if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
-        (playerInGrass || playerInWater || playerInTorch))
+    if (playerCondition && (playerInGrass || playerInWater || playerInTorch))
     {
         m_soundTimer++;
 

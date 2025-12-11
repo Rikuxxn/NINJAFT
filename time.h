@@ -23,7 +23,7 @@ class CColon;
 class CTime : public CObject
 {
 public:
-	CTime(int nPriority = 7);
+	CTime(int nPriority = 6);
 	~CTime();
 
 	static CTime* Create(int minutes, int seconds, float baseX, float baseY, float digitWidth, float digitHeight);
@@ -66,7 +66,7 @@ private:
 class CColon : public CObject
 {
 public:
-	CColon(int nPriority = 7);
+	CColon(int nPriority = 6);
 	~CColon();
 
 	static CColon* Create(D3DXVECTOR3 pos, float fWidth, float fHeight);

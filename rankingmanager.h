@@ -21,8 +21,12 @@ private:
     // ランキングデータ構造体
     struct RankData
     {
+        // クリアタイム
         int minutes = 0;
         int seconds = 0;
+
+        // アイテム個数
+        int items = 0;
     };
 
     static const int MAX_RANK = 5;

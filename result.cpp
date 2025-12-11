@@ -88,13 +88,13 @@ HRESULT CResult::Init(void)
 	int clearSeconds = totalClear % 60;
 
 	// タイムの生成
-	m_pTime = CResultTime::Create(clearMinutes, clearSeconds, 1100.0f, 695.0f, 72.0f, 88.0f); 
-
-	// 音発生数の表示
-	CResultSoundCount::Create(1100.0f, 395.0f, 50.0f, 60.0f);
+	m_pTime = CResultTime::Create(clearMinutes, clearSeconds, 300.0f, 825.0f, 72.0f, 88.0f); 
 
 	// 宝獲得数の表示
-	CResultTreasureCount::Create(1100.0f, 295.0f, 50.0f, 60.0f);
+	CResultTreasureCount::Create(250.0f, 225.0f, 80.0f, 95.0f);
+
+	// 音発生数の表示
+	CResultSoundCount::Create(250.0f, 525.0f, 80.0f, 95.0f);
 
 	// 音発生数の設定
 	CResultSoundCount::SetSoundCount(m_soundCount);

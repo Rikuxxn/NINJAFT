@@ -11,8 +11,9 @@
 // インクルードファイル
 //*****************************************************************************
 #include "object.h"
-#include "guage.h"
-#include "manager.h"
+
+// 前方宣言
+class CGuage;
 
 // 名前空間stdの使用
 using namespace std;
@@ -44,21 +45,7 @@ public:
     void UpdateRotation(float fInterpolationSpeed);
 
     // HPゲージの設定処理
-    void SetGuages(D3DXVECTOR3 pos, D3DXCOLOR colHP, D3DXCOLOR colBack, float fWidth, float fHeight)
-    {
-        m_pFrame = CGuage::Create(CGuage::TYPE_FRAME, pos, fWidth, fHeight);// 枠
-        m_pBackGuage = CGuage::Create(CGuage::TYPE_BACKGUAGE, pos, fWidth, fHeight);// バックゲージ
-        m_pHpGuage = CGuage::Create(CGuage::TYPE_GUAGE, pos, fWidth, fHeight);// HPゲージ
-
-        // HPを個別管理するためにゲージのターゲットを設定
-        m_pFrame->SetTargetCharacter(this);
-        m_pBackGuage->SetTargetCharacter(this);
-        m_pHpGuage->SetTargetCharacter(this);
-
-        // 色の設定
-        m_pHpGuage->SetCol(colHP);
-        m_pBackGuage->SetCol(colBack);
-    }
+    void SetGuages(D3DXVECTOR3 pos, D3DXCOLOR colHP, D3DXCOLOR colBack, float fWidth, float fHeight);
 
     // ダメージ処理
     virtual void Damage(float fDamage)

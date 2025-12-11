@@ -53,6 +53,13 @@ public:
 	CUIBase(int nPriority = 6);
 	virtual ~CUIBase();
 
+    enum class FadeMode
+    {
+        None,
+        FadeIn,
+        FadeOut
+    };
+
     static CUIBase* Create(float x, float y, D3DXCOLOR col, float width, float height);
 
     virtual HRESULT Init(void);
@@ -62,34 +69,32 @@ public:
 
     void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
 
-    // 表示・非表示
-    void SetVisible(bool flag)
-    { 
-        m_bVisible = flag; 
-
-        if (m_bVisible)
-        {
-            SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-        }
-        else
-        {
-            SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-        }
-    }
-
+    // 表示・非表示(即時)
+    void Show(void);
+    void Hide(void);
     bool IsVisible(void) const { return m_bVisible; }
+
+    // 表示・非表示(フェード)
+    void FadeIn(float duration);
+    void FadeOut(float duration);
 
     bool IsMouseOver(void);
 
     // 親子 UI
     void AddChild(CUIBase* child);
 
+protected:
+    void ApplyAlpha(void); // alphaをSetColへ反映
+
 private:
-    int m_nIdxTexture;		// テクスチャインデックス
-    char m_szPath[MAX_PATH];// ファイルパス
+    int m_nIdxTexture;		            // テクスチャインデックス
+    char m_szPath[MAX_PATH];            // ファイルパス
     bool m_bVisible;
     CUIBase* m_parent;
     std::vector<CUIBase*> m_children;
+    float m_alpha;                      // 現在の透明度
+    float m_fadeSpeed;                  // 更新で加算する値
+    FadeMode m_fadeMode;
 };
 
 //*****************************************************************************
@@ -108,16 +113,7 @@ public:
     virtual void Update(void) override;
     virtual void Draw(void) override;
 
-    void SetUseAlphaIncreaseFlag(bool flag) { m_bUseIncrease = flag; }
-    void SetUseAlphaDecreaseFlag(bool flag) { m_bUseDecrease = flag; }
-
-    bool UseAlphaIncrease(void) { return m_bUseIncrease; }
-    bool UseAlphaDecrease(void) { return m_bUseDecrease; }
-
 private:
-    float m_fAlpha;         // アルファ値
-    bool m_bUseIncrease;    // アルファ値増加を使用するか
-    bool m_bUseDecrease;    // アルファ値減少を使用するか 
 };
 
 //*****************************************************************************
@@ -147,17 +143,6 @@ private:
     int             m_fontSize;
     LPD3DXFONT      m_pFont;
     RECT            m_drawRect;
-};
-
-//*****************************************************************************
-// UIイン・アウトクラス
-//*****************************************************************************
-class CUIInOut : public CUIBase
-{
-public:
-
-private:
-
 };
 
 #endif

@@ -11,19 +11,18 @@
 // インクルードファイル
 //*****************************************************************************
 #include "scene.h"
-#include "imguimaneger.h"
-#include "grid.h"
-#include "light.h"
 #include "blockmanager.h"
 #include "pausemanager.h"
 #include "objectBillboard.h"
 #include "block.h"
 #include "rankingmanager.h"
-#include "time.h"
 
 // --- 前方宣言 ---
 class CPlayer;
 class CEnemy;
+class CTime;
+class CGrid;
+class CLight;
 
 //*****************************************************************************
 // ゲームクラス

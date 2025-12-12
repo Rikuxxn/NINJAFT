@@ -226,7 +226,7 @@ public:
 	}
 
 private:
-	static constexpr float TRIGGER_DISTACE = 80.0f;
+	static constexpr float TRIGGER_DISTACE = 100.0f;
 
 	bool m_isEscape;	// íEèoÇµÇΩÇ©Ç«Ç§Ç©
 };

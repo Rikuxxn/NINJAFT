@@ -524,6 +524,7 @@ void CExitBlock::Update(void)
 		D3DXVECTOR3 disPos = playerPos - GetPos();
 		float distance = D3DXVec3Length(&disPos);
 
+		// ”ÍˆÍ“à‚¾‚Á‚½‚ç
 		if (distance < TRIGGER_DISTACE)
 		{
 			m_isEscape = true;

@@ -64,7 +64,7 @@
 
 #define VEC4_WHITE (D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f))
 #define VEC4_BLACK (D3DXVECTOR4(0.0f, 0.0f, 0.0f, 1.0f))
-#define VEC4_RED (D3DXVECTOR4(1.0f, 0.0f, 1.0f, 1.0f))
+#define VEC4_RED (D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f))
 #define VEC4_YELLOW (D3DXVECTOR4(1.0f, 1.0f, 0.0f, 1.0f))
 
 //*****************************************************************************

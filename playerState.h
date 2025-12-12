@@ -58,13 +58,6 @@ public:
 
 		// 移動量を設定
 		pPlayer->SetMove(move);
-
-		// リジッドボディに反映
-		btVector3 velocity = pPlayer->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setY(-50.0f);
-		velocity.setZ(move.z);
-		pPlayer->GetRigidBody()->setLinearVelocity(velocity);
 	}
 
 	void OnExit(CPlayer* /*pPlayer*/)override
@@ -127,12 +120,6 @@ public:
 
 		// 補間後の速度をプレイヤーにセット
 		pPlayer->SetMove(currentMove);
-
-		// 物理エンジンにセット
-		btVector3 velocity = pPlayer->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pPlayer->GetRigidBody()->setLinearVelocity(velocity);
 
 		CModelEffect* pModelEffect = nullptr;
 
@@ -242,12 +229,6 @@ public:
 
 		// 補間後の速度をプレイヤーにセット
 		pPlayer->SetMove(currentMove);
-
-		// 物理エンジンにセット
-		btVector3 velocity = pPlayer->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pPlayer->GetRigidBody()->setLinearVelocity(velocity);
 
 		// 移動入力があれば移動ステートに移行
 		if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && !input.stealth)

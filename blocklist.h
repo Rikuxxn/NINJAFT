@@ -38,7 +38,8 @@ public:
 
 private:
 	static constexpr float MASS = 1.0f;
-	static constexpr float RESPAWN_HEIGHT = -810.0f;
+	static constexpr float RESPAWN_HEIGHT = -800.0f;
+
 	D3DXVECTOR3 m_ResPos;	// リスポーン位置
 };
 
@@ -91,6 +92,9 @@ public:
 	bool IsHit(void) { return m_isHit; }
 
 private:
+	static constexpr int SPAWN_TIME = 7;		// 生成間隔(フレーム)
+	static constexpr float SPAWN_RADIUS = 10.0f;// 生成半径
+
 	int m_counter;	// 生成カウンター
 	bool m_isHit;	// 当たっているか
 };
@@ -128,7 +132,7 @@ private:
 	static constexpr int SPAWN_TIME = 180;				// 生成までの時間
 	static constexpr int GET_THRESHOLD = 2;				// 取得数閾値
 	static constexpr float GUAGE_RATE = 100.0f;			// ゲージの最大量
-	static constexpr float GUAGE_DECREASE_SPEED = 0.2f;	// ゲージの減る量
+	static constexpr float GUAGE_DECREASE_SPEED = 0.23f;// ゲージの減る量
 
 	int m_effectTimer;									// エフェクト生成タイマー
 	C3DGuage* m_pFrame;									// 枠
@@ -222,8 +226,7 @@ public:
 	}
 
 private:
-	static constexpr float TRIGGER_DISTACE = 100.0f;
-	static constexpr int GET_THRESHOLD = 2;
+	static constexpr float TRIGGER_DISTACE = 80.0f;
 
 	bool m_isEscape;	// 脱出したかどうか
 };

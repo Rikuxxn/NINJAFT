@@ -36,22 +36,22 @@ public:
 		ACTION_NONE,
 
 		// 共通
-		AI_NEUTRAL,			// 待機
-		AI_MOVE,			// 移動
-		AI_INVESTIGATE,		// 調査
-		AI_CAUTION,			// 警戒
-		AI_CHASE,			// プレイヤー追跡
+		AI_NEUTRAL,				// 待機
+		AI_MOVE,				// 移動
+		AI_SOUND_INVESTIGATE,	// 音源の調査
+		AI_CAUTION,				// 警戒
+		AI_CHASE,				// プレイヤー追跡
 
 		// リーダー
-		AI_ATTACK_01,		// 攻撃(スライド)
-		AI_CLOSE_ATTACK_01,	// 近距離攻撃1
-		AI_CLOSE_ATTACK_02,	// 近距離攻撃2
-		AI_DOUBT,			// 疑い
-		AI_ORDER,			// 命令
-		AI_DISCOVER,		// 発見
+		AI_TREASURE_INVESTIGATE,// 埋蔵金の調査
+		AI_CLOSE_ATTACK_01,		// 近距離攻撃1
+		AI_CLOSE_ATTACK_02,		// 近距離攻撃2
+		AI_DOUBT,				// 疑い
+		AI_ORDER,				// 命令
+		AI_DISCOVER,			// 発見
 
 		// サブ
-		AI_FOLLOW,			// リーダー追従
+		AI_FOLLOW,				// リーダー追従
 
 		AI_MAX
 	}EEnemyAction;
@@ -163,11 +163,49 @@ public:
 		m_hasHeardSound = false;   // 音源処理終了
 	}
 
+	// 一番近い埋蔵金ポイントの設定処理
+	void SetNearestTreasurePosition(void)
+	{
+		auto& list = CGame::GetBlockManager()->GetTreasurePositions();
+
+		// リストが空になったら
+		if (list.empty()) 
+		{
+			return;
+		}
+
+		float minDist = FLT_MAX;
+		int closestIndex = 0;
+
+		for (size_t i = 0; i < list.size(); ++i)
+		{
+			D3DXVECTOR3 dis = list[i] - GetPos();
+
+			// 一番近い埋蔵金ポイントに設定する
+			float dist = D3DXVec3Length(&dis);
+			if (dist < minDist)
+			{
+				minDist = dist;
+				closestIndex = (int)i;
+			}
+		}
+
+		m_nearestTreasurePosition = list[closestIndex];
+	}
+
 	// 巡回ポイントに到達したか
 	bool HasReachedTarget(void) // 到達判定
 	{
 		D3DXVECTOR3 pos = GetPos();
 		D3DXVECTOR3 dis = m_currentPatrolTarget - pos;
+		return D3DXVec3Length(&dis) < 20.0f; // 到達距離
+	}
+
+	// 埋蔵金の位置に到達したか
+	bool HasReachedTreasure(void)
+	{
+		D3DXVECTOR3 pos = GetPos();
+		D3DXVECTOR3 dis = m_nearestTreasurePosition - pos;
 		return D3DXVec3Length(&dis) < 20.0f; // 到達距離
 	}
 
@@ -249,6 +287,7 @@ public:
 	D3DXVECTOR3 GetForward(void);
 	EEnemyAction GetRequestedAction(void) const { return m_requestedAction; }
 	D3DXVECTOR3 GetPatrolTarget(void) const { return m_currentPatrolTarget; }
+	D3DXVECTOR3 GetNearestTreasurePos(void) const { return m_nearestTreasurePosition; }
 	D3DXVECTOR3 GetLastHeardSoundPos(void) const { return m_lastHeardSoundPos; }
 	bool HasHeardSound(void) { return m_hasHeardSound; }
 	bool IsInvestigating(void) { return m_returnToPatrol; }
@@ -270,11 +309,13 @@ private:
 	CDebugProc3D* m_pDebug3D;				// 3Dデバッグ表示へのポインタ
 	int m_nNumModel;						// モデル(パーツ)の総数
 	CModel* m_pSwordModel;					// 武器モデルのポインタ
-	float m_sightRange;						//視界距離
-	float m_sightAngle;						//視界範囲
-	EEnemyAction m_requestedAction;
+	float m_sightRange;						// 視界距離
+	float m_sightAngle;						// 視界範囲
+	EEnemyAction m_requestedAction;			// AIのリクエスト
 	std::vector<D3DXVECTOR3> m_patrolPoints;// 巡回ポイント
+
 	D3DXVECTOR3 m_currentPatrolTarget;		// 現在の巡回ポイント
+	D3DXVECTOR3 m_nearestTreasurePosition;	// 一番近い埋蔵金ポイント
 	D3DXVECTOR3 m_lastHeardSoundPos;		// 最後に聞いた音の座標
 	bool m_hasHeardSound;					// 音を聞いたかどうか
 	bool m_returnToPatrol;					// 最寄りの巡回ポイントに戻るフラグ
@@ -303,17 +344,17 @@ public:
 	// リーダー敵モーションの種類
 	typedef enum
 	{
-		NEUTRAL = 0,		// 待機
-		MOVE,				// 移動
-		ATTACK_01,			// 攻撃(スライド)
-		CLOSE_ATTACK_01,	// 近距離攻撃1
-		CLOSE_ATTACK_02,	// 近距離攻撃2
-		DOUBT,				// 疑い
-		INVESTIGATE,		// 調査
-		CAUTION,			// 警戒
-		ORDER,				// 命令
-		CHASE,				// 追跡
-		DISCOVER,			// 発見
+		NEUTRAL = 0,			// 待機
+		MOVE,					// 移動
+		CLOSE_ATTACK_01,		// 近距離攻撃1
+		CLOSE_ATTACK_02,		// 近距離攻撃2
+		DOUBT,					// 疑い
+		SOUND_INVESTIGATE,		// 音源の調査
+		TREASURE_INVESTIGATE,	// 埋蔵金の調査
+		CAUTION,				// 警戒
+		ORDER,					// 命令
+		CHASE,					// 追跡
+		DISCOVER,				// 発見
 		MAX
 	}ENEMY_MOTION;
 

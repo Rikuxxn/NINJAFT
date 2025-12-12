@@ -27,6 +27,12 @@ public:
 
 	virtual void Update(class CEnemy* enemy, CPlayer* player) = 0;
 	virtual void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) = 0;
+	virtual float CalcSoundProbability(int targetCount)// 確率取得処理(0.0～1.0)
+	{
+		float x = (float)targetCount;
+
+		return 1.0f / (1.0f + expf(-0.5f * (x - 5.0f)));
+	}
 
 };
 
@@ -48,9 +54,12 @@ public:
 
 	void Update(CEnemy* pEnemy, CPlayer* pPlayer) override;
 	void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) override;
-	float CalcSoundProbability(int targetCount);
 
 private:
+	static constexpr float PROBABILITY_THRESHOLD = 0.9f;	// 音の閾値
+	static constexpr float TRIGGER_DISTANCE = 50.0f;
+	static constexpr int LOG_TIME = 30;
+
 	PlayerBehaviorLog m_log;
 	int m_logTimer;				// 記録タイマー
 	bool m_prevInSight;			// 直前に視界に入ったか
@@ -76,9 +85,13 @@ public:
 
 	void Update(CEnemy* pEnemy, CPlayer* pPlayer) override;
 	void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) override;
-	float CalcSoundProbability(void);
 
 private:
+	static constexpr float PROBABILITY_THRESHOLD = 0.9f;	// 音の閾値
+	static constexpr float DISTANCE_NORMAL = 70.0f;
+	static constexpr float DISTANCE_STEALTH = 30.0f;
+	static constexpr int LOG_TIME = 30;
+
 	PlayerBehaviorLog m_log;
 	int m_logTimer;				// 記録タイマー
 	bool m_prevInSight;			// 直前に視界に入ったか

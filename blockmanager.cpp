@@ -257,6 +257,14 @@ void CBlockManager::GenerateThumbnailsForResources(void)
 	}
 }
 //=============================================================================
+// サムネイルテクスチャの取得
+//=============================================================================
+IDirect3DTexture9* CBlockManager::GetThumbnailTexture(size_t index)
+{
+	assert(index < m_thumbnailTextures.size());
+	return m_thumbnailTextures[index];
+}
+//=============================================================================
 // サムネイルの破棄
 //=============================================================================
 void CBlockManager::ReleaseThumbnailRenderTarget(void)
@@ -941,8 +949,7 @@ void CBlockManager::GenerateRandomMap(int seed)
 	EnsureTorchCount(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, waterPositions, torchPositions);
 
 	// 埋蔵金補充
-	std::vector<D3DXVECTOR3> treasurePositions;
-	EnsureBuriedTreasureCount(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, torchPositions, waterPositions, treasurePositions);
+	EnsureBuriedTreasureCount(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, torchPositions, waterPositions, m_treasurePositions);
 
 	// 外周を草で囲む
 	GenerateOuterGrassBelt(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, waterPositions);
@@ -1516,6 +1523,25 @@ void CBlockManager::GeneratePatrolPoints(
 	}
 }
 //=============================================================================
+// 埋蔵金が取得されたときにその場所を削除する処理
+//=============================================================================
+void CBlockManager::OnTreasureCollected(const D3DXVECTOR3& pos)
+{
+	for (auto it = m_treasurePositions.begin(); it != m_treasurePositions.end(); ++it)
+	{
+		//float dx = it->x - pos.x;
+		//float dz = it->z - pos.z;
+
+		// 位置が一致しているか判定
+		if (it->x == pos.x && it->z == pos.z)
+		{
+			// 位置リストからこの位置を削除する
+			m_treasurePositions.erase(it);
+			break;
+		}
+	}
+}
+//=============================================================================
 // 水との重なり判定処理
 //=============================================================================
 bool CBlockManager::IsCollidingWithWater(const D3DXVECTOR3& pos, float areaSize, const std::vector<D3DXVECTOR3>& waterPositions)
@@ -1729,5 +1755,5 @@ bool CBlockManager::IsPlayerInWater(void)
 		}
 	}
 
-	return false; // どの灯籠ブロックにも入っていない
+	return false; // どの水ブロックにも入っていない
 }

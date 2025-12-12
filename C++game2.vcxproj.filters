@@ -55,12 +55,30 @@
     <Filter Include="ヘッダー ファイル\Character">
       <UniqueIdentifier>{38a3a934-6406-445e-8ecf-244be329bfa2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\State">
+      <UniqueIdentifier>{cb892091-a683-4dbc-9c09-2205b4a5b9c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effects">
+      <UniqueIdentifier>{c8036f69-1dc0-471e-9a24-996e54754a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects">
+      <UniqueIdentifier>{ba8446e5-130b-4f44-8921-a7fca87aa7de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Mesh">
+      <UniqueIdentifier>{5eaae444-18d7-4d13-a483-00671177e91f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Mesh">
+      <UniqueIdentifier>{d8d52963-bb14-4763-8b84-c1224dd44845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ResultUI">
+      <UniqueIdentifier>{4591121a-340f-40fc-a4bc-f5d2850999c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ResultUI">
+      <UniqueIdentifier>{1785494f-cf56-4645-81a8-d06be5c87cc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="effect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="fade.cpp">
@@ -147,16 +165,10 @@
     <ClCompile Include="imguimaneger.cpp">
       <Filter>ソース ファイル\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="meshcylinder.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="collisionUtils.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="guage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="charactermanager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="weaponcollider.cpp">
@@ -177,19 +189,7 @@
     <ClCompile Include="ui.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="meshdome.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="resulttime.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="background.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="resultsoundcount.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="resulttreasurecount.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="rank.cpp">
@@ -261,15 +261,36 @@
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\Character</Filter>
     </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="SEpopupeffect.cpp">
+      <Filter>ソース ファイル\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="meshcylinder.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="meshdome.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="charactermanager.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="resultsoundcount.cpp">
+      <Filter>ソース ファイル\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="resulttime.cpp">
+      <Filter>ソース ファイル\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="resulttreasurecount.cpp">
+      <Filter>ソース ファイル\ResultUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="easing.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="effect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="fade.h">
@@ -329,9 +350,6 @@
     <ClInclude Include="sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="state.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -365,16 +383,10 @@
     <ClInclude Include="grass.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="meshcylinder.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="collisionUtils.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="guage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="charactermanager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="weaponcollider.h">
@@ -383,16 +395,10 @@
     <ClInclude Include="enemyAI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="playerState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="itemselect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="gameover.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="dummyPlayer.h">
@@ -401,28 +407,10 @@
     <ClInclude Include="ui.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="meshdome.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="resulttime.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyleaderState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="enemysubState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="background.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="resultsoundcount.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="resulttreasurecount.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="rank.h">
@@ -490,6 +478,45 @@
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>ヘッダー ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="gameover.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyleaderState.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="enemysubState.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="playerState.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="state.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="SEpopupeffect.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="meshcylinder.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="meshdome.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="charactermanager.h">
+      <Filter>ヘッダー ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="resultsoundcount.h">
+      <Filter>ヘッダー ファイル\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="resulttime.h">
+      <Filter>ヘッダー ファイル\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="resulttreasurecount.h">
+      <Filter>ヘッダー ファイル\ResultUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

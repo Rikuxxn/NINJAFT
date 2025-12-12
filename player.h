@@ -96,6 +96,7 @@ private:
 	static constexpr int MAX_PARTS			= 32;		// 最大パーツ数
 	static constexpr float CAPSULE_RADIUS	= 10.5f;	// カプセルコライダーの半径
 	static constexpr float CAPSULE_HEIGHT	= 45.5f;	// カプセルコライダーの高さ
+	static constexpr float RESPAWN_HEIGHT	= -280.0f;	// リスポーンする高さ
 
 	D3DXMATRIX m_mtxWorld;				// ワールドマトリックス
 	CModel* m_apModel[MAX_PARTS];		// モデル(パーツ)へのポインタ

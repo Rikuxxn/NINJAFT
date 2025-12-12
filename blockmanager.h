@@ -63,6 +63,7 @@ public:
         const std::vector<D3DXVECTOR3>& obstaclePositions, // 灯籠や障害物
         float safeDistance,          // 障害物からの最小距離
         std::vector<D3DXVECTOR3>& outPatrolPoints);
+    void OnTreasureCollected(const D3DXVECTOR3& pos);
 
     void UpdateLight(void) 
     {
@@ -79,11 +80,7 @@ public:
     HRESULT InitThumbnailRenderTarget(LPDIRECT3DDEVICE9 device);
     IDirect3DTexture9* RenderThumbnail(CBlock* pBlock);
     void GenerateThumbnailsForResources(void);
-    IDirect3DTexture9* GetThumbnailTexture(size_t index)
-    {
-        assert(index < m_thumbnailTextures.size());
-        return m_thumbnailTextures[index];
-    }
+    IDirect3DTexture9* GetThumbnailTexture(size_t index);
 
     //*****************************************************************************
     // ImGuiでの操作関数
@@ -105,6 +102,7 @@ public:
     bool IsPlayerInTorch(void);
     bool IsPlayerInWater(void);
     const std::vector<D3DXVECTOR3>& GetPatrolPoints(void) const { return m_patrolPoints; }
+    const std::vector<D3DXVECTOR3>& GetTreasurePositions(void) const { return m_treasurePositions; }
 
     // 特定のタイプのブロックを取得
     static const std::vector<CBlock*>& GetBlocksByType(CBlock::TYPE type)
@@ -146,16 +144,17 @@ private:
 
     static std::vector<CBlock*> m_blocks;   // ブロック情報
     static std::unordered_map<CBlock::TYPE, std::vector<CBlock*>> m_blocksByType;
-    static CBlock* m_draggingBlock;         // ドラッグ中のブロック情報
-    static int m_selectedIdx;               // 選択中のインデックス
-    int m_prevSelectedIdx;                  // 前回の選択中のインデックス
-    bool m_hasConsumedPayload ;             // ペイロード生成済みフラグ
-    CDebugProc3D* m_pDebug3D;			    // 3Dデバッグ表示へのポインタ
+    static CBlock* m_draggingBlock;                                     // ドラッグ中のブロック情報
+    static int m_selectedIdx;                                           // 選択中のインデックス
+    int m_prevSelectedIdx;                                              // 前回の選択中のインデックス
+    bool m_hasConsumedPayload ;                                         // ペイロード生成済みフラグ
+    CDebugProc3D* m_pDebug3D;			                                // 3Dデバッグ表示へのポインタ
     bool m_autoUpdateColliderSize;
     static std::unordered_map<CBlock::TYPE, std::string> s_FilePathMap;
-    static CBlock* m_selectedBlock;         // 選択中のブロック
-    bool m_isDragging;                      // ドラッグ中かどうか
-    std::vector<D3DXVECTOR3> m_patrolPoints;// 巡回ポイント
+    static CBlock* m_selectedBlock;                                     // 選択中のブロック
+    bool m_isDragging;                                                  // ドラッグ中かどうか
+    std::vector<D3DXVECTOR3> m_patrolPoints;                            // 巡回ポイント
+    std::vector<D3DXVECTOR3> m_treasurePositions;                       // 埋蔵金の設置ポイント
 
     LPDIRECT3DTEXTURE9 m_pThumbnailRT;
     LPDIRECT3DSURFACE9  m_pThumbnailZ;

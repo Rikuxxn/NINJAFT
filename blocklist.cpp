@@ -70,7 +70,7 @@ void CWoodBoxBlock::Respawn(D3DXVECTOR3 resPos)
 
 	// リスポーン位置に設定
 	SetPos(resPos);
-	SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetRot(INIT_VEC3);
 
 	// コライダーの更新
 	UpdateCollider();
@@ -102,6 +102,7 @@ void CTorchBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
+	// プレイヤーの取得
 	CPlayer* pPlayer = CGame::GetPlayer();
 
 	if (!pPlayer)
@@ -224,10 +225,10 @@ void CWaterBlock::Update(void)
 		D3DXVECTOR3 pos = pPlayer->GetPos();
 		pos.y += 10.0f;
 
-		if (m_counter >= 7)
+		if (m_counter >= SPAWN_TIME)
 		{
 			// 半径を決めてランダム位置にスポーン
-			float radiusMax = 10.0f;
+			float radiusMax = SPAWN_RADIUS;
 
 			// 0.0～1.0 の乱数
 			float r = (rand() % 10000) / 10000.0f;
@@ -235,6 +236,7 @@ void CWaterBlock::Update(void)
 			// 平方根を取って均一に分布させる
 			float radius = sqrtf(r) * radiusMax;
 
+			// 角度
 			float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
 
 			// 位置
@@ -266,11 +268,11 @@ int CBuriedTreasureBlock::m_getCount = 0;
 CBuriedTreasureBlock::CBuriedTreasureBlock()
 {
 	// 値のクリア
-	m_effectTimer = 0;
-	m_guageRate;		// ゲージの最大量
-	m_guageDecreaseSpeed;// ゲージの減る量
-	m_bUiActive = false;
-	m_getCount = 0;
+	m_effectTimer = 0;		// エフェクト生成タイマー
+	m_guageRate;			// ゲージの最大量
+	m_guageDecreaseSpeed;	// ゲージの減る量
+	m_bUiActive = false;	// UIが表示されているか
+	m_getCount = 0;			// 取得数
 }
 //=============================================================================
 // 埋蔵金ブロックのデストラクタ
@@ -355,7 +357,7 @@ void CBuriedTreasureBlock::Update(void)
 		bool isDamage = pPlayer->GetMotion()->IsCurrentMotion(CPlayer::DAMAGE);
 		bool isMoving = pPlayer->GetIsMoving();
 
-		// ゲージを溜める
+		// ゲージを減らす
 		if (!isDamage && !isMoving && 
 			(pMouse->GetPress(0) || pJoypad->GetPress(CInputJoypad::JOYKEY_A)))
 		{
@@ -389,7 +391,7 @@ void CBuriedTreasureBlock::Update(void)
 		m_pFrame->SetPos(guagePos);
 		m_pGuage->SetPos(guagePos);
 
-		m_pGuage->UpdateGuageVtx(m_guageRate / 100.0f); // fRate を直接設定
+		m_pGuage->UpdateGuageVtx(m_guageRate / 100.0f);
 
 		// フレームも更新
 		m_pFrame->UpdateFrame();
@@ -400,6 +402,9 @@ void CBuriedTreasureBlock::Update(void)
 	{
 		// 取得カウントを増やす
 		m_getCount++;
+
+		// 埋蔵金が取られたことを通知して、リストから位置を削除する
+		CGame::GetBlockManager()->OnTreasureCollected(GetPos());
 
 		// 削除予約
 		Kill();
@@ -469,7 +474,7 @@ void CDoorBlock::Update(void)
 		}
 	}
 
-	// 回転を適用（ラジアンに変換）
+	// 回転を適用
 	D3DXVECTOR3 rot = GetRot();
 	rot.y = D3DXToRadian(m_rotY);
 	SetRot(rot);

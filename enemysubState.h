@@ -55,12 +55,6 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		D3DXVECTOR3 offpos = pEnemy->GetPos();
 		offpos.y += 70.0f;
 
@@ -86,7 +80,7 @@ public:
 		}
 
 		// 調査状態リクエストされていたら
-		if (pEnemy->GetRequestedAction() == CEnemy::AI_INVESTIGATE)
+		if (pEnemy->GetRequestedAction() == CEnemy::AI_SOUND_INVESTIGATE)
 		{
 			// 調査状態
 			m_pMachine->ChangeState<CEnemySub_InvestigateState>();
@@ -220,12 +214,6 @@ public:
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
-
-		// 物理エンジンにセット
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
 		// 目標の角度を算出
 		float targetYaw = atan2f(-toTarget.x, -toTarget.z);
@@ -361,12 +349,6 @@ public:
 			// 移動量を設定
 			pEnemy->SetMove(move);
 
-			// リジッドボディに反映
-			btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-			velocity.setX(move.x);
-			velocity.setZ(move.z);
-			pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 			return; // 近すぎたら止まる
 		}
 
@@ -396,12 +378,6 @@ public:
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
-
-		// 物理エンジンにセット
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
 		// 追跡モーションが終わっていたら
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemySub::CHASE))
@@ -513,12 +489,6 @@ public:
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
 
-		// 物理エンジンにセット
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		// 目標の角度を算出
 		float targetYaw = atan2f(-toTarget.x, -toTarget.z);
 
@@ -586,12 +556,6 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		D3DXVECTOR3 offpos = pEnemy->GetPos();
 		offpos.y += 70.0f;
 
@@ -629,7 +593,7 @@ public:
 
 		switch (pEnemy->GetRequestedAction())
 		{
-		case CEnemy::EEnemyAction::AI_INVESTIGATE:// 調査状態
+		case CEnemy::EEnemyAction::AI_SOUND_INVESTIGATE:// 音源の調査状態
 			m_pMachine->ChangeState<CEnemySub_InvestigateState>();
 			break;
 		case CEnemy::EEnemyAction::AI_CHASE:// 追跡状態
@@ -681,7 +645,7 @@ public:
 	{
 		switch (pEnemy->GetRequestedAction())
 		{
-		case CEnemy::EEnemyAction::AI_INVESTIGATE:// 調査状態
+		case CEnemy::EEnemyAction::AI_SOUND_INVESTIGATE:// 調査状態
 			m_pMachine->ChangeState<CEnemySub_InvestigateState>();
 			break;
 		case CEnemy::EEnemyAction::AI_CHASE:// 追跡状態
@@ -736,12 +700,6 @@ public:
 				// 移動量を設定
 				pEnemy->SetMove(move);
 
-				// リジッドボディに反映
-				btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-				velocity.setX(move.x);
-				velocity.setZ(move.z);
-				pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 				return; // 近すぎたら止まる
 			}
 
@@ -771,12 +729,6 @@ public:
 
 			// 補間後の速度をプレイヤーにセット
 			pEnemy->SetMove(currentMove);
-
-			// 物理エンジンにセット
-			btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-			velocity.setX(currentMove.x);
-			velocity.setZ(currentMove.z);
-			pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 		}
 	}
 

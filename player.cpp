@@ -214,7 +214,7 @@ void CPlayer::Update(void)
 	// コライダーの位置更新(オフセットを設定)
 	UpdateCollider(D3DXVECTOR3(0, 35.0f, 0));// 足元に合わせる
 
-	if (GetPos().y < -280.0f)
+	if (GetPos().y < RESPAWN_HEIGHT)
 	{
 		// リスポーン処理
 		Respawn(D3DXVECTOR3(0.0f, 30.0f, -300.0f));
@@ -237,28 +237,28 @@ void CPlayer::Update(void)
 	bool playerInGrass = pBlockManager->IsPlayerInGrass();
 	bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
 
-	D3DXVECTOR4 outlineColor = D3DXVECTOR4(0, 0, 0, 1); // 通常は黒
+	D3DXVECTOR4 outlineColor = VEC4_BLACK; // 通常は黒
 
 	if (playerInTorch)// 灯籠に近づく
 	{
 		if (!m_isStealth && m_bIsMoving)
 		{
-			outlineColor = D3DXVECTOR4(1, 0, 0, 1); // 赤色
+			outlineColor = VEC4_RED; // 赤色
 		}
 		else
 		{
-			outlineColor = D3DXVECTOR4(1, 1, 0, 1); // 黄色
+			outlineColor = VEC4_YELLOW; // 黄色
 		}
 	}
 	else if (playerInGrass)// 草に入る
 	{
 		if (!m_isStealth && m_bIsMoving)
 		{
-			outlineColor = D3DXVECTOR4(1, 0, 0, 1); // 赤色
+			outlineColor = VEC4_RED; // 赤色
 		}
 		else
 		{
-			outlineColor = D3DXVECTOR4(1, 1, 1, 1);	// 白
+			outlineColor = VEC4_WHITE;	// 白
 		}
 	}
 
@@ -392,7 +392,7 @@ bool CPlayer::OnGround(btDiscreteDynamicsWorld* world, btRigidBody* playerBody, 
 		// 法線と上方向の内積（= cosθ）
 		float slopeDot = normal.dot(up);
 
-		// cosθ が小さいほど急斜面
+		// cos が小さいほど急斜面
 		// 50度までを地面として扱う
 		float slopeLimit = cosf(D3DXToRadian(50.0f));
 
@@ -413,10 +413,7 @@ bool CPlayer::OnGround(btDiscreteDynamicsWorld* world, btRigidBody* playerBody, 
 //=============================================================================
 D3DXVECTOR3 CPlayer::GetForward(void)
 {
-	// プレイヤーの回転角度（Y軸）から前方ベクトルを計算
-	float yaw = GetRot().y;
-
-	D3DXVECTOR3 forward(-sinf(yaw), 0.0f, -cosf(yaw));
+	D3DXVECTOR3 forward(-m_mtxWorld._31, m_mtxWorld._32, -m_mtxWorld._33);
 
 	// 正規化する
 	D3DXVec3Normalize(&forward, &forward);

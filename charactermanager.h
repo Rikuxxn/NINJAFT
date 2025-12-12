@@ -88,7 +88,16 @@ public:
     void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
     void SetSize(D3DXVECTOR3 size) { m_size = size; }
     void SetRotDest(const D3DXVECTOR3& rotDest) { m_rotDest = rotDest; }
-    void SetMove(D3DXVECTOR3 move) { m_move = move; }
+    void SetMove(D3DXVECTOR3 move)
+    {
+        m_move = move; 
+
+        // リジッドボディに反映
+        btVector3 velocity = GetRigidBody()->getLinearVelocity();
+        velocity.setX(move.x);
+        velocity.setZ(move.z);
+        GetRigidBody()->setLinearVelocity(velocity);
+    }
 
     //*****************************************************************************
     // getter関数

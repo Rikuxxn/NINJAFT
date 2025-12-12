@@ -57,6 +57,7 @@ public:
 		TYPE_MAX
 	}TYPE;
 
+	// OBB情報構造体
 	struct OBB
 	{
 		D3DXVECTOR3 center;
@@ -146,17 +147,21 @@ public:
 	btRigidBody* GetRigidBody(void) const { return m_pRigidBody; }						// RigidBodyの取得
 	D3DXVECTOR3 GetColliderSize(void) const { return m_colliderSize; }					// コライダーサイズの取得
 	D3DXVECTOR3 GetColliderOffset(void) const { return m_colliderOffset; }				// コライダーのオフセットの取得
-	virtual btScalar GetMass(void) const { return 2.0f; }								// 質量の取得
+	virtual btScalar GetMass(void) const { return DEFAULT_MASS; }								// 質量の取得
 	bool IsDead(void) const { return m_isDead; }										// 削除予約の取得
 	D3DXMATRIX GetWorldMatrix(void);
 
 	virtual int GetCollisionFlags(void) const { return 0; }// デフォルトはフラグなし
 	virtual btVector3 GetLinearFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
 	virtual btVector3 GetAngularFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
-	virtual btScalar GetRollingFriction(void) const { return 0.7f; }
-	virtual btScalar GetFriction(void) const { return 1.0f; }
+	virtual btScalar GetRollingFriction(void) const { return DEFAULT_ROLLING_FRICTION; }
+	virtual btScalar GetFriction(void) const { return DEFAULT_FRICTION; }
 
 private:
+	static constexpr float DEFAULT_MASS = 2.0f;
+	static constexpr float DEFAULT_ROLLING_FRICTION = 0.7f;
+	static constexpr float DEFAULT_FRICTION = 1.0f;
+
 	TYPE m_Type;					// 種類
 	D3DXCOLOR m_col;				// アルファ値
 	D3DXCOLOR m_baseCol;			// ベースのアルファ値

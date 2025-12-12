@@ -106,6 +106,9 @@ void CEnemy::Update(void)
 
 #endif
 
+	// 一番近い埋蔵金の場所を設定
+	SetNearestTreasurePosition();
+
 	// 向きの更新処理
 	UpdateRotation(0.09f);
 
@@ -172,10 +175,7 @@ void CEnemy::Draw(void)
 //=============================================================================
 D3DXVECTOR3 CEnemy::GetForward(void)
 {
-	// 回転角度（Y軸）から前方ベクトルを計算
-	float yaw = GetRot().y;
-
-	D3DXVECTOR3 forward(-sinf(yaw), 0.0f, -cosf(yaw));
+	D3DXVECTOR3 forward(-m_mtxWorld._31, m_mtxWorld._32, -m_mtxWorld._33);
 
 	// 正規化する
 	D3DXVec3Normalize(&forward, &forward);

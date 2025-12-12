@@ -232,6 +232,7 @@
     <ClCompile Include="resulttime.cpp" />
     <ClCompile Include="resulttreasurecount.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="SEpopupeffect.cpp" />
     <ClCompile Include="shadowS.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="resulttime.h" />
     <ClInclude Include="resulttreasurecount.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="SEpopupeffect.h" />
     <ClInclude Include="shadowS.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="state.h" />

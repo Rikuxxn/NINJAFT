@@ -14,6 +14,7 @@
 #include "meshcylinder.h"
 #include "time.h"
 #include "blockmanager.h"
+#include "SEpopupeffect.h"
 
 //=============================================================================
 // リーダー敵AIコンストラクタ
@@ -51,7 +52,11 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
 
     // 時間の割合を取得
     float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
-    bool isNight = progress < 0.30f && progress >= 0.90f;
+    bool isNight = (progress < 0.30f || progress >= 0.90f);
+
+    // プレイヤーとの距離を算出
+    D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
+    float distance = D3DXVec3Length(&diff);
 
     // 特定のブロックに当たっているか判定する
     bool playerInGrass = pBlockManager->IsPlayerInGrass();
@@ -77,22 +82,24 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     pEnemy->SetSightRange(range);
     pEnemy->SetSightAngle(D3DXToRadian(angle));
 
-    // 視界に入ったら
-    if (pEnemy->IsPlayerInSight(pPlayer))
-    {
-        // 発見状態
-        pEnemy->SetRequestedAction(CEnemy::AI_DISCOVER);
-        return;
-    }
-    
     // 音を立てた または 視界に入った回数に応じて命令(サブ敵をそこに向かわせる)確率を上げる
     float prob = CalcSoundProbability(m_log.makeSoundCount);
-
-    float threshold = 0.9f;
 
     // プレイヤーの条件
     bool playerCondition = !pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
         !pPlayer->GetMotion()->IsCurrentMotion(CPlayer::DAMAGE);
+
+    // 当たった対象に応じてテクスチャパスを変える
+    const char* path = "data/TEXTURE/popup_01.png";
+
+    if (playerInGrass)// 草
+    {
+        path = "data/TEXTURE/popup_01.png";
+    }
+    else if (playerInWater)// 水
+    {
+        path = "data/TEXTURE/popup_02.png";
+    }
 
     // 特定のオブジェクトに接触かつ忍び足じゃなかったら
     if (playerCondition && (playerInGrass || playerInWater || playerInTorch))
@@ -101,7 +108,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
 
         // プレイヤーの位置を取得
         D3DXVECTOR3 pos = pPlayer->GetPos();
-        pos.y += 60.0f;// 少し上げる
+        pos.y += 40.0f;// 少し上げる
 
         if (m_soundTimer >= 10)
         {
@@ -114,10 +121,13 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
             // 波紋の生成
             CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.008f);
 
+            // 効果音ポップアップエフェクトの生成
+            CSEPopupEffect::Create(path, pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40);
+
             // 音の位置を設定
             pEnemy->OnSoundHeard(pPlayer->GetPos());
 
-            if (threshold <= prob)
+            if (PROBABILITY_THRESHOLD <= prob)
             {
                 // 命令状態
                 pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
@@ -134,6 +144,13 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         // 移動状態
         pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
     }
+
+    // 視界に入ったら
+    if (pEnemy->IsPlayerInSight(pPlayer) || distance < TRIGGER_DISTANCE)
+    {
+        // 発見状態
+        pEnemy->SetRequestedAction(CEnemy::AI_DISCOVER);
+    }
 }
 //=============================================================================
 // リーダー敵AIのプレイヤーの行動記録処理
@@ -143,24 +160,19 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
     // 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
     CBlockManager* pBlockManager = CGame::GetBlockManager();
 
-    // 時間の割合を取得
-    float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
-    bool isNight = progress >= 0.30f && progress < 0.90f;
-
     // 特定のブロックに当たっているか判定する
     bool playerInGrass = pBlockManager->IsPlayerInGrass();
-    bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
     bool playerInWater = pBlockManager->IsPlayerInWater();
 
     // 音カウントの加算
     {
         // 音を立てていたら一定間隔で音カウントを増やす
         if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
-            (playerInGrass || playerInWater || playerInTorch))
+            (playerInGrass || playerInWater))
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 30)
+            if (m_logTimer <= LOG_TIME)
             {
                 return;
             }
@@ -189,15 +201,6 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
 
         m_prevInSight = n;
     }
-}
-//=============================================================================
-// リーダー敵AIの確率取得処理(0.0～1.0)
-//=============================================================================
-float CEnemyAI_Leader::CalcSoundProbability(int targetCount)
-{
-    float x = (float)targetCount;
-
-    return 1.0f / (1.0f + expf(-0.5f * (x - 5.0f)));
 }
 
 
@@ -235,8 +238,7 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     float distance = D3DXVec3Length(&diff);
 
     // 音を立てた回数に応じて命令(サブ敵をそこに向かわせる)確率を上げていく
-    float prob = CalcSoundProbability();
-    float threshold = 0.9f;
+    float prob = CalcSoundProbability(m_log.makeSoundCount);
 
     // 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
     CBlockManager* pBlockManager = CGame::GetBlockManager();
@@ -245,16 +247,16 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     bool playerInGrass = pBlockManager->IsPlayerInGrass();
 
     // 判定距離
-    float threshold_dis = 70.0f;
+    float threshold_dis = DISTANCE_NORMAL;
 
     // プレイヤーが草にいるときは視界を狭める
     if (playerInGrass)
     {
-        threshold_dis = 30.0f;
+        threshold_dis = DISTANCE_STEALTH;
     }
 
     // 独自行動へ移行する確率判定
-    if (threshold <= prob)
+    if (PROBABILITY_THRESHOLD <= prob)
     {
         // 移動状態
         pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
@@ -275,8 +277,8 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         // 音の位置を設定
         pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
 
-        // 調査状態
-        pEnemy->SetRequestedAction(CEnemy::AI_INVESTIGATE);
+        // 音源の調査状態
+        pEnemy->SetRequestedAction(CEnemy::AI_SOUND_INVESTIGATE);
         return;
     }
     else
@@ -294,18 +296,17 @@ void CEnemyAI_Sub::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
     CBlockManager* pBlockManager = CGame::GetBlockManager();
 
     bool playerInGrass = pBlockManager->IsPlayerInGrass();
-    bool playerInTorch = pBlockManager->IsPlayerInTorch();
     bool playerInWater = pBlockManager->IsPlayerInWater();
 
     // 音カウントの加算
     {
         // 音を立てていたら一定間隔で音カウントを増やす
         if (!pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
-            (playerInGrass || playerInWater || playerInTorch))
+            (playerInGrass || playerInWater))
         {
             m_logTimer++;// フレーム加算
 
-            if (m_logTimer <= 30)
+            if (m_logTimer <= LOG_TIME)
             {
                 return;
             }
@@ -334,13 +335,4 @@ void CEnemyAI_Sub::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
 
         m_prevInSight = n;
     }
-}
-//=============================================================================
-// サブ敵AIの確率取得処理(0.0～1.0)
-//=============================================================================
-float CEnemyAI_Sub::CalcSoundProbability(void)
-{
-    float x = (float)m_log.makeSoundCount;
-
-    return 1.0f / (1.0f + expf(-0.5f * (x - 5.0f)));
 }

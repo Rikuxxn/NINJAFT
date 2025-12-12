@@ -16,11 +16,11 @@
 // 前方宣言
 class CEnemyLeader_StandState;
 class CEnemyLeader_MoveState;
-class CEnemyLeader_AttackState1;
 class CEnemyLeader_CloseAttackState1;
 class CEnemyLeader_CloseAttackState2;
 class CEnemyLeader_DoubtState;
-class CEnemyLeader_InvestigateState;
+class CEnemyLeader_SoundInvestigateState;
+class CEnemyLeader_TreasureInvestigateState;
 class CEnemyLeader_CautionState;
 class CEnemyLeader_OrderState;
 class CEnemyLeader_ChaseState;
@@ -51,12 +51,6 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		// サブ敵が追跡状態だったら
 		if (pEnemy->IsSubAction(CEnemy::AI_CHASE) && !pEnemy->IsCooldown())
 		{
@@ -68,8 +62,8 @@ public:
 		// AIリクエストに応じて状態を変更
 		switch (pEnemy->GetRequestedAction())
 		{
-		case CEnemy::EEnemyAction::AI_INVESTIGATE:// 調査状態
-			m_pMachine->ChangeState<CEnemyLeader_InvestigateState>();
+		case CEnemy::EEnemyAction::AI_SOUND_INVESTIGATE:// 音源の調査状態
+			m_pMachine->ChangeState<CEnemyLeader_SoundInvestigateState>();
 			break;
 		case CEnemy::EEnemyAction::AI_ORDER:// 命令状態
 			m_pMachine->ChangeState<CEnemyLeader_OrderState>();
@@ -134,27 +128,18 @@ public:
 		case CEnemyLeader::AI_DISCOVER:
 			// 発見状態
 			m_pMachine->ChangeState<CEnemyLeader_DiscoverState>();
-			return;
 			break;
 		case CEnemyLeader::AI_ORDER:
 			// 命令状態
 			m_pMachine->ChangeState<CEnemyLeader_OrderState>();
-			return;
 			break;
 		case CEnemyLeader::AI_CHASE:
 			// 追跡状態
 			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
-			return;
-			break;
-		case CEnemyLeader::AI_ATTACK_01:
-			// 攻撃状態
-			m_pMachine->ChangeState<CEnemyLeader_AttackState1>();
-			return;
 			break;
 		case CEnemyLeader::AI_DOUBT:
 			// 疑い状態
 			m_pMachine->ChangeState<CEnemyLeader_DoubtState>();
-			return;
 			break;
 		}
 
@@ -188,12 +173,6 @@ public:
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
 
-		// 物理エンジンにセット
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		// 目標の角度を算出
 		float targetYaw = atan2f(-toTarget.x, -toTarget.z);
 
@@ -222,8 +201,16 @@ public:
 			}
 			else
 			{
-				// 次の巡回ポイントに向かう
-				pEnemy->ChooseNextPatrolPoint();
+				if ((rand() % 100) < 55)
+				{
+					// 埋蔵金の調査状態
+					m_pMachine->ChangeState<CEnemyLeader_TreasureInvestigateState>();
+				}
+				else
+				{
+					// 次の巡回ポイントに向かう
+					pEnemy->ChooseNextPatrolPoint();
+				}
 			}
 		}
 	}
@@ -231,135 +218,6 @@ public:
 	void OnExit(CEnemyLeader* /*pEnemy*/)override
 	{
 
-	}
-
-private:
-
-};
-
-//*****************************************************************************
-// 攻撃状態1
-//*****************************************************************************
-class CEnemyLeader_AttackState1 :public StateBase<CEnemyLeader>
-{
-public:
-
-	void OnStart(CEnemyLeader* pEnemy)override
-	{
-		// ヒットフラグをリセット
-		pEnemy->GetWeaponCollider()->ResetHit();
-
-		// 攻撃モーション
-		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::ATTACK_01, 10);
-
-		// プレイヤー取得
-		CPlayer* pPlayer = CGame::GetPlayer();
-
-		// プレイヤーへの方向ベクトル
-		D3DXVECTOR3 toPlayer = pPlayer->GetPos() - pEnemy->GetPos();
-
-		if (pPlayer)
-		{
-			toPlayer.y = 0.0f; // 水平方向のみ
-			D3DXVec3Normalize(&toPlayer, &toPlayer);
-
-			// 目標の角度を算出
-			float targetYaw = atan2f(-toPlayer.x, -toPlayer.z);
-
-			// 目的角度を設定（X,Zはそのまま）
-			D3DXVECTOR3 rotDest = pEnemy->GetRot();
-			rotDest.y = targetYaw;
-
-			// 敵に目的角度を設定
-			pEnemy->SetRotDest(rotDest);
-
-			// 補間して回転
-			pEnemy->UpdateRotation(0.5f);
-		}
-
-		// 向いている方向にスライドさせるため、プレイヤー方向ベクトルを取得
-		D3DXVECTOR3 dir = toPlayer;
-
-		// 正規化
-		D3DXVec3Normalize(&dir, &dir);
-
-		float dashPower = 70.0f;// スライドパワー
-
-		D3DXVECTOR3 move = dir * dashPower;
-
-		// 現在の移動量に上書き
-		pEnemy->SetMove(move);
-
-		// 物理速度にも即反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setY(move.y * -10.0f);// 段差で飛ばないように上の力を下げる
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-	}
-
-	void OnUpdate(CEnemyLeader* pEnemy)override
-	{
-		// モーションの進行度を取得
-		float motionRate = pEnemy->GetMotion()->GetMotionRate(); // 0.0～1.0
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		// モーション前半だけ前方移動を維持
-		if (motionRate < 0.2f)
-		{
-			D3DXVECTOR3 forwardDir = pEnemy->GetForward();
-			D3DXVec3Normalize(&forwardDir, &forwardDir);
-
-			float forwardPower = 40.0f; // 滑る速度
-			move = forwardDir * forwardPower;
-		}
-		else
-		{
-			move *= 0.82f; // 減速率
-			if (fabsf(move.x) < 0.01f) move.x = 0;
-			if (fabsf(move.z) < 0.01f) move.z = 0;
-		}
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
-
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setY(move.y * -10.0f);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
-		if (pEnemy->GetWeapon() && pEnemy->GetWeaponCollider())
-		{
-			// 攻撃中だけ有効化
-			if (pEnemy->GetMotion()->IsAttacking(CEnemyLeader::ATTACK_01, 0, 2, 0, 30))
-			{
-				pEnemy->GetWeaponCollider()->SetActive(true);
-				pEnemy->GetWeaponCollider()->ResetPrevPos();
-			}
-			else
-			{
-				pEnemy->GetWeaponCollider()->SetActive(false);
-			}
-
-			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 1.0f);
-		}
-
-		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::ATTACK_01))
-		{// 攻撃モーションが終わっていたら
-
-			// 待機状態
-			m_pMachine->ChangeState<CEnemyLeader_StandState>();
-			return;
-		}
-	}
-
-	void OnExit(CEnemyLeader* pEnemy)override
-	{
-		// クールダウンの設定
-		pEnemy->SetCooldown(3.0f);
 	}
 
 private:
@@ -452,12 +310,6 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		if (pEnemy->GetWeapon() && pEnemy->GetWeaponCollider())
 		{
 			// 攻撃中だけ有効化
@@ -472,7 +324,7 @@ public:
 			}
 
 			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.0f);
+			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.5f);
 		}
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::CLOSE_ATTACK_01))
@@ -561,12 +413,6 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		if (pEnemy->GetWeapon() && pEnemy->GetWeaponCollider())
 		{
 			// 攻撃中だけ有効化
@@ -581,7 +427,7 @@ public:
 			}
 
 			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.0f);
+			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.5f);
 		}
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::CLOSE_ATTACK_02))
@@ -654,12 +500,6 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
-
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
 		{
@@ -679,8 +519,8 @@ public:
 				return;
 			}
 
-			// 調査状態
-			m_pMachine->ChangeState<CEnemyLeader_InvestigateState>();
+			// 音源の調査状態
+			m_pMachine->ChangeState<CEnemyLeader_SoundInvestigateState>();
 		}
 	}
 
@@ -694,16 +534,16 @@ private:
 };
 
 //*****************************************************************************
-// 調査状態
+// 音源の調査状態
 //*****************************************************************************
-class CEnemyLeader_InvestigateState :public StateBase<CEnemyLeader>
+class CEnemyLeader_SoundInvestigateState :public StateBase<CEnemyLeader>
 {
 public:
 
 	void OnStart(CEnemyLeader* pEnemy)override
 	{
-		// 調査モーション
-		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::INVESTIGATE, 10);
+		// 音源の調査モーション
+		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::SOUND_INVESTIGATE, 10);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
@@ -719,13 +559,6 @@ public:
 			return;// 即移行
 		}
 
-		// 攻撃状態リクエストされていたら
-		if (pEnemy->GetRequestedAction() == CEnemy::AI_ATTACK_01)
-		{
-			m_pMachine->ChangeState<CEnemyLeader_AttackState1>();
-			return; // すぐに切り替え
-		}
-
 		// サブ敵が追跡状態だったら
 		if (pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
@@ -736,6 +569,103 @@ public:
 
 		// 音源のポイントに向かう
 		D3DXVECTOR3 toTarget = pEnemy->GetLastHeardSoundPos() - pEnemy->GetPos();
+		toTarget.y = 0;
+		D3DXVec3Normalize(&toTarget, &toTarget);
+
+		// 目標速度計算
+		float moveSpeed = CEnemyLeader::INVESTIGATE_SPEED;
+		D3DXVECTOR3 targetMove = pEnemy->GetForward();
+
+		if (targetMove.x != 0.0f || targetMove.z != 0.0f)
+		{
+			D3DXVec3Normalize(&targetMove, &targetMove);
+
+			targetMove *= moveSpeed;
+		}
+		else
+		{
+			targetMove = D3DXVECTOR3(0, 0, 0);
+		}
+
+		// 現在速度との補間（イージング）
+		const float accelRate = 0.15f;
+		D3DXVECTOR3 currentMove = pEnemy->GetMove();
+
+		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
+		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+
+		// 補間後の速度をプレイヤーにセット
+		pEnemy->SetMove(currentMove);
+
+		// 目標の角度を算出
+		float targetYaw = atan2f(-toTarget.x, -toTarget.z);
+
+		// 目的角度を設定（X,Zはそのまま）
+		D3DXVECTOR3 rotDest = pEnemy->GetRot();
+		rotDest.y = targetYaw;
+
+		// 敵に目的角度を設定
+		pEnemy->SetRotDest(rotDest);
+
+		// 補間して回転
+		pEnemy->UpdateRotation(0.05f);
+
+		// 到達したら次の目標に切り替える
+		if (pEnemy->HasReachedSoundTarget())
+		{
+			// 巡回ポイントに到達したら警戒状態に戻す
+			if (!pEnemy->IsInvestigating())
+			{
+				m_pMachine->ChangeState<CEnemyLeader_CautionState>();
+			}
+		}
+	}
+
+	void OnExit(CEnemyLeader* /*pEnemy*/)override
+	{
+
+	}
+
+private:
+
+};
+
+//*****************************************************************************
+// 埋蔵金の調査状態
+//*****************************************************************************
+class CEnemyLeader_TreasureInvestigateState :public StateBase<CEnemyLeader>
+{
+public:
+
+	void OnStart(CEnemyLeader* pEnemy)override
+	{
+		// 埋蔵金の調査モーション
+		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::TREASURE_INVESTIGATE, 10);
+	}
+
+	void OnUpdate(CEnemyLeader* pEnemy)override
+	{
+		// 視界内判定をするためにプレイヤーを取得
+		CPlayer* pPlayer = CGame::GetPlayer();
+
+		// モーション中にプレイヤーが視界に入ったら
+		if (pEnemy->IsPlayerInSight(pPlayer))
+		{
+			// 追跡状態
+			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
+			return;// 即移行
+		}
+
+		// サブ敵が追跡状態だったら
+		if (pEnemy->IsSubAction(CEnemy::AI_CHASE))
+		{
+			// 追跡状態
+			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
+			return; // すぐに切り替え
+		}
+
+		// 一番近い埋蔵金の場所に向かう
+		D3DXVECTOR3 toTarget = pEnemy->GetNearestTreasurePos() - pEnemy->GetPos();
 		toTarget.y = 0;
 		D3DXVec3Normalize(&toTarget, &toTarget);
 
@@ -784,13 +714,10 @@ public:
 		pEnemy->UpdateRotation(0.05f);
 
 		// 到達したら次の目標に切り替える
-		if (pEnemy->HasReachedSoundTarget())
+		if (pEnemy->HasReachedTreasure())
 		{
-			// 巡回ポイントに到達したら警戒状態に戻す
-			if (!pEnemy->IsInvestigating())
-			{
-				m_pMachine->ChangeState<CEnemyLeader_CautionState>();
-			}
+			// 警戒状態
+			m_pMachine->ChangeState<CEnemyLeader_CautionState>();
 		}
 	}
 
@@ -830,12 +757,6 @@ public:
 
 		// 移動量を設定
 		pEnemy->SetMove(move);
-
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
@@ -907,12 +828,6 @@ public:
 
 		// 移動量を設定
 		pEnemy->SetMove(move);
-
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
 		// 音源のポイントに向く
 		D3DXVECTOR3 toTarget = pEnemy->GetLastHeardSoundPos() - pEnemy->GetPos();
@@ -993,7 +908,7 @@ public:
 		for (int i = 0; i < pEnemy->GetNumModels(); i++)
 		{
 			// アウトラインを赤にする
-			models[i]->SetOutlineColor(D3DXVECTOR4(1, 0, 0, 1));
+			models[i]->SetOutlineColor(VEC4_RED);
 		}
 
 		// サブ敵が追跡中なら、リーダーも追跡継続
@@ -1037,7 +952,7 @@ public:
 		}
 		else
 		{
-			targetMove = D3DXVECTOR3(0, 0, 0);
+			targetMove = INIT_VEC3;
 		}
 
 		// 現在速度との補間（イージング）
@@ -1049,12 +964,6 @@ public:
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
-
-		// 物理エンジンにセット
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(currentMove.x);
-		velocity.setZ(currentMove.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
 		// 目標の角度を算出
 		float targetYaw = atan2f(-toTarget.x, -toTarget.z);
@@ -1075,7 +984,8 @@ public:
 		CModel** models = pEnemy->GetModels();
 		for (int i = 0; i < pEnemy->GetNumModels(); i++)
 		{
-			models[i]->SetOutlineColor(D3DXVECTOR4(0, 0, 0, 1));
+			// アウトラインを通常(黒色)に戻す
+			models[i]->SetOutlineColor(VEC4_BLACK);
 		}
 	}
 
@@ -1132,12 +1042,6 @@ public:
 
 		// 移動量を設定
 		pEnemy->SetMove(move);
-
-		// リジッドボディに反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 
 		// 発見モーションが終わっていたら
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::DISCOVER))

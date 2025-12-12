@@ -399,6 +399,7 @@ public:
 	static constexpr float SPEED = 5.0f;				// 移動スピード
 	static constexpr float INVESTIGATE_SPEED = 10.0f;	// 調査時の移動スピード
 	static constexpr float CHASE_SPEED = 13.0f;			// 追跡時の移動スピード
+	static constexpr float CHASE_DISTANCE = 110.0f;		// 追跡状態になる距離
 
 	// サブ敵モーションの種類
 	typedef enum

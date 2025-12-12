@@ -151,7 +151,7 @@ public:
 		float distance = D3DXVec3Length(&diff);
 
 		// モーション中にプレイヤーが一定範囲近づいたら
-		if (distance < 150.0f)
+		if (distance < CEnemySub::CHASE_DISTANCE)
 		{
 			// 追跡状態リクエスト
 			pEnemy->SetRequestedAction(CEnemy::AI_CHASE);
@@ -325,7 +325,7 @@ public:
 		pEnemy->UpdateRotation(0.05f);
 
 		// 一定距離離れたら追跡終了
-		if (distance > 110.0f)
+		if (distance > CEnemySub::CHASE_DISTANCE)
 		{
 			// 最初の巡回ポイントを決めておく
 			pEnemy->ReturnToPatrol();
@@ -337,7 +337,7 @@ public:
 		}
 
 		// 一定距離になったら速度を落とす
-		if (distance < 100.0f)
+		if (distance < 50.0f)
 		{
 			// 移動量の取得
 			D3DXVECTOR3 move = pEnemy->GetMove();
@@ -384,7 +384,6 @@ public:
 		{
 			// 待機状態
 			m_pMachine->ChangeState<CEnemySub_StandState>();
-			return;
 		}
 	}
 

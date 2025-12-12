@@ -240,21 +240,6 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     // 音を立てた回数に応じて命令(サブ敵をそこに向かわせる)確率を上げていく
     float prob = CalcSoundProbability(m_log.makeSoundCount);
 
-    // 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
-    CBlockManager* pBlockManager = CGame::GetBlockManager();
-
-    // 特定のブロックに当たっているか判定する
-    bool playerInGrass = pBlockManager->IsPlayerInGrass();
-
-    // 判定距離
-    float threshold_dis = DISTANCE_NORMAL;
-
-    // プレイヤーが草にいるときは視界を狭める
-    if (playerInGrass)
-    {
-        threshold_dis = DISTANCE_STEALTH;
-    }
-
     // 独自行動へ移行する確率判定
     if (PROBABILITY_THRESHOLD <= prob)
     {
@@ -264,7 +249,7 @@ void CEnemyAI_Sub::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     }
 
     //  一定距離近づいたら
-    if (distance < threshold_dis)
+    if (distance < CEnemySub::CHASE_DISTANCE)
     {
         // 追跡状態
         pEnemy->SetRequestedAction(CEnemy::AI_CHASE);

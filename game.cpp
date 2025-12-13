@@ -110,7 +110,7 @@ HRESULT CGame::Init(void)
 		// リーダーの周囲に配置
 		D3DXVECTOR3 offset(
 			(rand() % 200 - 100),  // -100～100
-			55.0f,
+			30.0f,
 			(rand() % 200 - 100)
 		);
 
@@ -165,6 +165,15 @@ HRESULT CGame::Init(void)
 	// ランキングマネージャーのインスタンス生成
 	m_pRankingManager = make_unique<CRankingManager>();
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// ゲームBGMの再生
+	if (pSound)
+	{
+		pSound->Play(CSound::SOUND_LABEL_GAMEBGM);
+	}
+
 	return S_OK;
 }
 //=============================================================================
@@ -172,9 +181,6 @@ HRESULT CGame::Init(void)
 //=============================================================================
 void CGame::Uninit(void)
 {
-	// 音の停止
-	CManager::GetSound()->Stop(CSound::SOUND_LABEL_GAMEBGM);
-
 	// ブロックマネージャーの破棄
 	if (m_pBlockManager != nullptr)
 	{

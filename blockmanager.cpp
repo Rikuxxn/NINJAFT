@@ -1201,7 +1201,7 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 	const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& treasurePositions)
 {
 	// 埋蔵金同士の最低距離(クラスター用)
-	const float MIN_CLUSTER_DISTANCE = 0.5f * areaSize;
+	const float MIN_CLUSTER_DISTANCE = 0.3f * areaSize;
 
 	// 埋蔵金同士の最低距離(通常)
 	const float MIN_NORMAL_DISTANCE = 2.0f * areaSize;

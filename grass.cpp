@@ -85,7 +85,7 @@ void CGrassBlock::Update(void)
 		// ‹——£‚É‰ž‚¶‚½Š„‡
 		float t = 1.0f - (nearestDist / m_distMax);
 
-		// ŒX‚«Šp“x = Å‘åŠp“x ~ Š„‡
+		// ŒX‚«Šp“x
 		float tilt = fMaxTilt * t;
 
 		rot.x = -nearestDiff.z * tilt;
@@ -96,6 +96,7 @@ void CGrassBlock::Update(void)
 	{
 		D3DXVECTOR3 diff = pPlayer->GetPos() - thisPos;
 		float dist = D3DXVec3Length(&diff);
+
 		pPlayer->SetInGrass(dist < m_distMax);
 	}
 
@@ -103,7 +104,6 @@ void CGrassBlock::Update(void)
 	float stiffness = 0.12f;		// ƒoƒl‚Ì‹­‚³
 	float damping = 0.75f;			// Œ¸Š—¦
 
-	// ƒoƒl—Í = (–Ú•W - Œ»Ý) ~ ƒoƒl’è”
 	m_rotVel.x += (targetRot.x - rot.x) * stiffness;
 	m_rotVel.z += (targetRot.z - rot.z) * stiffness;
 

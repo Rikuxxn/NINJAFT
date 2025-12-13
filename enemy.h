@@ -214,7 +214,7 @@ public:
 	{
 		D3DXVECTOR3 pos = GetPos();
 		D3DXVECTOR3 dis = m_lastHeardSoundPos - pos;
-		return D3DXVec3Length(&dis) < 20.0f; // “ž’B‹——£
+		return D3DXVec3Length(&dis) < 30.0f; // “ž’B‹——£
 	}
 
 	bool IsPlayerInSight(CPlayer* pPlayer);

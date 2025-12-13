@@ -86,8 +86,7 @@ HRESULT CCamera::Init(void)
 //=============================================================================
 void CCamera::Uninit(void)
 {
-	// サウンドの停止
-	CManager::GetSound()->Stop(CSound::SOUND_LABEL_INSPIRATION);
+
 }
 //=============================================================================
 // 更新処理
@@ -417,9 +416,6 @@ void CCamera::DirectionCamera(int nTimer)
 		m_nDirectionCamTimer = 0;
 
 		m_fDistance = 220.0f;
-
-		// ひらめきSE
-		CManager::GetSound()->Play(CSound::SOUND_LABEL_INSPIRATION);
 
 		// ゲームカメラに戻す
 		m_Mode = MODE_GAME;

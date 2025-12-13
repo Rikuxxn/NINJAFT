@@ -144,6 +144,15 @@ HRESULT CTitle::Init(void)
 	// 項目選択の初期化処理
 	m_pItemSelect->Init();
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// タイトルBGMの再生
+	if (pSound)
+	{
+		pSound->Play(CSound::SOUND_LABEL_TITLEBGM);
+	}
+
 	return S_OK;
 }
 //=============================================================================

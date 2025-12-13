@@ -22,30 +22,13 @@ public:
 	typedef enum
 	{
 		SOUND_LABEL_GAMEBGM = 0,	// ゲームBGM
-		SOUND_LABEL_WATER,
-		SOUND_LABEL_WATERRISE,
-		SOUND_LABEL_HIT,
-		SOUND_LABEL_FIRE,
-		SOUND_LABEL_ROCKHIT,
-		SOUND_LABEL_SWITCH,
+		SOUND_LABEL_TITLEBGM,
 		SOUND_LABEL_PAUSE,
 		SOUND_LABEL_SELECT,
 		SOUND_LABEL_ENTER,
-		SOUND_LABEL_ROLL,
-		SOUND_LABEL_MASK,
-		SOUND_LABEL_INSPIRATION,
-		SOUND_LABEL_TIMER,
-		SOUND_LABEL_TREASURE,
-		SOUND_LABEL_SWING,
-		SOUND_LABEL_GET,
-		SOUND_LABEL_RANK,
-		SOUND_LABEL_GAMEBGM2,
-		SOUND_LABEL_SHINE,
-		SOUND_LABEL_DOOR,
-		SOUND_LABEL_WATERWHEEL,
-		SOUND_LABEL_WATERFLOW,
-		SOUND_LABEL_FLOATING,
-		SOUND_LABEL_RELEASE,
+		SOUND_LABEL_GRASS,
+		SOUND_LABEL_WATER,
+
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 
@@ -99,31 +82,13 @@ private:
 	// サウンドの情報
 	SOUNDINFO m_aSoundInfo[SOUND_LABEL_MAX] =
 	{
-		{"data/BGM/gameBGM.wav", -1},			// ゲームBGM(ステージ1)
-		{"data/SE/water.wav", 0},				// 入水SE
-		{"data/SE/waterrise.wav", 0},			// 水位上昇SE
-		{"data/SE/hit.wav", 0},					// プレイヤーヒットSE
-		{"data/SE/fire.wav", -1},				// 炎SE(ループ)
-		{"data/SE/rock_hit.wav", 0},			// 岩衝突SE
-		{"data/SE/switch.wav", 0},				// スイッチSE
+		{"data/BGM/gameBGM.wav", -1},			// ゲームBGM
+		{"data/BGM/titleBGM.wav", -1},			// タイトルBGM
 		{"data/SE/menu.wav", 0},				// ポーズSE
 		{"data/SE/select.wav", 0},				// 選択SE
 		{"data/SE/enter.wav", 0},				// 決定SE
-		{"data/SE/roll.wav", -1},				// 岩転がるSE(ループ)
-		{"data/SE/mask.wav", -1},				// 仮面SE(ループ)
-		{"data/SE/Inspiration.wav", 0},			// ひらめきSE
-		{"data/SE/timer.wav", 0},				// タイマーSE
-		{"data/SE/treasure.wav", -1},			// 秘宝SE(ループ)
-		{"data/SE/swing.wav", 0},				// 斧SE
-		{"data/SE/get.wav", 0},					// 入手SE
-		{"data/SE/resultrank.wav", 0},			// リザルトランク表示SE
-		{"data/BGM/gameBGM2.wav", -1},			// ゲームBGM2(ステージ2)
-		{"data/SE/shines.wav", 0},				// ドアが開くときの台座SE
-		{"data/SE/door.wav", 0},				// ドアSE
-		{"data/SE/waterWheel.wav", -1},			// 歯車SE(ループ)
-		{"data/SE/waterrise2.wav", -1},			// 水流SE(ループ)
-		{"data/SE/magic_floating.wav", -1},		// 浮遊SE(ループ)
-		{"data/SE/magic_release.wav", 0},		// 離しSE
+		{"data/SE/grass.wav", 0},				// 草SE
+		{"data/SE/water.wav", 0},				// 水SE
 	};
 
 	SoundData m_SoundData[SOUND_LABEL_MAX];

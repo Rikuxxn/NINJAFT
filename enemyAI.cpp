@@ -15,6 +15,8 @@
 #include "time.h"
 #include "blockmanager.h"
 #include "SEpopupeffect.h"
+#include "sound.h"
+#include "manager.h"
 
 //=============================================================================
 // リーダー敵AIコンストラクタ
@@ -110,33 +112,47 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         D3DXVECTOR3 pos = pPlayer->GetPos();
         pos.y += 40.0f;// 少し上げる
 
-        if (m_soundTimer >= 10)
+        if (m_soundTimer <= 15)
         {
-            m_soundTimer = 0;
-            m_soundCount++;
+            return;
+        }
 
-            // 音発生数の設定
-            pEnemy->SetSoundCount(m_soundCount);
+        m_soundTimer = 0;
+        m_soundCount++;
 
-            // 波紋の生成
-            CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.008f);
+        // 音発生数の設定
+        pEnemy->SetSoundCount(m_soundCount);
 
-            // 効果音ポップアップエフェクトの生成
-            CSEPopupEffect::Create(path, pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40);
+        // 音の取得
+        CSound* pSound = CManager::GetSound();
 
-            // 音の位置を設定
-            pEnemy->OnSoundHeard(pPlayer->GetPos());
+        if (pSound && playerInGrass)        // 草SEの再生
+        {
+            pSound->Play(CSound::SOUND_LABEL_GRASS);
+        }
+        else if (pSound && playerInWater)   // 水SEの再生
+        {
+            pSound->Play(CSound::SOUND_LABEL_WATER);
+        }
 
-            if (PROBABILITY_THRESHOLD <= prob)
-            {
-                // 命令状態
-                pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
-            }
-            else
-            {
-                // 疑い状態
-                pEnemy->SetRequestedAction(CEnemy::AI_DOUBT);
-            }
+        // 波紋の生成
+        CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.008f);
+
+        // 効果音ポップアップエフェクトの生成
+        CSEPopupEffect::Create(path, pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40);
+
+        // 音の位置を設定
+        pEnemy->OnSoundHeard(pPlayer->GetPos());
+
+        if (PROBABILITY_THRESHOLD <= prob)
+        {
+            // 命令状態
+            pEnemy->SetRequestedAction(CEnemy::AI_ORDER);
+        }
+        else
+        {
+            // 疑い状態
+            pEnemy->SetRequestedAction(CEnemy::AI_DOUBT);
         }
     }
     else

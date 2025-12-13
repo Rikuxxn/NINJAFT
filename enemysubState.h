@@ -55,8 +55,8 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		D3DXVECTOR3 offpos = pEnemy->GetPos();
-		offpos.y += 70.0f;
+		// パーティクル発生位置
+		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
 
 		m_nParticleTimer++;
 
@@ -65,11 +65,11 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
 		}
 
 		// モーション中にプレイヤーが一定範囲近づいたら
-		if (distance < 150.0f)
+		if (distance < CEnemySub::CHASE_DISTANCE)
 		{
 			// 追跡状態リクエスト
 			pEnemy->SetRequestedAction(CEnemy::AI_CHASE);
@@ -172,8 +172,8 @@ public:
 			return;
 		}
 
-		D3DXVECTOR3 offpos = pEnemy->GetPos();
-		offpos.y += 70.0f;
+		// パーティクル発生位置
+		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
 
 		m_nParticleTimer++;
 
@@ -182,7 +182,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
 		}
 
 		// 巡回ポイントに向かう
@@ -284,6 +284,8 @@ public:
 
 		// 追跡モーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemySub::CHASE, 10);
+
+		pEnemy->SetSize(D3DXVECTOR3(1.5f, 1.5f, 1.5f));
 	}
 
 	void OnUpdate(CEnemySub* pEnemy)override
@@ -291,8 +293,8 @@ public:
 		// 追跡状態
 		pEnemy->SetRequestedAction(CEnemy::AI_CHASE);
 
-		D3DXVECTOR3 offpos = pEnemy->GetPos();
-		offpos.y += 70.0f;
+		// パーティクル発生位置
+		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
 
 		m_nParticleTimer++;
 
@@ -301,7 +303,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(1.0f, 0.2f, 0.4f, 0.6f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(1.0f, 0.2f, 0.4f, 0.6f), 40, 1);
 		}
 
 		// プレイヤーの取得
@@ -387,9 +389,9 @@ public:
 		}
 	}
 
-	void OnExit(CEnemySub* /*pEnemy*/)override
+	void OnExit(CEnemySub* pEnemy)override
 	{
-
+		pEnemy->SetSize(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	}
 
 private:
@@ -445,8 +447,8 @@ public:
 			return; // すぐに切り替え
 		}
 
-		D3DXVECTOR3 offpos = pEnemy->GetPos();
-		offpos.y += 70.0f;
+		// パーティクル発生位置
+		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
 
 		m_nParticleTimer++;
 
@@ -455,7 +457,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.6f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(1.0f, 1.0f, 0.6f, 0.6f), 40, 1);
 		}
 
 		// 音源のポイントに向かう
@@ -555,8 +557,8 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
-		D3DXVECTOR3 offpos = pEnemy->GetPos();
-		offpos.y += 70.0f;
+		// パーティクル発生位置
+		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
 
 		m_nParticleTimer++;
 
@@ -565,7 +567,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(0.8f, 0.6f, 1.0f, 0.8f), 40, 1);
 		}
 
 		// モーション中にプレイヤーが一定範囲近づいたら
@@ -655,8 +657,8 @@ public:
 			break;
 		}
 
-		D3DXVECTOR3 offpos = pEnemy->GetPos();
-		offpos.y += 70.0f;
+		// パーティクル発生位置
+		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
 
 		m_nParticleTimer++;
 
@@ -665,7 +667,7 @@ public:
 			m_nParticleTimer = 0;
 
 			// パーティクル生成
-			CParticle::Create<COnibiParticle>(INIT_VEC3, offpos, D3DXCOLOR(0.7f, 0.6f, 1.0f, 0.5f), 40, 1);
+			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(0.7f, 0.6f, 1.0f, 0.5f), 40, 1);
 		}
 
 		if (CEnemy* leader = pEnemy->GetLeader())

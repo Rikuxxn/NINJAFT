@@ -57,7 +57,11 @@ HRESULT CEnemy::Init(void)
 
 	// 巡回ポイントの設定
 	auto& patrolPoints = CGame::GetBlockManager()->GetPatrolPoints();
-	SetPatrolPoints(patrolPoints);
+
+	if (!patrolPoints.empty())
+	{
+		SetPatrolPoints(patrolPoints);
+	}
 
 	// 最初の巡回ポイントを決めておく
 	ReturnToPatrol();
@@ -400,6 +404,14 @@ HRESULT CEnemySub::Init(void)
 
 	// カプセルコライダーの設定
 	CreatePhysics(0.0f, CAPSULE_HEIGHT, 0.1f);
+
+	btRigidBody* pRigid = GetRigidBody();
+
+	// 重力を無効化
+	if (pRigid)
+	{
+		pRigid->setGravity(btVector3(0, 0, 0));
+	}
 
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);

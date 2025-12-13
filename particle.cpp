@@ -678,7 +678,7 @@ void COnibiParticle::Update(void)
 		desc.col = GetCol();
 
 		// 半径の設定
-		desc.fRadius = 6.0f + (rand() % 6);
+		desc.fRadius = 7.0f + (rand() % 7);
 
 		// 寿命の設定
 		desc.nLife = GetLife();
@@ -687,7 +687,7 @@ void COnibiParticle::Update(void)
 		desc.fGravity = 0.0f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 0.3f;
+		desc.fDecRadius = 0.35f;
 
 		// エフェクトの設定
 		CEffect::Create(desc);
@@ -776,83 +776,3 @@ void CSmokeParticle::Update(void)
 	// パーティクルの更新処理
 	CParticle::Update();
 }
-
-
-////=============================================================================
-//// 効果音ポップアップエフェクトのコンストラクタ
-////=============================================================================
-//CSEPopupEffect::CSEPopupEffect()
-//{
-//
-//}
-////=============================================================================
-//// 効果音ポップアップエフェクトのデストラクタ
-////=============================================================================
-//CSEPopupEffect::~CSEPopupEffect()
-//{
-//	// なし
-//}
-////=============================================================================
-////効果音ポップアップエフェクトの初期化処理
-////=============================================================================
-//HRESULT CSEPopupEffect::Init(void)
-//{
-//	// テクスチャを設定しておく
-//	SetPath("data/TEXTURE/smoke.jpg");
-//
-//	// パーティクルの初期化処理
-//	CParticle::Init();
-//
-//	return S_OK;
-//}
-////=============================================================================
-//// 効果音ポップアップエフェクトの更新処理
-////=============================================================================
-//void CSEPopupEffect::Update(void)
-//{
-//	int nMaxParticle = GetMaxParticle();
-//
-//	// パーティクル生成
-//	for (int nCnt = 0; nCnt < nMaxParticle; nCnt++)//発生させたい粒子の数
-//	{
-//		EffectDesc desc;
-//
-//		// テクスチャの指定
-//		desc.path = "data/TEXTURE/smoke.jpg";
-//
-//		// 位置
-//		desc.pos = GetPos();
-//
-//		// ランダムな角度で横に広がる
-//		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-//		float speed = (rand() % 100) / 30.0f + 0.2f;
-//
-//		desc.move.x = cosf(angle) * speed;
-//		desc.move.z = sinf(angle) * speed;
-//		desc.move.y = (rand() % 300) / 50.0f + 0.05f; // 少しだけ上方向
-//
-//		// 色の設定
-//		desc.col = GetCol();
-//
-//		// 半径の設定
-//		desc.fRadius = 35.0f + (rand() % 30);
-//
-//		// 寿命の設定
-//		desc.nLife = GetLife();
-//
-//		// 重力の設定
-//		desc.fGravity = 0.16f;
-//
-//		// 半径の減衰量の設定
-//		desc.fDecRadius = 2.0f;
-//
-//		// アルファブレンドの設定フラグ
-//		desc.bBlend = false;
-//
-//		// エフェクトの設定
-//		CEffect::Create(desc);
-//	}
-//
-//	// パーティクルの更新処理
-//	CParticle::Update();
-//}

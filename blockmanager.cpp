@@ -1200,12 +1200,102 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 	float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& torchPositions,
 	const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& treasurePositions)
 {
-	// 埋蔵金同士の最低距離
-	const float MIN_TORCH_DISTANCE = 2.0f * areaSize;
+	// 埋蔵金同士の最低距離(クラスター用)
+	const float MIN_CLUSTER_DISTANCE = 0.5f * areaSize;
+
+	// 埋蔵金同士の最低距離(通常)
+	const float MIN_NORMAL_DISTANCE = 2.0f * areaSize;
+
+	const int TOTAL_TREASURE = MAX_TREASURE;
+	const int CLUSTER_MIN = 3;
+	const int CLUSTER_MAX = 4;
+	const float CLUSTER_RADIUS = areaSize * 0.8f;
+
+	int clusterSize = CLUSTER_MIN + rand() % (CLUSTER_MAX - CLUSTER_MIN + 1);
+
+	// クラスター中心を決める
+	D3DXVECTOR3 clusterCenter;
+	bool foundCenter = false;
+
+	for (int i = 0; i < MAX_ATTEMPTS && !foundCenter; i++)
+	{
+		float cx = offsetX + (rand() % gridX) * areaSize;
+		float cz = offsetZ + (rand() % gridZ) * areaSize;
+		D3DXVECTOR3 center(cx, 0.0f, cz);
+
+		if (IsCollidingWithTorch(center, areaSize, torchPositions))
+		{
+			continue;
+		}
+
+		if (IsCollidingWithWater(center, areaSize, waterPositions))
+		{
+			continue;
+		}
+
+		clusterCenter = center;
+		foundCenter = true;
+	}
+
+	for (int i = 0; i < clusterSize; i++)
+	{
+		for (int a = 0; a < MAX_ATTEMPTS; a++)
+		{
+			float angle = (float)(rand() % 360) * D3DX_PI / 180.0f;
+			float radius = ((float)rand() / RAND_MAX) * CLUSTER_RADIUS;
+
+			float x = clusterCenter.x + cosf(angle) * radius;
+			float z = clusterCenter.z + sinf(angle) * radius;
+			D3DXVECTOR3 pos(x, 0.0f, z);
+
+			if (IsCollidingWithTorch(pos, areaSize, torchPositions))
+			{
+				continue;
+			}
+
+			if (IsCollidingWithWater(pos, areaSize, waterPositions))
+			{
+				continue;
+			}
+
+			bool tooClose = false;
+			for (auto& t : treasurePositions)
+			{
+				float dx = t.x - pos.x;
+				float dz = t.z - pos.z;
+				if (dx * dx + dz * dz < MIN_CLUSTER_DISTANCE * MIN_CLUSTER_DISTANCE)
+				{
+					tooClose = true;
+					break;
+				}
+			}
+
+			if (tooClose)
+			{
+				continue;
+			}
+
+			CBlock* treasure = CreateBlock(CBlock::TYPE_BURIED_TREASURE, pos);
+
+			if (treasure)
+			{
+				D3DXVECTOR3 offPos = pos;
+				offPos.y -= 3.0f;
+				treasure->SetPos(offPos);
+
+				// 向きをランダムにする
+				float rotY = (rand() % 360) * D3DX_PI / 180.0f;
+				treasure->SetRot(D3DXVECTOR3(0.0f, rotY, 0.0f));
+
+				treasurePositions.push_back(pos);
+				break;
+			}
+		}
+	}
 
 	int attempts = 0;
 
-	while ((int)treasurePositions.size() < MAX_TREASURE && attempts < MAX_ATTEMPTS)
+	while ((int)treasurePositions.size() < TOTAL_TREASURE && attempts < MAX_ATTEMPTS)
 	{
 		attempts++;
 
@@ -1230,7 +1320,7 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 		{
 			float dx = t.x - pos.x;
 			float dz = t.z - pos.z;
-			if (dx * dx + dz * dz < (MIN_TORCH_DISTANCE * MIN_TORCH_DISTANCE))
+			if (dx * dx + dz * dz < (MIN_NORMAL_DISTANCE * MIN_NORMAL_DISTANCE))
 			{
 				tooClose = true;
 				break;
@@ -1250,12 +1340,17 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 			D3DXVECTOR3 offPos = treasure->GetPos();
 			offPos.y -= 3.0f;
 			treasure->SetPos(offPos);
+
+			// 向きをランダムにする
+			float rotY = (rand() % 360) * D3DX_PI / 180.0f;
+			treasure->SetRot(D3DXVECTOR3(0.0f, rotY, 0.0f));
+
 			treasurePositions.push_back(pos);
 		}
 	}
 
 #ifdef _DEBUG
-	if ((int)treasurePositions.size() < MAX_TREASURE)
+	if ((int)treasurePositions.size() < TOTAL_TREASURE)
 	{
 		MessageBox(nullptr, "埋蔵金の配置に失敗しました。", "エラー", MB_OK | MB_ICONERROR);
 	}
@@ -1431,7 +1526,7 @@ void CBlockManager::CreateGrassCluster(const D3DXVECTOR3& centerPos, float areaS
 	int gridX, int gridZ, float offsetX, float offsetZ,
 	const std::vector<D3DXVECTOR3>& waterPositions)
 {
-	int grassLength = 2 + rand() % 3;    // 草を連続配置する数
+	int grassLength = 3 + rand() % 3;    // 草を連続配置する数
 
 	// --- マップ中心を取得 ---
 	const float mapCenterX = offsetX + (gridX - 1) * areaSize / 2.0f;
@@ -1529,9 +1624,6 @@ void CBlockManager::OnTreasureCollected(const D3DXVECTOR3& pos)
 {
 	for (auto it = m_treasurePositions.begin(); it != m_treasurePositions.end(); ++it)
 	{
-		//float dx = it->x - pos.x;
-		//float dz = it->z - pos.z;
-
 		// 位置が一致しているか判定
 		if (it->x == pos.x && it->z == pos.z)
 		{
@@ -1582,7 +1674,7 @@ bool CBlockManager::IsCollidingWithTorch(const D3DXVECTOR3& pos, float areaSize,
 //=============================================================================
 void CBlockManager::ApplyRandomGrassTransform(CBlock* block)
 {
-	float scaleX = 1.0f + (rand() / (float)RAND_MAX) * 0.8f;
+	float scaleX = 1.5f + (rand() / (float)RAND_MAX) * 0.8f;
 	float scaleY = 1.3f + (rand() / (float)RAND_MAX) * 0.3f;
 	float rotY = (rand() % 360) * D3DX_PI / 180.0f;
 

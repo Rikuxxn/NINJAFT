@@ -22,7 +22,7 @@ CGrassBlock::CGrassBlock(int nPriority) : CBlock(nPriority)
 {
 	// 値のクリア
 	m_rotVel = INIT_VEC3;
-	m_distMax = 40.0f;
+	m_distMax = 35.0f;
 }
 //=============================================================================
 // デストラクタ
@@ -99,9 +99,9 @@ void CGrassBlock::Update(void)
 		pPlayer->SetInGrass(dist < m_distMax);
 	}
 
-	// *** バネ ＋ ダンピング ***
-	float stiffness = 0.12f;		// バネの強さ（0.1～0.3ぐらい）
-	float damping = 0.75f;			// 減衰率（0.8～0.98ぐらい）
+	// バネ ＋ ダンピング
+	float stiffness = 0.12f;		// バネの強さ
+	float damping = 0.75f;			// 減衰率
 
 	// バネ力 = (目標 - 現在) × バネ定数
 	m_rotVel.x += (targetRot.x - rot.x) * stiffness;
@@ -136,8 +136,14 @@ void CGrassBlock::Draw(void)
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
 	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);//0より大きかったら描画
 
+	// カリング設定を無効化
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
 	// ブロックの描画
 	CBlock::Draw();
+
+	// カリング設定を有効化
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	// αテストを無効に戻す
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);//デフォルトはfalse

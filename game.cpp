@@ -103,14 +103,14 @@ HRESULT CGame::Init(void)
 	characterManager.AddCharacter(pLeader);
 
 	// サブ敵生成
-	constexpr int NUM_SUB_ENEMIES = 60;
+	constexpr int NUM_SUB_ENEMIES = 50;
 	std::vector<CEnemy*> subEnemies;
 	for (int i = 0; i < NUM_SUB_ENEMIES; i++)
 	{
 		// リーダーの周囲に配置
 		D3DXVECTOR3 offset(
 			(rand() % 200 - 100),  // -100～100
-			0.0f,
+			55.0f,
 			(rand() % 200 - 100)
 		);
 

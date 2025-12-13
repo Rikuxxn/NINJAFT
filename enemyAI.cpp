@@ -74,7 +74,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     }
     else if (playerInGrass)// ƒvƒŒƒCƒ„[‚ª‘‚É‚¢‚é‚Æ‚«‚Í‹ŠE‚ğ‹·‚ß‚é
     {
-        range = 170.0f;
+        range = 100.0f;
         angle = 100.0f;
     }
 

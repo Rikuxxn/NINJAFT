@@ -399,7 +399,7 @@ public:
 	static constexpr float SPEED = 5.0f;				// 移動スピード
 	static constexpr float INVESTIGATE_SPEED = 10.0f;	// 調査時の移動スピード
 	static constexpr float CHASE_SPEED = 13.0f;			// 追跡時の移動スピード
-	static constexpr float CHASE_DISTANCE = 110.0f;		// 追跡状態になる距離
+	static constexpr float CHASE_DISTANCE = 150.0f;		// 追跡状態になる距離
 
 	// サブ敵モーションの種類
 	typedef enum
@@ -421,7 +421,7 @@ public:
 	StateMachine<CEnemySub> GetStateMachine(void) { return m_stateMachine; }
 
 private:
-	static constexpr int MAX_PARTS = 32;			// 最大パーツ数
+	static constexpr int MAX_PARTS = 10;			// 最大パーツ数
 	static constexpr float CAPSULE_RADIUS = 1.0f;	// カプセルコライダーの半径
 	static constexpr float CAPSULE_HEIGHT = 65.0f;	// カプセルコライダーの高さ
 

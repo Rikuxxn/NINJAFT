@@ -380,9 +380,6 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="grass.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="collisionUtils.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -517,6 +514,9 @@
     </ClInclude>
     <ClInclude Include="resulttreasurecount.h">
       <Filter>ヘッダー ファイル\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="grass.h">
+      <Filter>ヘッダー ファイル\Block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

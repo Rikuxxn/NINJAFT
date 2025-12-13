@@ -335,8 +335,12 @@ void CGame::Update(void)
 	{
 		if (pFade->GetFade() == CFade::FADE_NONE && exit->IsEscape())
 		{
+			// •ó‚ÌŠl“¾”‚Ìæ“¾
+			int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+
 			// ƒ‰ƒ“ƒLƒ“ƒO‚É“o˜^
-			m_pRankingManager->AddRecordWithLimit(3, 0, m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+			//m_pRankingManager->AddRecordWithLimit(3, 0, m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+			m_pRankingManager->AddItemRecord(treasureCount);
 
 			// ‡ˆÊ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
 			int rankIndex = m_pRankingManager->GetRankIdx();
@@ -347,9 +351,6 @@ void CGame::Update(void)
 
 			// ‰¹”­¶”‚Ìæ“¾
 			int count = m_pEnemy->GetSoundCount();
-
-			// •ó‚ÌŠl“¾”‚Ìæ“¾
-			int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
 
 			// •ó‚ÌŠl“¾”‚Ìİ’è
 			CResult::SetTreasureCount(treasureCount);
@@ -367,8 +368,12 @@ void CGame::Update(void)
 
 	if (pFade->GetFade() == CFade::FADE_NONE && pInputKeyboard->GetTrigger(DIK_RETURN))
 	{
+		// •ó‚ÌŠl“¾”‚Ìæ“¾
+		int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+
 		// ƒ‰ƒ“ƒLƒ“ƒO‚É“o˜^
-		m_pRankingManager->AddRecordWithLimit(3, 0, m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+		//m_pRankingManager->AddRecordWithLimit(3, 0, m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+		m_pRankingManager->AddItemRecord(treasureCount);
 
 		// ‡ˆÊ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
 		int rankIndex = m_pRankingManager->GetRankIdx();
@@ -379,6 +384,9 @@ void CGame::Update(void)
 
 		// ‰¹”­¶”‚Ìæ“¾
 		int count = m_pEnemy->GetSoundCount();
+
+		// •ó‚ÌŠl“¾”‚Ìİ’è
+		CResult::SetTreasureCount(treasureCount);
 
 		// ‰¹”­¶”‚Ìİ’è
 		CResult::SetSoundCount(count);

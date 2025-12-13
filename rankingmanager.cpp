@@ -53,7 +53,7 @@ void CRankingManager::Save(void)
 
     for (auto& data : m_rankList)
     {
-        fprintf(fp, "%d %d\n", data.minutes, data.seconds);
+        fprintf(fp, "%d %d %d\n", data.minutes, data.seconds, data.items);
     }
 
     // ファイルを閉じる
@@ -74,11 +74,15 @@ void CRankingManager::Load(void)
         return;
     }
 
-    int min, sec;
+    int min, sec, items;
 
-    while (fscanf(fp, "%d %d", &min, &sec) == 2)
+    while (fscanf(fp, "%d %d %d", &min, &sec, &items) == 3)
     {
-        m_rankList.push_back({ min, sec });
+        RankData data;
+        data.minutes = min;
+        data.seconds = sec;
+        data.items = items;
+        m_rankList.push_back(data);
     }
 
     // ファイルを閉じる

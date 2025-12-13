@@ -39,6 +39,12 @@ public:
 	CRankingManager();
 	~CRankingManager();
 
+    enum class RankType
+    {
+        ClearTime,  // 速い順
+        ItemCount   // 多い順
+    };
+
     static CRankingManager* GetInstance(void)
     {
         m_Instance = new CRankingManager();
@@ -47,15 +53,14 @@ public:
     }
 
     // 外部からコピー用に取得
-    std::vector<std::pair<int, int>> GetRankList(void) const
+    std::vector<RankData> GetRankList(void) const
     {
-        std::vector<std::pair<int, int>> list;
+        std::vector<RankData> list;
 
-        for (auto& r : m_rankList)
+        for (const auto& r : m_rankList)
         {
-            list.push_back({ r.minutes, r.seconds });
+            list.push_back({ r.minutes, r.seconds, r.items });
         }
-
         return list;
     }
 
@@ -69,12 +74,28 @@ public:
     }
 
     //*****************************************************************************
+    // アイテムの数を記録
+    //*****************************************************************************
+    void AddItemRecord(int itemCount)
+    {
+        RankData data;
+        data.items = itemCount;
+        RegisterRecord(data);
+    }
+
+    //*****************************************************************************
     // 残り時間をクリアタイムに変換して登録
     //*****************************************************************************
     void AddRecordWithLimit(int limitMinutes, int limitSeconds, int remainMinutes, int remainSeconds)
     {
         RankData data = ConvertToClearTime(limitMinutes, limitSeconds, remainMinutes, remainSeconds);
         RegisterRecord(data);
+    }
+
+    void SetRankType(RankType type)
+    {
+        m_rankType = type;
+        SortRank();   // 切り替えたら並び替え
     }
 
     const std::vector<RankData>& GetList(void) const { return m_rankList; }
@@ -84,6 +105,8 @@ public:
     void Load(void);
 
 private:
+    RankType m_rankType = RankType::ItemCount;
+
     //*****************************************************************************
     // 残り時間 → クリアタイムへの変換
     //*****************************************************************************
@@ -111,15 +134,8 @@ private:
     {
         m_rankList.push_back(data);
 
-        // ソート（速い順）
-        std::sort(m_rankList.begin(), m_rankList.end(), [](const RankData& a, const RankData& b)
-        {
-            if (a.minutes == b.minutes)
-            {
-                return a.seconds < b.seconds;
-            }
-            return a.minutes < b.minutes;
-        });
+        // ソート処理
+        SortRank();
 
         // 上位5件に制限
         if (m_rankList.size() > MAX_RANK)
@@ -131,7 +147,9 @@ private:
         m_rankIdx = -1; // 初期値はランクイン無し
         for (size_t i = 0; i < m_rankList.size(); i++)
         {
-            if (m_rankList[i].minutes == data.minutes && m_rankList[i].seconds == data.seconds)
+            if ((m_rankList[i].minutes == data.minutes &&
+                m_rankList[i].seconds == data.seconds) &&
+                m_rankList[i].items == data.items)
             {
                 m_rankIdx = static_cast<int>(i);
                 break;
@@ -141,6 +159,42 @@ private:
         // 保存
         Save();
     }
+
+    //*****************************************************************************
+    // ソート処理
+    //*****************************************************************************
+    void SortRank(void)
+    {
+        std::sort(m_rankList.begin(), m_rankList.end(),
+            [this](const RankData& a, const RankData& b)
+            {
+                if (m_rankType == RankType::ItemCount)
+                {
+                    // アイテム数：多い順
+                    if (a.items != b.items)
+                    {
+                        return a.items > b.items;
+                    }
+                }
+                else
+                {
+                    // クリアタイム：速い順
+                    if (a.minutes != b.minutes)
+                    {
+                        return a.minutes < b.minutes;
+                    }
+
+                    if (a.seconds != b.seconds)
+                    {
+                        return a.seconds < b.seconds;
+                    }
+                }
+
+                // 同点時の保険（安定ソート用）
+                return a.items > b.items;
+            });
+    }
+
 };
 
 #endif

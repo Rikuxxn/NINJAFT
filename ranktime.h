@@ -44,7 +44,6 @@ private:
 	CNumber* m_apNumber[MaxRanking][DIGITS];// ナンバーへのポインタ
 	int m_nMinutes;							// 分
 	int m_nSeconds;							// 秒
-	int m_nFrameCount;						// フレームカウント
 	float m_digitWidth;						// 数字1桁あたりの幅
 	float m_digitHeight;					// 数字1桁あたりの高さ
 	D3DXVECTOR3 m_basePos;					// 表示の開始位置

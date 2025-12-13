@@ -169,22 +169,3 @@ void CResultTreasureCount::Draw(void)
 		}
 	}
 }
-//=============================================================================
-// Œ…•ªŠ„ˆ—
-//=============================================================================
-int CResultTreasureCount::DigitNum(int nCount)
-{
-	if (nCount == 0)
-	{
-		return 1;
-	}
-
-	int nCnt = 0;
-	while (nCount > 0)
-	{
-		nCount /= 10;
-		nCnt++;
-	}
-
-	return nCnt;
-}

@@ -23,6 +23,7 @@ CRanking::CRanking() : CScene(CScene::MODE_RANKING)
 {
 	// 値のクリア
 	m_pRankingManager = nullptr;
+	m_pRankItem = nullptr;
 }
 //=============================================================================
 // デストラクタ
@@ -39,30 +40,11 @@ HRESULT CRanking::Init(void)
 	// ランキングマネージャーのインスタンス生成
 	m_pRankingManager = CRankingManager::GetInstance();
 
-	// ランキングタイムの生成
-	m_pRankTime = CRankTime::Create(600.0f, 170.0f, 62.0f, 78.0f);
+	//// タイムランキング
+	//TimeRanking(m_pRankingManager);
 
-	// ランキングデータをセット
-	if (m_pRankingManager)
-	{
-		std::vector<std::pair<int, int>> rankList;
-
-		for (auto& r : m_pRankingManager->GetList())
-		{
-			rankList.push_back({ r.minutes, r.seconds });
-		}
-
-		// タイムリストの設定
-		m_pRankTime->SetRankList(rankList);
-
-		int  rankIndex = CResult::GetClearRank();
-
-		if (rankIndex >= 0 && rankIndex < static_cast<int>(rankList.size()))
-		{
-			// ランクインアニメーション
-			m_pRankTime->ShowNewRankEffect(rankIndex);
-		}
-	}
+	// アイテムランキング
+	ItemRanking(m_pRankingManager);
 
 	return S_OK;
 }
@@ -116,6 +98,64 @@ void CRanking::Draw(void)
 {
 
 
+}
+//=============================================================================
+// タイムランキング処理
+//=============================================================================
+void CRanking::TimeRanking(CRankingManager* pRankingManager)
+{
+	// ランキングタイムの生成
+	m_pRankTime = CRankTime::Create(600.0f, 170.0f, 62.0f, 78.0f);
 
+	// ランキングデータをセット
+	if (pRankingManager)
+	{
+		std::vector<std::pair<int, int>> rankList;
 
+		for (auto& r : pRankingManager->GetList())
+		{
+			rankList.push_back({ r.minutes, r.seconds });
+		}
+
+		// タイムリストの設定
+		m_pRankTime->SetRankList(rankList);
+
+		int  rankIndex = CResult::GetClearRank();
+
+		if (rankIndex >= 0 && rankIndex < static_cast<int>(rankList.size()))
+		{
+			// ランクインアニメーション
+			m_pRankTime->ShowNewRankEffect(rankIndex);
+		}
+	}
+}
+//=============================================================================
+// アイテムランキング処理
+//=============================================================================
+void CRanking::ItemRanking(CRankingManager* pRankingManager)
+{
+	// ランキングアイテムの生成
+	m_pRankItem = CRankItem::Create(600.0f, 170.0f, 62.0f, 78.0f);
+
+	// ランキングデータをセット
+	if (pRankingManager)
+	{
+		std::vector<int> rankList;
+
+		for (auto& r : pRankingManager->GetList())
+		{
+			rankList.push_back({ r.items });
+		}
+
+		// アイテムリストの設定
+		m_pRankItem->SetRankList(rankList);
+
+		int  rankIndex = CResult::GetClearRank();
+
+		if (rankIndex >= 0 && rankIndex < static_cast<int>(rankList.size()))
+		{
+			// ランクインアニメーション
+			m_pRankItem->ShowNewRankEffect(rankIndex);
+		}
+	}
 }

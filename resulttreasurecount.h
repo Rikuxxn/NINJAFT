@@ -27,9 +27,9 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
 	D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(); }
 	static void SetTreasureCount(int nCount) { m_nTreasureCount = nCount; }
-	int DigitNum(int nCount);
 
 private:
 	static const int MAX_DIGITS = 3;		// åÖêî

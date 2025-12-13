@@ -13,6 +13,7 @@
 #include "scene.h"
 #include "rankingmanager.h"
 #include "ranktime.h"
+#include "rankitem.h"
 
 //*****************************************************************************
 // ランキングクラス
@@ -28,9 +29,13 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void TimeRanking(CRankingManager* pRankingManager);
+	void ItemRanking(CRankingManager* pRankingManager);
+
 private:
-	CRankTime* m_pRankTime;            // クリアタイムランキング表示用
-	CRankingManager* m_pRankingManager;// ランキングへのポインタ
+	CRankTime* m_pRankTime;				// クリアタイムランキング表示用
+	CRankItem* m_pRankItem;				// アイテムランキング表示用
+	CRankingManager* m_pRankingManager;	// ランキングへのポインタ
 };
 
 

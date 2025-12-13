@@ -285,6 +285,9 @@
     <ClCompile Include="resulttreasurecount.cpp">
       <Filter>ソース ファイル\ResultUI</Filter>
     </ClCompile>
+    <ClCompile Include="rankitem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -517,6 +520,9 @@
     </ClInclude>
     <ClInclude Include="grass.h">
       <Filter>ヘッダー ファイル\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="rankitem.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

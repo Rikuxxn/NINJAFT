@@ -228,6 +228,7 @@
     <ClCompile Include="rank.cpp" />
     <ClCompile Include="ranking.cpp" />
     <ClCompile Include="rankingmanager.cpp" />
+    <ClCompile Include="rankitem.cpp" />
     <ClCompile Include="ranktime.cpp" />
     <ClCompile Include="raycast.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="rank.h" />
     <ClInclude Include="ranking.h" />
     <ClInclude Include="rankingmanager.h" />
+    <ClInclude Include="rankitem.h" />
     <ClInclude Include="ranktime.h" />
     <ClInclude Include="raycast.h" />
     <ClInclude Include="renderer.h" />

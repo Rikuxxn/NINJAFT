@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// タイム処理 [ranktime.cpp]
+// ランキングタイム処理 [ranktime.cpp]
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
@@ -24,7 +24,6 @@ CRankTime::CRankTime(int nPriority) : CObject(nPriority)
 	memset(m_apRankClon, 0, sizeof(m_apRankClon));	// コロンへのポインタ
 	m_nMinutes = 0;								// 分
 	m_nSeconds = 0;								// 秒
-	m_nFrameCount = 0;							// フレームカウント
 	m_digitWidth = 0.0f;						// 数字1桁あたりの幅
 	m_digitHeight = 0.0f;						// 数字1桁あたりの高さ
 	m_basePos = INIT_VEC3;						// 表示の開始位置
@@ -46,7 +45,6 @@ CRankTime* CRankTime::Create(float baseX,float baseY,float digitWidth,float digi
 
 	pRankTime = new CRankTime;
 
-	pRankTime->m_nFrameCount = 0;
 	pRankTime->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
 	pRankTime->m_digitWidth = digitWidth;
 	pRankTime->m_digitHeight = digitHeight;
@@ -68,7 +66,7 @@ HRESULT CRankTime::Init(void)
 		float UIbaseX = m_basePos.x + m_digitWidth;
 		float UIbaseY = m_basePos.y + i * (m_digitHeight + 50.0f);
 
-		// テスト
+		// 順位表示
 		CRank::Create(D3DXVECTOR3(UIbaseX, UIbaseY, 0.0f), m_digitWidth / 2, m_digitHeight, (float)i);
 
 		// 順位UIの幅

@@ -36,12 +36,10 @@ public:
     void GenerateRiver(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, std::vector<D3DXVECTOR3>& outWaterPositions);
     void GenerateClusters(int gridX, int gridZ, float areaSize,
-        float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
-        std::vector<D3DXVECTOR3>& torchPositions);
+        float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions);
     void CreateClusterElement(const D3DXVECTOR3& pos, float AREA_SIZE,
         int GRID_X, int GRID_Z, float offsetX, float offsetZ,
-        const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& torchPositions,
-        int& torchRemaining);
+        const std::vector<D3DXVECTOR3>& waterPositions);
     void EnsureTorchCount(int gridX, int gridZ, float areaSize,
         float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
         std::vector<D3DXVECTOR3>& torchPositions);

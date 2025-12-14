@@ -198,7 +198,7 @@ public:
 	{
 		D3DXVECTOR3 pos = GetPos();
 		D3DXVECTOR3 dis = m_currentPatrolTarget - pos;
-		return D3DXVec3Length(&dis) < 20.0f; // 到達距離
+		return D3DXVec3Length(&dis) < 40.0f; // 到達距離
 	}
 
 	// 埋蔵金の位置に到達したか
@@ -214,7 +214,7 @@ public:
 	{
 		D3DXVECTOR3 pos = GetPos();
 		D3DXVECTOR3 dis = m_lastHeardSoundPos - pos;
-		return D3DXVec3Length(&dis) < 30.0f; // 到達距離
+		return D3DXVec3Length(&dis) < 40.0f; // 到達距離
 	}
 
 	bool IsPlayerInSight(CPlayer* pPlayer);

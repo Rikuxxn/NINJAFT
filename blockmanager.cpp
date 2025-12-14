@@ -942,10 +942,10 @@ void CBlockManager::GenerateRandomMap(int seed)
 	GenerateRiver(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, waterPositions);
 
 	// クラスタ生成
-	std::vector<D3DXVECTOR3> torchPositions;
-	GenerateClusters(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, waterPositions, torchPositions);
+	GenerateClusters(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, waterPositions);
 
 	// 灯籠補充
+	std::vector<D3DXVECTOR3> torchPositions;
 	EnsureTorchCount(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ, waterPositions, torchPositions);
 
 	// 埋蔵金補充
@@ -1021,14 +1021,10 @@ void CBlockManager::GenerateRiver(int gridX, int gridZ, float areaSize,
 // クラスタ生成処理
 //=============================================================================
 void CBlockManager::GenerateClusters(int gridX, int gridZ, float areaSize,
-	float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
-	std::vector<D3DXVECTOR3>& torchPositions)
+	float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions)
 {
 	// クラスター数
 	const int clusterCount = 10;
-
-	// 灯籠の実体を作る
-	int torchRemaining = MAX_TORCH;
 
 	for (int i = 0; i < clusterCount; i++)
 	{
@@ -1046,7 +1042,7 @@ void CBlockManager::GenerateClusters(int gridX, int gridZ, float areaSize,
 			);
 
 			// クラスタの要素生成
-			CreateClusterElement(pos, areaSize, gridX, gridZ, offsetX, offsetZ, waterPositions, torchPositions, torchRemaining);
+			CreateClusterElement(pos, areaSize, gridX, gridZ, offsetX, offsetZ, waterPositions);
 		}
 	}
 }
@@ -1055,8 +1051,7 @@ void CBlockManager::GenerateClusters(int gridX, int gridZ, float areaSize,
 //=============================================================================
 void CBlockManager::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 	int gridX, int gridZ, float offsetX, float offsetZ,
-	const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& torchPositions,
-	int& torchRemaining)
+	const std::vector<D3DXVECTOR3>& waterPositions)
 {
 	// --- マップの中心座標を求める ---
 	const float mapCenterX = offsetX + (gridX - 1) * areaSize / 2.0f;
@@ -1074,31 +1069,7 @@ void CBlockManager::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 		return;
 	}
 
-	// 灯籠生成判定
 	CBlock::TYPE type = CBlock::TYPE_GRASS;
-	if (torchRemaining > 0)
-	{
-		const float MIN_TORCH_DIST = 3.0f * areaSize;
-		bool tooClose = false;
-		for (auto& t : torchPositions)
-		{
-			float dx = t.x - pos.x;
-			float dz = t.z - pos.z;
-			if (dx * dx + dz * dz < (MIN_TORCH_DIST * MIN_TORCH_DIST))
-			{
-				tooClose = true;
-				break;
-			}
-		}
-
-		// 近くなかったら
-		if (!tooClose)
-		{
-			type = CBlock::TYPE_TORCH_01;
-			torchRemaining--;
-			torchPositions.push_back(pos);
-		}
-	}
 
 	// 水上でなければ生成
 	if (!IsCollidingWithWater(pos, areaSize, waterPositions))
@@ -1109,13 +1080,7 @@ void CBlockManager::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 			return;
 		}
 
-		if (type == CBlock::TYPE_TORCH_01)
-		{
-			D3DXVECTOR3 p = block->GetPos();
-			p.y += 35.0f;
-			block->SetPos(p);
-		}
-		else if (type == CBlock::TYPE_GRASS)
+		if (type == CBlock::TYPE_GRASS)
 		{
 			ApplyRandomGrassTransform(block);
 		}
@@ -1128,58 +1093,52 @@ void CBlockManager::EnsureTorchCount(int gridX, int gridZ, float areaSize,
 	float offsetX, float offsetZ, const std::vector<D3DXVECTOR3>& waterPositions,
 	std::vector<D3DXVECTOR3>& torchPositions)
 {
-	const float MIN_TORCH_DISTANCE = 5.0f * areaSize;
+	const float startX = offsetX + areaSize * 0.5f;
+	const float startZ = offsetZ + areaSize * 0.5f;
+	const float endX = offsetX + (gridX - 1) * areaSize;
+	const float endZ = offsetZ + (gridZ - 1) * areaSize;
 
-	int attempts = 0;
-
-	// 中央禁止エリア計算
-	float centerX = offsetX + (gridX * areaSize) * 0.5f;
-	float centerZ = offsetZ + (gridZ * areaSize) * 0.5f;
-
-	float centerRadius = areaSize * 5.0f; // 敵巡回エリアに合わせて調整
-
-	while ((int)torchPositions.size() < MAX_TORCH && attempts < MAX_ATTEMPTS)
+	const float INWARD_OFFSET = areaSize * 0.5f; // 壁から離す距離
+	const float variation = areaSize * 0.6f;
+	auto randVar = [&]()
 	{
-		attempts++;
+		return ((rand() / (float)RAND_MAX) - 0.5f) * 2.0f * variation;
+	};
 
-		float randX = offsetX + (rand() % gridX) * areaSize;
-		float randZ = offsetZ + (rand() % gridZ) * areaSize;
-		D3DXVECTOR3 pos(randX, 0.0f, randZ);
+	// 4辺からランダムに3つ選ぶ
+	std::vector<int> sides = { 0, 1, 2, 3 }; // 0 = 下,1 = 上,2 = 左,3 = 右
+	std::shuffle(sides.begin(), sides.end(), std::mt19937{ std::random_device{}() });
+	sides.resize(MAX_TORCH);
 
-		// 中央付近なら配置禁止
-		float dx_c = pos.x - centerX;
-		float dz_c = pos.z - centerZ;
-		if (dx_c * dx_c + dz_c * dz_c < (centerRadius * centerRadius))
+	for (int side : sides)
+	{
+		D3DXVECTOR3 pos;
+
+		switch (side)
 		{
-			continue;
+		case 0: // 下
+			pos = { (startX + endX) * 0.8f + randVar(), 0.0f, startZ + INWARD_OFFSET };
+			break;
+		case 1: // 上
+			pos = { (startX + endX) * 0.8f + randVar(), 0.0f, endZ - INWARD_OFFSET };
+			break;
+		case 2: // 左
+			pos = { startX + INWARD_OFFSET, 0.0f, (startZ + endZ) * 0.8f + randVar() };
+			break;
+		case 3: // 右
+			pos = { endX - INWARD_OFFSET, 0.0f, (startZ + endZ) * 0.8f + randVar() };
+			break;
 		}
 
+		// 水と被ったら
 		if (IsCollidingWithWater(pos, areaSize, waterPositions))
 		{
 			continue;
 		}
 
-		bool tooClose = false;
-		for (auto& t : torchPositions)
+		if (CBlock* torch = CreateBlock(CBlock::TYPE_TORCH_01, pos))
 		{
-			float dx = t.x - pos.x;
-			float dz = t.z - pos.z;
-			if (dx * dx + dz * dz < (MIN_TORCH_DISTANCE * MIN_TORCH_DISTANCE))
-			{
-				tooClose = true;
-				break;
-			}
-		}
-
-		if (tooClose)
-		{
-			continue;
-		}
-
-		CBlock* torch = CreateBlock(CBlock::TYPE_TORCH_01, pos);
-		if (torch)
-		{
-			D3DXVECTOR3 offPos = torch->GetPos();
+			D3DXVECTOR3 offPos = pos;
 			offPos.y += 35.0f;
 			torch->SetPos(offPos);
 			torchPositions.push_back(pos);

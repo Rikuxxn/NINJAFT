@@ -104,7 +104,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     }
 
     // 特定のオブジェクトに接触かつ忍び足じゃなかったら
-    if (playerCondition && (playerInGrass || playerInWater || playerInTorch))
+    if (playerCondition && (playerInGrass || playerInWater))
     {
         m_soundTimer++;
 

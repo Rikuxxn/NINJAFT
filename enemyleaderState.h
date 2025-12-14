@@ -915,7 +915,7 @@ public:
 		if (!pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
 			// ƒTƒu“G‚ª’ÇÕ‚µ‚Ä‚¢‚È‚­‚ÄA‹——£‚ª—£‚ê‚½‚çŒx‰ú‚Ö
-			if (distance > 300.0f)
+			if (distance > 280.0f)
 			{
 				// Œx‰úó‘Ô
 				m_pMachine->ChangeState<CEnemyLeader_CautionState>();

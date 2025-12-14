@@ -92,11 +92,17 @@ public:
 		// フラグ更新
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
-		//// 埋蔵金の取得数に応じてスピードを遅くする
-		//int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+		// 埋蔵金の取得数に応じてスピードを遅くする
+		int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+
+		float speedRate = 1.0f - treasureCount * 0.05f;// 5%ずつ低下
+		speedRate = max(speedRate, 0.5f); // 最大50%
+
+		// モーションスピードを遅くしていく
+		pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
 
 		// 目標速度計算
-		float moveSpeed = CPlayer::PLAYER_SPEED/* * (treasureCount * 0.9f)*/;
+		float moveSpeed = CPlayer::PLAYER_SPEED * speedRate;
 
 		D3DXVECTOR3 targetMove = input.moveDir;
 
@@ -172,9 +178,10 @@ public:
 		}
 	}
 
-	void OnExit(CPlayer* /*pPlayer*/)override
+	void OnExit(CPlayer* pPlayer)override
 	{
-
+		// モーションスピードを通常に戻す
+		pPlayer->GetMotion()->SetMotionSpeedRate(1.0f);
 	}
 
 private:

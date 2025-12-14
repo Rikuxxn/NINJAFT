@@ -285,7 +285,7 @@ public:
 		// ’ÇÕƒ‚[ƒVƒ‡ƒ“
 		pEnemy->GetMotion()->StartBlendMotion(CEnemySub::CHASE, 10);
 
-		pEnemy->SetSize(D3DXVECTOR3(1.5f, 1.5f, 1.5f));
+		pEnemy->SetSize(D3DXVECTOR3(1.8f, 1.8f, 1.8f));
 	}
 
 	void OnUpdate(CEnemySub* pEnemy)override

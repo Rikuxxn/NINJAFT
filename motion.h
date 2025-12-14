@@ -29,7 +29,7 @@ public:
 	void StartBlendMotion(int  motionTypeBlend, int nFrameBlend);
 	void SetMotion(int  motionType);
 	void AdvanceKeyCounter(int motionType, int& nKey, int& nCounter, bool bLoop);
-
+	void SetMotionSpeedRate(float rate);
 	bool IsCurrentMotion(int motionType) const;
 	bool IsCurrentMotionEnd(int motionType) const;
 	int GetMotionType(void) { return m_motionType; }
@@ -104,6 +104,8 @@ private:
 	int m_nCounterMotionBlend;					// ブレンドモーションのカウンター
 	int m_nFrameBlend;							// ブレンドのフレーム数(何フレームかけてブレンドするか)
 	int m_nCounterBlend;						// ブレンドカウンター
+	float m_motionSpeedRate;					// モーションスピード
+	float m_motionCounterAcc;					// 小数進行用
 };
 
 #endif

@@ -256,77 +256,8 @@ void CGame::Update(void)
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
 
-	switch (m_startState)
-	{
-	case StartState::WaitStart:
-		m_stateTimer--;
-
-		if (m_stateTimer <= 0.0f)
-		{
-			// UI表示
-			auto mission = CUIManager::GetInstance()->GetUI("Mission");
-			mission->Show();
-
-			m_startState = StartState::Hidden;
-			m_stateTimer = 180;  // UI表示時間
-		}
-		break;
-
-	case StartState::Hidden:
-		m_stateTimer--;
-
-		if (m_stateTimer <= 0.0f)
-		{
-			// UI非表示
-			auto mission = CUIManager::GetInstance()->GetUI("Mission");
-			mission->FadeOut(60.0f);
-
-			// 操作フラグをtrueにする
-			m_pPlayer->SetControlFlag(true);
-			m_pEnemy->SetControlFlag(true);
-
-			// タイマーも開始
-			m_pTime->SetActiveFlag(true);
-
-			m_startState = StartState::Idle;
-		}
-		break;
-
-	case StartState::Idle:
-
-		// タイムアップまたはプレイヤーが死んだら
-		if (m_pTime->IsTimeUp() || m_pPlayer->IsDead())
-		{
-			m_stateTimer = 120;
-			m_startState = StartState::Failure;
-		}
-		break;
-	case StartState::Failure:// 失敗時
-		m_stateTimer--;
-
-		if (m_stateTimer <= 0.0f)
-		{
-			m_stateTimer = 180;
-
-			// UI表示
-			auto mission_failure = CUIManager::GetInstance()->GetUI("MissionFailure");
-			mission_failure->FadeIn(120.0f);
-
-			m_startState = StartState::WaitEnd;
-		}
-
-		break;
-	case StartState::WaitEnd:// 終了までの待機時間
-		m_stateTimer--;
-
-		if (pFade->GetFade() == CFade::FADE_NONE && m_stateTimer <= 0.0f)
-		{
-			// タイトル画面に移行
-			pFade->SetFade(MODE_TITLE);
-		}
-
-		break;
-	}
+	// UIの更新
+	UIUpdate();
 
 	// --- 脱出したか確認 ---
 	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();
@@ -404,9 +335,9 @@ void CGame::UpdateLight(void)
 	float progress = m_pTime->GetProgress(); // 0.0～0.1
 
 	// ======== 各時間帯のメインライト色 ========
-	D3DXCOLOR evening(1.0f, 0.65f, 0.35f, 1.0f); // 夕日：濃いオレンジ
-	D3DXCOLOR night(0.15f, 0.18f, 0.35f, 1.0f);  // 夜：青みが強く暗い（でも完全には黒くしない）
-	D3DXCOLOR morning(0.95f, 0.8f, 0.7f, 1.0f);  // 明け方：柔らかいピンクベージュ
+	D3DXCOLOR evening(1.0f, 0.65f, 0.35f, 1.0f); // 夕方
+	D3DXCOLOR night(0.15f, 0.18f, 0.35f, 1.0f);  // 夜
+	D3DXCOLOR morning(0.95f, 0.8f, 0.7f, 1.0f);  // 明け方
 
 	D3DXCOLOR mainColor;
 
@@ -424,7 +355,7 @@ void CGame::UpdateLight(void)
 	else
 	{// 明け方
 		float t = (progress - 0.90f) / (1.0f - 0.90f);
-		D3DXColorLerp(&mainColor, &morning, &evening, t); // 少し戻すとループっぽく自然
+		D3DXColorLerp(&mainColor, &morning, &evening, t);
 	}
 
 	// ======== 光の向き補間 ========
@@ -450,7 +381,7 @@ void CGame::UpdateLight(void)
 
 	m_pBlockManager->UpdateLight();
 
-	// メインライト（太陽・月相当）
+	// メインライト
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,
 		mainColor,
@@ -458,7 +389,7 @@ void CGame::UpdateLight(void)
 		D3DXVECTOR3(0.0f, 300.0f, 0.0f)
 	);
 
-	// サブライト（空の反射光）も時間帯で変化
+	// サブライト
 	D3DXCOLOR skyEvening(0.4f, 0.45f, 0.8f, 1.0f);
 	D3DXCOLOR skyNight(0.1f, 0.15f, 0.3f, 1.0f);
 	D3DXCOLOR skyMorning(0.6f, 0.7f, 1.0f, 1.0f);
@@ -480,8 +411,8 @@ void CGame::UpdateLight(void)
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 	);
 
-	// 補助光：ほんのり赤み（朝夕）を残す
-	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f; // 夕・朝で強め
+	// 補助光
+	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f;
 	warmFactor = max(0.0f, warmFactor);
 
 	CLight::AddLight(
@@ -505,6 +436,85 @@ void CGame::Draw(void)
 	{
 		// ポーズマネージャーの描画処理
 		m_pPauseManager->Draw();
+	}
+}
+//=============================================================================
+// UIの更新処理
+//=============================================================================
+void CGame::UIUpdate(void)
+{
+	CFade* pFade = CManager::GetFade();
+
+	switch (m_startState)
+	{
+	case StartState::WaitStart:
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			// UI表示
+			auto mission = CUIManager::GetInstance()->GetUI("Mission");
+			mission->Show();
+
+			m_startState = StartState::Hidden;
+			m_stateTimer = 180;  // UI表示時間
+		}
+		break;
+
+	case StartState::Hidden:
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			// UI非表示
+			auto mission = CUIManager::GetInstance()->GetUI("Mission");
+			mission->FadeOut(60.0f);
+
+			// 操作フラグをtrueにする
+			m_pPlayer->SetControlFlag(true);
+			m_pEnemy->SetControlFlag(true);
+
+			// タイマーも開始
+			m_pTime->SetActiveFlag(true);
+
+			m_startState = StartState::Idle;
+		}
+		break;
+
+	case StartState::Idle:
+
+		// タイムアップまたはプレイヤーが死んだら
+		if (m_pTime->IsTimeUp() || m_pPlayer->IsDead())
+		{
+			m_stateTimer = 120;
+			m_startState = StartState::Failure;
+		}
+		break;
+	case StartState::Failure:// 失敗時
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			m_stateTimer = 180;
+
+			// UI表示
+			auto mission_failure = CUIManager::GetInstance()->GetUI("MissionFailure");
+			mission_failure->FadeIn(120.0f);
+
+			m_startState = StartState::WaitEnd;
+		}
+
+		break;
+	case StartState::WaitEnd:// 終了までの待機時間
+		m_stateTimer--;
+
+		if (pFade->GetFade() == CFade::FADE_NONE && m_stateTimer <= 0.0f)
+		{
+			// タイトル画面に移行
+			pFade->SetFade(MODE_TITLE);
+		}
+
+		break;
 	}
 }
 //=============================================================================

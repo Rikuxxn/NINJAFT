@@ -33,7 +33,8 @@ CMotion::CMotion()
 	m_nCounterMotionBlend = 0;				// ブレンドモーションのカウンター
 	m_nFrameBlend		  = 0;				// ブレンドのフレーム数(何フレームかけてブレンドするか)
 	m_nCounterBlend       = 0;				// ブレンドカウンター
-
+	m_motionSpeedRate	  = 1.0f;			// 1.0 = 通常
+	m_motionCounterAcc	  = 0.0f;			// 小数進行用
 }
 //=============================================================================
 // デストラクタ
@@ -320,17 +321,30 @@ void CMotion::LoadMotionSet(FILE* pFile, char* aString, CMotion* pMotion, int& n
 //=============================================================================
 void CMotion::AdvanceKeyCounter(int motionType, int& nKey, int& nCounter, bool bLoop)
 {
-	nCounter++;
-	if (nCounter >= m_aMotionInfo[motionType].aKeyInfo[nKey].nFrame)
+	m_motionCounterAcc += m_motionSpeedRate;
+
+	if (m_motionCounterAcc < 1.0f)
+		return;
+
+	int step = (int)m_motionCounterAcc;
+	m_motionCounterAcc -= step;
+
+	nCounter += step;
+
+	while (nCounter >= m_aMotionInfo[motionType].aKeyInfo[nKey].nFrame)
 	{
-		nCounter = 0;
+		nCounter -= m_aMotionInfo[motionType].aKeyInfo[nKey].nFrame;
 		nKey++;
+
 		if (nKey >= m_aMotionInfo[motionType].nNumKey)
 		{
 			if (bLoop)
 				nKey = 0;
 			else
+			{
 				nKey = m_aMotionInfo[motionType].nNumKey - 1;
+				break;
+			}
 		}
 	}
 }
@@ -451,6 +465,13 @@ inline D3DXVECTOR3 CMotion::LerpRot(const KEY& a, const KEY& b, float t)
 		a.fRotY + delta(a.fRotY, b.fRotY) * t,
 		a.fRotZ + delta(a.fRotZ, b.fRotZ) * t
 	);
+}
+//=============================================================================
+// モーションスピード設定処理
+//=============================================================================
+void CMotion::SetMotionSpeedRate(float rate)
+{
+	m_motionSpeedRate = max(rate, 0.1f); // 下限
 }
 //=============================================================================
 // モーションブレンド開始処理

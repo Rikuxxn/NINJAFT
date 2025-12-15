@@ -16,6 +16,7 @@
 #include "ui.h"
 #include "background.h"
 #include "resulttreasurecount.h"
+#include "meshdome.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -66,11 +67,17 @@ HRESULT CResult::Init(void)
 	// ライトの再設定処理
 	ResetLight();
 
+	// JSONの読み込み
+	m_pBlockManager->LoadFromJson("data/block_result.json");
+
 	// 背景の生成
 	CBackground::Create(D3DXVECTOR3(360.0f, 540.0f, 0.0f), 360.0f, 540.0f, "data/TEXTURE/.png");
 
 	// ダミープレイヤーの生成
-	CDummyPlayer::Create(D3DXVECTOR3(300.0f, 110.0f, -10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::NEUTRAL);
+	CDummyPlayer::Create(D3DXVECTOR3(0.0f, 110.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::DUSH);
+
+	// メッシュドームの生成
+	CMeshDome::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), 2800);
 
 	// 合計秒で扱う
 	int totalLimit = 3 * 60 + 0;
@@ -156,11 +163,11 @@ void CResult::Update(void)
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();		// ゲームパッドの入力取得
 	CFade* pFade = CManager::GetFade();
 
-	if (pFade->GetFade() == CFade::FADE_NONE && (pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
-	{
-		// ランキング画面に移行
-		pFade->SetFade(MODE_RANKING);
-	}
+	//if (pFade->GetFade() == CFade::FADE_NONE && (pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	//{
+	//	// ランキング画面に移行
+	//	pFade->SetFade(MODE_RANKING);
+	//}
 
 #ifdef _DEBUG
 	if (pFade->GetFade() == CFade::FADE_NONE && CManager::GetInputKeyboard()->GetTrigger(DIK_RETURN))

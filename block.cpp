@@ -87,11 +87,14 @@ void CBlock::InitFactory(void)
 	// ƒŠƒXƒg‚ð‹ó‚É‚·‚é
 	m_BlockFactoryMap.clear();
 
+	m_BlockFactoryMap[CBlock::TYPE_WALL_01]			= []() -> CBlock* { return new CWallBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_GRASS_FLOOR]			= []() -> CBlock* { return new CGrassFloorBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_TORCH_01]		= []() -> CBlock* { return new CTorchBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_GRASS]			= []() -> CBlock* { return new CGrassBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_TORCH_01]		= []() -> CBlock* { return new CTorchBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_ROCK]			= []() -> CBlock* { return new CRockBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_WATER]			= []() -> CBlock* { return new CWaterBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_BLOSSOM_TREE]	= []() -> CBlock* { return new CBlossomTreeBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_BURIED_TREASURE] = []() -> CBlock* { return new CBuriedTreasureBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_DOOR]			= []() -> CBlock* { return new CDoorBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_GHOSTOBJECT]		= []() -> CBlock* { return new CExitBlock(); };

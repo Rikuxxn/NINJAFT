@@ -94,12 +94,23 @@ void CCamera::Uninit(void)
 void CCamera::Update(void)
 {
 	// タイトル画面だったら
-	if (CManager::GetMode() == MODE_TITLE || CManager::GetMode() == MODE_RESULT)
+	if (CManager::GetMode() == MODE_TITLE)
 	{// カメラの位置の設定
 		m_posV = D3DXVECTOR3(437.4f, 116.0f, 90.3f);
 		m_posR = D3DXVECTOR3(124.0f, 265.5f, -630.5f);
 		m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);// 固定でいい
 		m_rot = D3DXVECTOR3(-0.19f, 0.41f, 0.0f);
+		m_fDistance = sqrtf(
+			((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x)) +
+			((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y)) +
+			((m_posV.z - m_posR.z) * (m_posV.z - m_posR.z)));
+	}
+	else if (CManager::GetMode() == MODE_RESULT)
+	{// カメラの位置の設定
+		m_posV = D3DXVECTOR3(64.0f, 170.8f, 50.6f);
+		m_posR = D3DXVECTOR3(-41.4f, 152.2f, -112.4f);
+		m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);// 固定でいい
+		m_rot = D3DXVECTOR3(0.10f, 0.57f, 0.0f);
 		m_fDistance = sqrtf(
 			((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x)) +
 			((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y)) +

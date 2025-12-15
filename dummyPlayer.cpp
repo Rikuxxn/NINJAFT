@@ -81,7 +81,7 @@ HRESULT CDummyPlayer::Init(void)
 	m_pShadowS->SetStencilRef(1);// 個別のステンシルバッファの参照値を設定
 
 	// モーションを設定
-	m_pMotion->SetMotion(m_motionType/*, 10*/);
+	m_pMotion->SetMotion(m_motionType);
 
 	return S_OK;
 }

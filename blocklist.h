@@ -44,6 +44,46 @@ private:
 };
 
 //*****************************************************************************
+// 壁ブロッククラス
+//*****************************************************************************
+class CWallBlock : public CBlock
+{
+public:
+	CWallBlock();
+	~CWallBlock();
+
+	static TYPE GetStaticType(void) { return TYPE_WALL_01; }
+
+	void Update(void);
+
+private:
+	static constexpr float resetDepth = -810.0f;
+	static constexpr float bottomPosZ = 540.0f;
+	static constexpr float moveSpeed = 3.0f;
+
+};
+
+//*****************************************************************************
+// 草地面ブロッククラス
+//*****************************************************************************
+class CGrassFloorBlock : public CBlock
+{
+public:
+	CGrassFloorBlock();
+	~CGrassFloorBlock();
+
+	static TYPE GetStaticType(void) { return TYPE_GRASS_FLOOR; }
+
+	void Update(void);
+
+private:
+	static constexpr float resetDepth = -720.0f;
+	static constexpr float bottomPosZ = 480.0f;
+	static constexpr float moveSpeed = 3.0f;
+
+};
+
+//*****************************************************************************
 // 灯籠ブロッククラス
 //*****************************************************************************
 class CTorchBlock : public CBlock
@@ -97,6 +137,26 @@ private:
 
 	int m_counter;	// 生成カウンター
 	bool m_isHit;	// 当たっているか
+};
+
+//*****************************************************************************
+// 桜の木ブロッククラス
+//*****************************************************************************
+class CBlossomTreeBlock : public CBlock
+{
+public:
+	CBlossomTreeBlock();
+	~CBlossomTreeBlock();
+
+	static TYPE GetStaticType(void) { return TYPE_BLOSSOM_TREE; }
+
+	void Update(void);
+
+private:
+	static constexpr float resetDepth = -1110.0f;
+	static constexpr float bottomPosZ = 740.0f;
+	static constexpr float moveSpeed = 3.0f;
+
 };
 
 //*****************************************************************************

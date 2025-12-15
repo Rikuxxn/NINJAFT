@@ -28,6 +28,7 @@ public:
 	enum DUMMY_MOTION
 	{
 		NEUTRAL = 0,		// ‘Ò‹@
+		DUSH,
 		MAX
 	};
 

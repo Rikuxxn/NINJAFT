@@ -1160,7 +1160,7 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 	const std::vector<D3DXVECTOR3>& waterPositions, std::vector<D3DXVECTOR3>& treasurePositions)
 {
 	// 埋蔵金同士の最低距離(クラスター用)
-	const float MIN_CLUSTER_DISTANCE = 0.3f * areaSize;
+	const float MIN_CLUSTER_DISTANCE = 0.4f * areaSize;
 
 	// 埋蔵金同士の最低距離(通常)
 	const float MIN_NORMAL_DISTANCE = 2.0f * areaSize;
@@ -1170,6 +1170,13 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 	const int CLUSTER_MAX = 4;
 	const float CLUSTER_RADIUS = areaSize * 0.8f;
 
+	const float SAFE_MARGIN = CLUSTER_RADIUS; // 壁、ブロック余白
+
+	float minX = offsetX + SAFE_MARGIN;
+	float maxX = offsetX + (gridX - 1) * areaSize - SAFE_MARGIN;
+	float minZ = offsetZ + SAFE_MARGIN;
+	float maxZ = offsetZ + (gridZ - 1) * areaSize - SAFE_MARGIN;
+
 	int clusterSize = CLUSTER_MIN + rand() % (CLUSTER_MAX - CLUSTER_MIN + 1);
 
 	// クラスター中心を決める
@@ -1178,15 +1185,17 @@ void CBlockManager::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSi
 
 	for (int i = 0; i < MAX_ATTEMPTS && !foundCenter; i++)
 	{
-		float cx = offsetX + (rand() % gridX) * areaSize;
-		float cz = offsetZ + (rand() % gridZ) * areaSize;
+		float cx = minX + ((float)rand() / RAND_MAX) * (maxX - minX);
+		float cz = minZ + ((float)rand() / RAND_MAX) * (maxZ - minZ);
 		D3DXVECTOR3 center(cx, 0.0f, cz);
 
+		// 灯籠と重なっていたら
 		if (IsCollidingWithTorch(center, areaSize, torchPositions))
 		{
 			continue;
 		}
 
+		// 水と重なっていたら
 		if (IsCollidingWithWater(center, areaSize, waterPositions))
 		{
 			continue;
@@ -1353,13 +1362,14 @@ void CBlockManager::FillFloor(int gridX, int gridZ, float areaSize)
 
 			if (!occupied)
 			{
-				// 通常床
-				CreateBlock(CBlock::TYPE_FLOOR, pos);
+				// 草地面
+				CreateBlock(CBlock::TYPE_GRASS_FLOOR, pos);
 			}
 			else
 			{
+				// 土地面
 				pos.y = -70.0f;
-				CreateBlock(CBlock::TYPE_FLOOR2, pos);
+				CreateBlock(CBlock::TYPE_SOIL_FLOOR, pos);
 			}
 		}
 	}

@@ -86,10 +86,34 @@ HRESULT CRank::Init(void)
 	pVtx[3].rhw = 1.0f;
 
 	// 頂点カラーの設定
-	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	if (m_fRank == RANK_FIRST)
+	{// 1位
+		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[1].col = D3DCOLOR_RGBA(255, 215, 0, 255);
+		pVtx[2].col = D3DCOLOR_RGBA(255, 215, 0, 255);
+		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	}
+	else if (m_fRank == RANK_SECOND)
+	{// 2位
+		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[1].col = D3DCOLOR_RGBA(192, 192, 192, 255);
+		pVtx[2].col = D3DCOLOR_RGBA(192, 192, 192, 255);
+		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	}
+	else if (m_fRank == RANK_THIRD)
+	{// 3位
+		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[1].col = D3DCOLOR_RGBA(196, 112, 34, 255);
+		pVtx[2].col = D3DCOLOR_RGBA(196, 112, 34, 255);
+		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	}
+	else
+	{// その他
+		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	}
 
 	// テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(m_fRank * 0.2f, 0.0f);

@@ -66,7 +66,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     bool playerInWater = pBlockManager->IsPlayerInWater();
 
     // ‹ŠE‹——£‚ÆŠp“x
-    float range = 285.0f;
+    float range = 265.0f;
     float angle = 115.0f;
 
     if (playerInTorch)// “”âÄ‚Ì‹ß‚­‚É‚¢‚é‚Æ‚«‚Í‹ŠE‚ğL‚°‚é

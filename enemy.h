@@ -206,7 +206,7 @@ public:
 	{
 		D3DXVECTOR3 pos = GetPos();
 		D3DXVECTOR3 dis = m_nearestTreasurePosition - pos;
-		return D3DXVec3Length(&dis) < 20.0f; // 到達距離
+		return D3DXVec3Length(&dis) < 40.0f; // 到達距離
 	}
 
 	// 音源の位置に到達したか

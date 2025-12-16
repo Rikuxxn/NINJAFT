@@ -48,6 +48,7 @@ public:
 		MOVE,				// 移動
 		STEALTH_MOVE,		// 忍び足
 		DAMAGE,				// ダメージ
+		START,				// スタート時
 		MAX
 	}PLAYER_MOTION;
 

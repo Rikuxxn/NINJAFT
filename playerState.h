@@ -18,6 +18,7 @@ class CPlayer_StandState;
 class CPlayer_MoveState;
 class CPlayer_StealthMoveState;
 class CPlayer_DamageState;
+class CPlayer_StartState;
 
 //*****************************************************************************
 // プレイヤーの待機状態
@@ -126,6 +127,28 @@ public:
 
 		// 補間後の速度をプレイヤーにセット
 		pPlayer->SetMove(currentMove);
+		
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
+		CBlockManager* pBlockManager = CGame::GetBlockManager();
+
+		// 特定のブロックに当たっているか判定する
+		bool playerInWater = pBlockManager->IsPlayerInWater();
+
+		if (pSound && !playerInWater)
+		{
+			// 足音SEの再生
+			if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
+			{
+				pSound->Play(CSound::SOUND_LABEL_STEP);
+			}
+			else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
+			{
+				pSound->Play(CSound::SOUND_LABEL_STEP);
+			}
+		}
 
 		CModelEffect* pModelEffect = nullptr;
 
@@ -256,7 +279,6 @@ public:
 	void OnExit(CPlayer* /*pPlayer*/)override
 	{
 
-
 	}
 
 private:
@@ -272,6 +294,15 @@ public:
 
 	void OnStart(CPlayer* pPlayer)override
 	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// ダメージSEの再生
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_DAMAGE);
+		}
+
 		// ダメージモーション
 		pPlayer->GetMotion()->StartBlendMotion(CPlayer::DAMAGE, 10);
 
@@ -357,6 +388,47 @@ public:
 
 private:
 	float m_verticalVelocity; // 上下方向速度
+};
+
+//*****************************************************************************
+// プレイヤーのスタート状態
+//*****************************************************************************
+class CPlayer_StartState :public StateBase<CPlayer>
+{
+public:
+
+	void OnStart(CPlayer* pPlayer)override
+	{
+		// スタートモーション
+		pPlayer->GetMotion()->StartBlendMotion(CPlayer::START, 10);
+	}
+
+	void OnUpdate(CPlayer* pPlayer)override
+	{
+		// 移動量の取得
+		D3DXVECTOR3 move = pPlayer->GetMove();
+
+		move *= 0.82f; // 減速率
+		if (fabsf(move.x) < 0.01f) move.x = 0;
+		if (fabsf(move.z) < 0.01f) move.z = 0;
+
+		// 移動量を設定
+		pPlayer->SetMove(move);
+
+		if (pPlayer->GetMotion()->IsCurrentMotionEnd(CPlayer::START))
+		{
+			// 待機状態
+			m_pMachine->ChangeState<CPlayer_StandState>();
+		}
+	}
+
+	void OnExit(CPlayer* /*pPlayer*/)override
+	{
+
+	}
+
+private:
+
 };
 
 #endif

@@ -324,7 +324,9 @@ void CMotion::AdvanceKeyCounter(int motionType, int& nKey, int& nCounter, bool b
 	m_motionCounterAcc += m_motionSpeedRate;
 
 	if (m_motionCounterAcc < 1.0f)
+	{
 		return;
+	}
 
 	int step = (int)m_motionCounterAcc;
 	m_motionCounterAcc -= step;
@@ -339,7 +341,9 @@ void CMotion::AdvanceKeyCounter(int motionType, int& nKey, int& nCounter, bool b
 		if (nKey >= m_aMotionInfo[motionType].nNumKey)
 		{
 			if (bLoop)
+			{
 				nKey = 0;
+			}
 			else
 			{
 				nKey = m_aMotionInfo[motionType].nNumKey - 1;
@@ -534,9 +538,9 @@ bool CMotion::IsCurrentMotionEnd(int motionType) const
     return endCurrent;
 }
 //=============================================================================
-// 攻撃中の範囲(フレーム)
+// モーションの範囲
 //=============================================================================
-bool CMotion::IsAttacking(int motionType, int startKey, int endKey, int startFrame, int endFrame) const
+bool CMotion::EventMotionRange(int motionType, int startKey, int endKey, int startFrame, int endFrame) const
 {
 	// モーションが一致しない or 終了していたら false
 	if (m_motionType != motionType || m_bFinishMotion)
@@ -564,11 +568,33 @@ bool CMotion::IsAttacking(int motionType, int startKey, int endKey, int startFra
 	return true;
 }
 //=============================================================================
-// 攻撃中かどうかを返す（モーションタイプだけで判定）
+// モーションの範囲(1フレーム)
 //=============================================================================
-bool CMotion::IsAttacking(int motionType) const
+bool CMotion::EventMotionRange(int motionType, int Key, int Frame) const
 {
-	return (m_motionType == motionType);
+	// モーションが一致しない or 終了していたら false
+	if (m_motionType != motionType || m_bFinishMotion)
+	{
+		return false;
+	}
+
+	// 現在のキーが範囲内か
+	if (m_nKey < Key || m_nKey > Key)
+	{
+		return false;
+	}
+
+	// 現在のフレームが範囲内か
+	if (m_nKey == Key && m_nCounterMotion < Frame)
+	{
+		return false;
+	}
+	if (m_nKey == Key && m_nCounterMotion > Frame)
+	{
+		return false;
+	}
+
+	return true;
 }
 //=============================================================================
 // モーション進行率
@@ -600,4 +626,11 @@ float CMotion::GetMotionRate(void) const
 
 	// 進行率を返す（0.0 ～ 1.0）
 	return (float)currentFrame / (float)totalFrame;
+}
+//=============================================================================
+// モーションフレームの取得
+//=============================================================================
+int CMotion::GetMotionFrame(void)
+{
+	return m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].nFrame;
 }

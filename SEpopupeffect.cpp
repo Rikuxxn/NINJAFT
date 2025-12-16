@@ -112,7 +112,7 @@ void CSEPopupEffect::SetupParameter(void)
 
 	desc.move.x = cosf(angle) * speed;
 	desc.move.z = sinf(angle) * speed;
-	desc.move.y = (rand() % 300) / 50.0f + 0.05f; // 少しだけ上方向
+	desc.move.y = (rand() % 300) / 100.0f + 0.05f; // 少しだけ上方向
 
 	// 色の設定
 	desc.col = GetCol();
@@ -124,10 +124,10 @@ void CSEPopupEffect::SetupParameter(void)
 	desc.nLife = GetLife();
 
 	// 重力の設定
-	desc.fGravity = 0.16f;
+	desc.fGravity = 0.14f;
 
 	// 半径の減衰量の設定
-	desc.fDecRadius = 1.0f;
+	desc.fDecRadius = 0.8f;
 
 	// アルファブレンドの設定フラグ
 	desc.bBlend = false;

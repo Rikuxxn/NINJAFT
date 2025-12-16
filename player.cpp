@@ -104,7 +104,7 @@ HRESULT CPlayer::Init(void)
 	m_stateMachine.Start(this);
 
 	// 初期状態のステートをセット
-	m_stateMachine.ChangeState<CPlayer_StandState>();
+	m_stateMachine.ChangeState<CPlayer_StartState>();
 
 	// HPの設定
 	SetHp(10.0f);
@@ -176,24 +176,40 @@ void CPlayer::Update(void)
 
 #endif
 	
-	if (m_smokeActive)
-	{
-		D3DXVECTOR3 offPos = GetPos();
-		offPos.y += 40.0f;
+	// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
+	CBlockManager* pBlockManager = CGame::GetBlockManager();
 
-		for (int n = 0; n < 10; n++)
-		{
-			// 煙パーティクルの生成
-			CParticle::Create<CSmokeParticle>(INIT_VEC3, offPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120, 1);
-		}
+	// 特定のブロックに当たっているか判定する
+	bool playerInGrass = pBlockManager->IsPlayerInGrass();
+
+	bool isIn = playerInGrass || m_smokeActive;
+
+	if (isIn && !m_prevIn)
+	{
+		m_smokeActive = true;
+	}
+
+	if (m_smokeActive && (m_isStealth || m_pMotion->IsCurrentMotion(START)))
+	{
+		// 生成位置
+		D3DXVECTOR3 spawnPos1 = GetPos();
+		D3DXVECTOR3 spawnPos2 = GetPos();
+		spawnPos2.y += 60.0f;
+
+		// 煙パーティクルの生成
+		CParticle::Create<CSmokeParticle>(INIT_VEC3, spawnPos1, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120, 5);
+		CParticle::Create<CSmokeParticle>(INIT_VEC3, spawnPos2, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120, 5);
 
 		m_smokeTimer--;
 
 		if (m_smokeTimer <= 0)
 		{
+			m_smokeTimer = 10;
 			m_smokeActive = false;
 		}
 	}
+
+	m_prevIn = isIn;
 
 	// 向きの更新処理
 	UpdateRotation(0.09f);
@@ -230,11 +246,7 @@ void CPlayer::Update(void)
 	float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
 	bool isNight = (progress > 0.30f && progress <= 0.90f);
 
-	// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
-	CBlockManager* pBlockManager = CGame::GetBlockManager();
-
 	// 特定のブロックに当たっているか判定する
-	bool playerInGrass = pBlockManager->IsPlayerInGrass();
 	bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
 
 	D3DXVECTOR4 outlineColor = VEC4_BLACK; // 通常は黒
@@ -589,4 +601,3 @@ void CPlayer::Damage(float fDamage)
 		return;
 	}
 }
-

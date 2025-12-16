@@ -58,13 +58,13 @@ public:
 private:
 	static constexpr float PROBABILITY_THRESHOLD = 0.75f;	// 音の閾値
 	static constexpr float TRIGGER_DISTANCE = 50.0f;
-	static constexpr int LOG_TIME = 20;
+	static constexpr int LOG_TIME = 25;
 
 	PlayerBehaviorLog m_log;
 	int m_logTimer;				// 記録タイマー
 	bool m_prevInSight;			// 直前に視界に入ったか
 	int m_soundTimer;			// 波紋生成タイマー
-	int m_soundCount;			// 音発生数
+	int m_soundCount;			// 音発生数z
 };
 
 //*****************************************************************************
@@ -89,7 +89,7 @@ public:
 private:
 	static constexpr float PROBABILITY_THRESHOLD = 0.75f;	// 音の閾値
 	static constexpr float DISTANCE_NORMAL = 50.0f;
-	static constexpr int LOG_TIME = 20;
+	static constexpr int LOG_TIME = 25;
 
 	PlayerBehaviorLog m_log;
 	int m_logTimer;				// 記録タイマー

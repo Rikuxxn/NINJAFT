@@ -163,11 +163,11 @@ void CResult::Update(void)
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();		// ゲームパッドの入力取得
 	CFade* pFade = CManager::GetFade();
 
-	//if (pFade->GetFade() == CFade::FADE_NONE && (pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
-	//{
-	//	// ランキング画面に移行
-	//	pFade->SetFade(MODE_RANKING);
-	//}
+	if (pFade->GetFade() == CFade::FADE_NONE && (pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	{
+		// ランキング画面に移行
+		pFade->SetFade(MODE_RANKING);
+	}
 
 #ifdef _DEBUG
 	if (pFade->GetFade() == CFade::FADE_NONE && CManager::GetInputKeyboard()->GetTrigger(DIK_RETURN))

@@ -137,7 +137,7 @@ HRESULT CGame::Init(void)
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
 	// îCñ±äJénUIê∂ê¨
-	auto mission = CUITexture::Create("data/TEXTURE/ui_mission.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	auto mission = CUITexture::Create("data/TEXTURE/ui_mission2.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
 	// îCñ±é∏îsUIê∂ê¨
 	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
@@ -452,6 +452,15 @@ void CGame::UIUpdate(void)
 
 		if (m_stateTimer <= 0.0f)
 		{
+			// âπÇÃéÊìæ
+			CSound* pSound = CManager::GetSound();
+
+			// äJénSEÇÃçƒê∂
+			if (pSound)
+			{
+				pSound->Play(CSound::SOUND_LABEL_START);
+			}
+
 			// UIï\é¶
 			auto mission = CUIManager::GetInstance()->GetUI("Mission");
 			mission->Show();

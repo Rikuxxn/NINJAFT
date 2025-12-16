@@ -745,26 +745,26 @@ void CSmokeParticle::Update(void)
 
 		// ランダムな角度で横に広がる
 		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-		float speed = (rand() % 260) / 300.0f + 0.2f;
+		float speed = (rand() % 200) / 250.0f + 0.2f;
 
 		desc.move.x = cosf(angle) * speed;
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 150) / 100.0f + 0.9f; // 上方向
+		desc.move.y = (rand() % 100) / 100.0f + 0.9f; // 上方向
 
 		// 色の設定
 		desc.col = GetCol();
 
 		// 半径の設定
-		desc.fRadius = 14.0f + (rand() % 15);
+		desc.fRadius = 21.0f + (rand() % 22);
 
 		// 寿命の設定
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.0f;
+		desc.fGravity = 0.005f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 0.35f;
+		desc.fDecRadius = 0.5f;
 
 		// アルファブレンドの設定フラグ
 		desc.bBlend = false;

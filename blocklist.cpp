@@ -227,7 +227,7 @@ void CTorchBlock::UpdateLight(void)
 	// 夜になる手前（夕方）でフェードイン
 	if (progress >= 0.25f && progress < 0.30f)
 	{
-		torchIntensity = (progress - 0.25f) / (0.30f - 0.25f); // 0→1
+		torchIntensity = (progress - 0.25f) / (0.30f - 0.25f);
 	}
 	// 夜中は最大
 	else if (progress >= 0.30f && progress < 0.90f)
@@ -267,7 +267,6 @@ void CTorchBlock::UpdateLight(void)
 CWaterBlock::CWaterBlock(int nPriority) : CBlock(nPriority)
 {
 	// 値のクリア
-	m_counter = 0;// 生成カウンター
 	m_isHit = false;// 当たっているか
 }
 //=============================================================================
@@ -284,6 +283,9 @@ void CWaterBlock::Update(void)
 {
 	// ブロックの更新処理
 	CBlock::Update();
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
 
 	// プレイヤーの足元に波紋を生成するため、プレイヤーの取得をする
 	CPlayer* pPlayer = CGame::GetPlayer();
@@ -306,44 +308,51 @@ void CWaterBlock::Update(void)
 		m_isHit = false;
 	}
 
-	if (pPlayer && isOverlap && (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) &&
-		!pPlayer->GetMotion()->IsCurrentMotion(CPlayer::STEALTH_MOVE))
+	// 波紋生成関数
+	auto spawnCylinder = [&]()
 	{
-		m_counter++;
-
 		// プレイヤーの位置
 		D3DXVECTOR3 pos = pPlayer->GetPos();
 		pos.y += 10.0f;
 
-		if (m_counter >= SPAWN_TIME)
+		// 半径を決めてランダム位置にスポーン
+		float radiusMax = SPAWN_RADIUS;
+
+		// 0.0～1.0 の乱数
+		float r = (rand() % 10000) / 10000.0f;
+
+		// 平方根を取って均一に分布させる
+		float radius = sqrtf(r) * radiusMax;
+
+		// 角度
+		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
+
+		// 位置
+		pos.x = pos.x + cosf(angle) * radius;
+		pos.y += 2.0f;
+		pos.z = pos.z + sinf(angle) * radius;
+
+		// 水SEの再生
+		if (pSound)
 		{
-			// 半径を決めてランダム位置にスポーン
-			float radiusMax = SPAWN_RADIUS;
-
-			// 0.0～1.0 の乱数
-			float r = (rand() % 10000) / 10000.0f;
-
-			// 平方根を取って均一に分布させる
-			float radius = sqrtf(r) * radiusMax;
-
-			// 角度
-			float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-
-			// 位置
-			pos.x = pos.x + cosf(angle) * radius;
-			pos.y += 2.0f;
-			pos.z = pos.z + sinf(angle) * radius;
-
-			// 波紋の生成
-			CMeshCylinder::Create(pos, D3DXCOLOR(0.3f, 0.7f, 1.0f, 0.9f), 5.0f, 8.0f, 0.5f, 50, 0.03f);
-
-			m_counter = 0;
+			pSound->Play(CSound::SOUND_LABEL_WATER);
 		}
-	}
-	else
+
+		// 波紋の生成
+		CMeshCylinder::Create(pos, D3DXCOLOR(0.3f, 0.7f, 1.0f, 0.9f), 5.0f, 8.0f, 0.5f, 50, 0.03f);
+	};
+
+	if (pPlayer && isOverlap && pPlayer->GetMotion()->IsCurrentMotion(CPlayer::MOVE))
 	{
-		// カウンターをリセット
-		m_counter = 0;
+		// 水SEの再生
+		if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
+		{
+			spawnCylinder();
+		}
+		else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
+		{
+			spawnCylinder();
+		}
 	}
 }
 
@@ -456,6 +465,9 @@ void CBuriedTreasureBlock::Update(void)
 		CParticle::Create<CTreasureParticle>(INIT_VEC3, GetPos(), D3DXCOLOR(0.6f, 0.6f, 0.0f, 0.3f), 50, 10);
 	}
 
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
 	CPlayer* pPlayer = CGame::GetPlayer();
 
 	if (!pPlayer)
@@ -536,6 +548,12 @@ void CBuriedTreasureBlock::Update(void)
 	// ゲージがゼロになったらブロック削除
 	if (m_guageRate <= 0.0f)
 	{
+		// アイテム取得SEの再生
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_ITEMGET);
+		}
+
 		// 取得カウントを増やす
 		m_getCount++;
 

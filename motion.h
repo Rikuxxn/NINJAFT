@@ -34,9 +34,10 @@ public:
 	bool IsCurrentMotionEnd(int motionType) const;
 	int GetMotionType(void) { return m_motionType; }
 
-	bool IsAttacking(int motionType, int startKey, int endKey, int startFrame, int endFrame) const;
-	bool IsAttacking(int motionType) const;
+	bool EventMotionRange(int motionType, int startKey, int endKey, int startFrame, int endFrame) const;
+	bool EventMotionRange(int motionType, int Key, int Frame) const;
 	float GetMotionRate(void) const;
+	int GetMotionFrame(void);
 
 private:
 	static constexpr int MAX_WORD	= 1024;	// ç≈ëÂï∂éöêî

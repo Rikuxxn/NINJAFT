@@ -95,6 +95,7 @@ public:
         // リジッドボディに反映
         btVector3 velocity = GetRigidBody()->getLinearVelocity();
         velocity.setX(move.x);
+        velocity.setY(0.0f);
         velocity.setZ(move.z);
         GetRigidBody()->setLinearVelocity(velocity);
     }

@@ -135,7 +135,6 @@ private:
 	static constexpr int SPAWN_TIME = 7;		// 生成間隔(フレーム)
 	static constexpr float SPAWN_RADIUS = 10.0f;// 生成半径
 
-	int m_counter;	// 生成カウンター
 	bool m_isHit;	// 当たっているか
 };
 

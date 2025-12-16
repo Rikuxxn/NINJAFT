@@ -12,6 +12,9 @@
 //*****************************************************************************
 #include "particle.h"
 #include "enemy.h"
+#include "SEpopupeffect.h"
+#include "sound.h"
+#include "manager.h"
 
 // 前方宣言
 class CEnemyLeader_StandState;
@@ -239,6 +242,15 @@ public:
 		// 近距離攻撃モーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::CLOSE_ATTACK_01, 10);
 
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// 斬撃SE1の再生
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_SLASH_1);
+		}
+
 		// プレイヤー取得
 		CPlayer* pPlayer = CGame::GetPlayer();
 
@@ -313,7 +325,7 @@ public:
 		if (pEnemy->GetWeapon() && pEnemy->GetWeaponCollider())
 		{
 			// 攻撃中だけ有効化
-			if (pEnemy->GetMotion()->IsAttacking(CEnemyLeader::CLOSE_ATTACK_01, 2, 4, 0, 15))
+			if (pEnemy->GetMotion()->EventMotionRange(CEnemyLeader::CLOSE_ATTACK_01, 2, 4, 0, 15))
 			{
 				pEnemy->GetWeaponCollider()->SetActive(true);
 				pEnemy->GetWeaponCollider()->ResetPrevPos();
@@ -360,6 +372,15 @@ public:
 
 		// 近距離攻撃モーション2
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::CLOSE_ATTACK_02, 10);
+
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// 斬撃SE2の再生
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_SLASH_2);
+		}
 
 		// プレイヤー取得
 		CPlayer* pPlayer = CGame::GetPlayer();
@@ -416,7 +437,7 @@ public:
 		if (pEnemy->GetWeapon() && pEnemy->GetWeaponCollider())
 		{
 			// 攻撃中だけ有効化
-			if (pEnemy->GetMotion()->IsAttacking(CEnemyLeader::CLOSE_ATTACK_02, 0, 2, 0, 15))
+			if (pEnemy->GetMotion()->EventMotionRange(CEnemyLeader::CLOSE_ATTACK_02, 0, 2, 0, 15))
 			{
 				pEnemy->GetWeaponCollider()->SetActive(true);
 				pEnemy->GetWeaponCollider()->ResetPrevPos();
@@ -456,6 +477,8 @@ public:
 
 	void OnStart(CEnemyLeader* pEnemy)override
 	{
+		m_timer = 0;
+
 		// 疑いモーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::DOUBT, 10);
 
@@ -500,6 +523,20 @@ public:
 		// 移動量を設定
 		pEnemy->SetMove(move);
 
+		// リーダー敵の位置を取得
+		D3DXVECTOR3 pos = pEnemy->GetPos();
+		pos.y += 40.0f;// 少し上げる
+
+		m_timer++;
+
+		if (m_timer >= 15)
+		{
+			m_timer = 0;
+
+			// 効果音ポップアップエフェクトの生成
+			CSEPopupEffect::Create("data/TEXTURE/popup_question.png", pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40);
+		}
+
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
 		{
@@ -530,7 +567,7 @@ public:
 	}
 
 private:
-
+	int m_timer;// エフェクト用生成タイマー
 };
 
 //*****************************************************************************
@@ -554,8 +591,8 @@ public:
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
 		{
-			// 追跡状態
-			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
+			// 発見状態
+			m_pMachine->ChangeState<CEnemyLeader_DiscoverState>();
 			return;// 即移行
 		}
 
@@ -1002,6 +1039,8 @@ public:
 
 	void OnStart(CEnemyLeader* pEnemy)override
 	{
+		m_timer = 0;
+
 		// 発見モーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::DISCOVER, 10);
 
@@ -1033,6 +1072,10 @@ public:
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
+		// リーダー敵の位置を取得
+		D3DXVECTOR3 pos = pEnemy->GetPos();
+		pos.y += 40.0f;// 少し上げる
+
 		// 移動量の取得
 		D3DXVECTOR3 move = pEnemy->GetMove();
 
@@ -1042,6 +1085,16 @@ public:
 
 		// 移動量を設定
 		pEnemy->SetMove(move);
+
+		m_timer++;
+
+		if (m_timer >= 10)
+		{
+			m_timer = 0;
+
+			// 効果音ポップアップエフェクトの生成
+			CSEPopupEffect::Create("data/TEXTURE/popup_discover.png", pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40);
+		}
 
 		// 発見モーションが終わっていたら
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::DISCOVER))
@@ -1065,7 +1118,7 @@ public:
 	}
 
 private:
-
+	int m_timer;// エフェクト用タイマー
 };
 
 #endif

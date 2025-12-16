@@ -88,7 +88,7 @@ void CBlock::InitFactory(void)
 	m_BlockFactoryMap.clear();
 
 	m_BlockFactoryMap[CBlock::TYPE_WALL_01]			= []() -> CBlock* { return new CWallBlock(); };
-	m_BlockFactoryMap[CBlock::TYPE_GRASS_FLOOR]			= []() -> CBlock* { return new CGrassFloorBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_GRASS_FLOOR]		= []() -> CBlock* { return new CGrassFloorBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_TORCH_01]		= []() -> CBlock* { return new CTorchBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_GRASS]			= []() -> CBlock* { return new CGrassBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_TORCH_01]		= []() -> CBlock* { return new CTorchBlock(); };

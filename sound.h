@@ -28,6 +28,12 @@ public:
 		SOUND_LABEL_ENTER,
 		SOUND_LABEL_GRASS,
 		SOUND_LABEL_WATER,
+		SOUND_LABEL_START,
+		SOUND_LABEL_ITEMGET,
+		SOUND_LABEL_STEP,
+		SOUND_LABEL_SLASH_1,
+		SOUND_LABEL_SLASH_2,
+		SOUND_LABEL_DAMAGE,
 
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
@@ -89,6 +95,12 @@ private:
 		{"data/SE/enter.wav", 0},				// 決定SE
 		{"data/SE/grass.wav", 0},				// 草SE
 		{"data/SE/water.wav", 0},				// 水SE
+		{"data/SE/start.wav", 0},				// 開始SE
+		{"data/SE/itemget.wav", 0},				// アイテム取得SE
+		{"data/SE/step.wav", 0},				// 足音SE
+		{"data/SE/slash_1.wav", 0},				// 斬撃1SE
+		{"data/SE/slash_2.wav", 0},				// 斬撃2SE
+		{"data/SE/damage.wav", 0},				// ダメージSE
 	};
 
 	SoundData m_SoundData[SOUND_LABEL_MAX];

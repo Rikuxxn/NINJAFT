@@ -96,17 +96,33 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
 
     if (playerInGrass)// 草
     {
-        path = "data/TEXTURE/popup_01.png";
+        path = "data/TEXTURE/popup_grass.png";
     }
     else if (playerInWater)// 水
     {
-        path = "data/TEXTURE/popup_02.png";
+        path = "data/TEXTURE/popup_water.png";
     }
 
     // 特定のオブジェクトに接触かつ忍び足じゃなかったら
     if (playerCondition && (playerInGrass || playerInWater))
     {
         m_soundTimer++;
+
+        // 音の取得
+        CSound* pSound = CManager::GetSound();
+
+        if (pSound && playerInGrass)
+        {
+            // 草SEの再生
+            if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
+            {
+                pSound->Play(CSound::SOUND_LABEL_GRASS);
+            }
+            else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
+            {
+                pSound->Play(CSound::SOUND_LABEL_GRASS);
+            }
+        }
 
         // プレイヤーの位置を取得
         D3DXVECTOR3 pos = pPlayer->GetPos();
@@ -122,18 +138,6 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
 
         // 音発生数の設定
         pEnemy->SetSoundCount(m_soundCount);
-
-        // 音の取得
-        CSound* pSound = CManager::GetSound();
-
-        if (pSound && playerInGrass)        // 草SEの再生
-        {
-            pSound->Play(CSound::SOUND_LABEL_GRASS);
-        }
-        else if (pSound && playerInWater)   // 水SEの再生
-        {
-            pSound->Play(CSound::SOUND_LABEL_WATER);
-        }
 
         // 波紋の生成
         CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.008f);

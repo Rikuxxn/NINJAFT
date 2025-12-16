@@ -12,6 +12,7 @@
 #include "manager.h"
 #include "input.h"
 #include "result.h"
+#include "background.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -39,6 +40,9 @@ HRESULT CRanking::Init(void)
 {
 	// ランキングマネージャーのインスタンス生成
 	m_pRankingManager = CRankingManager::GetInstance();
+
+	// 背景の生成
+	CBackground::Create(D3DXVECTOR3(850.0f, 490.0f, 0.0f), 280.0f, 390.0f, "data/TEXTURE/.png");
 
 	//// タイムランキング
 	//TimeRanking(m_pRankingManager);
@@ -135,7 +139,7 @@ void CRanking::TimeRanking(CRankingManager* pRankingManager)
 void CRanking::ItemRanking(CRankingManager* pRankingManager)
 {
 	// ランキングアイテムの生成
-	m_pRankItem = CRankItem::Create(600.0f, 170.0f, 62.0f, 78.0f);
+	m_pRankItem = CRankItem::Create(660.0f, 180.0f, 62.0f, 78.0f);
 
 	// ランキングデータをセット
 	if (pRankingManager)

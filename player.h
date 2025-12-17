@@ -38,7 +38,8 @@ public:
 	CPlayer();
 	~CPlayer();
 
-	static constexpr float PLAYER_SPEED = 22.0f;				// 移動時スピード
+	static constexpr float PLAYER_SPEED = 22.0f;				// 通常移動時スピード
+	static constexpr float INJURY_SPEED = 12.0f;				// 負傷時スピード
 	static constexpr float STEALTH_SPEED = 8.0f;				// 忍び移動時スピード
 
 	// プレイヤーモーションの種類
@@ -46,6 +47,7 @@ public:
 	{
 		NEUTRAL = 0,		// 待機
 		MOVE,				// 移動
+		INJURY,				// 負傷
 		STEALTH_MOVE,		// 忍び足
 		DAMAGE,				// ダメージ
 		START,				// スタート時
@@ -84,6 +86,7 @@ public:
 	bool IsStealth(void) { return m_isStealth; }
 	CModel** GetModels(void) { return m_apModel; }
 	int GetNumModels(void) { return m_nNumModel; }
+	bool GetControlFlag(void) { return m_canControl; }
 
 	// ステート用にフラグ更新
 	void UpdateMovementFlags(const D3DXVECTOR3& moveDir)

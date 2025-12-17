@@ -128,6 +128,15 @@ HRESULT CResult::Init(void)
 	// 「クリアタイム」UI登録
 	CUIManager::GetInstance()->AddUI("ClearTime", clearTime);
 
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
+
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamParameter(D3DXVECTOR3(64.0f, 170.8f, 50.6f),
+		D3DXVECTOR3(-41.4f, 152.2f, -112.4f),
+		D3DXVECTOR3(0.10f, 0.57f, 0.0f),
+		0.0f);
+
 	return S_OK;
 }
 //=============================================================================
@@ -182,8 +191,17 @@ void CResult::Update(void)
 //=============================================================================
 void CResult::Draw(void)
 {
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
 
-
+	if (!pCamera->GetMode() == CCamera::MODE_EDIT)
+	{
+		// カメラの設定
+		pCamera->SetCamParameter(D3DXVECTOR3(64.0f, 170.8f, 50.6f),
+			D3DXVECTOR3(-41.4f, 152.2f, -112.4f),
+			D3DXVECTOR3(0.10f, 0.57f, 0.0f),
+			0.0f);
+	}
 }
 //=============================================================================
 // ライト設定処理

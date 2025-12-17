@@ -20,9 +20,9 @@
 //=============================================================================
 void CGuiInfo::PlayerInfo(void)
 {
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
-	if (pPlayer == nullptr || CManager::GetMode() != MODE_GAME)
+	if (!pPlayer || CManager::GetMode() != MODE_GAME)
 	{
 		return;
 	}
@@ -118,9 +118,9 @@ void CGuiInfo::PlayerInfo(void)
 //=============================================================================
 void CGuiInfo::EnemyInfo(void)
 {
-	CEnemy* pEnemy = CGame::GetEnemy();
+	CEnemy* pEnemy = CCharacterManager::GetInstance().GetCharacter<CEnemy>();
 
-	if (pEnemy == nullptr || CManager::GetMode() != MODE_GAME)
+	if (!pEnemy || CManager::GetMode() != MODE_GAME)
 	{
 		return;
 	}
@@ -216,9 +216,9 @@ void CGuiInfo::EnemyInfo(void)
 //=============================================================================
 void CGuiInfo::AIInfo(void)
 {
-	CEnemy* pEnemy = CGame::GetEnemy();// “G‚ÌŽæ“¾
+	CEnemy* pEnemy = CCharacterManager::GetInstance().GetCharacter<CEnemy>();// “G‚ÌŽæ“¾
 
-	if (pEnemy == nullptr)
+	if (!pEnemy )
 	{
 		return;
 	}

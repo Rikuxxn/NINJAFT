@@ -14,6 +14,7 @@
 #include "result.h"
 #include "ranking.h"
 #include "gameover.h"
+#include "tutorial.h"
 
 //=============================================================================
 // コンストラクタ
@@ -42,6 +43,11 @@ CScene* CScene::Create(MODE mode)
 	case MODE_TITLE:
 		// タイトル画面の生成
 		pScene = new CTitle();
+		break;
+
+	case MODE_TUTORIAL:
+		// チュートリアル画面
+		pScene = new CTutorial();
 		break;
 
 	case MODE_GAME:

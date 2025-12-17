@@ -151,6 +151,11 @@ public:
 		toTarget.y = 0;
 		D3DXVec3Normalize(&toTarget, &toTarget);
 
+		float speedRate = 1.5f;
+
+		// モーションスピードを早くする
+		pEnemy->GetMotion()->SetMotionSpeedRate(speedRate);
+
 		// 目標速度計算
 		float moveSpeed = CEnemyLeader::SPEED;
 		D3DXVECTOR3 targetMove = pEnemy->GetForward();
@@ -218,9 +223,10 @@ public:
 		}
 	}
 
-	void OnExit(CEnemyLeader* /*pEnemy*/)override
+	void OnExit(CEnemyLeader* pEnemy)override
 	{
-
+		// モーションスピードを通常にする
+		pEnemy->GetMotion()->SetMotionSpeedRate(1.0f);
 	}
 
 private:
@@ -252,7 +258,7 @@ public:
 		}
 
 		// プレイヤー取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーへの方向ベクトル
 		D3DXVECTOR3 toPlayer = pPlayer->GetPos() - pEnemy->GetPos();
@@ -282,7 +288,7 @@ public:
 		// 正規化
 		D3DXVec3Normalize(&dir, &dir);
 
-		float dashPower = 50.0f;// スライドパワー
+		float dashPower = 60.0f;// スライドパワー
 
 		D3DXVECTOR3 move = dir * dashPower;
 
@@ -335,8 +341,14 @@ public:
 				pEnemy->GetWeaponCollider()->SetActive(false);
 			}
 
-			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.5f);
+			// プレイヤーの取得
+			CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+
+			if (pPlayer)
+			{
+				// プレイヤーに当たったか判定する
+				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f);
+			}
 		}
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::CLOSE_ATTACK_01))
@@ -383,7 +395,12 @@ public:
 		}
 
 		// プレイヤー取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+
+		if (!pPlayer)
+		{
+			return;
+		}
 
 		// プレイヤーへの方向ベクトル
 		D3DXVECTOR3 toPlayer = pPlayer->GetPos() - pEnemy->GetPos();
@@ -447,8 +464,14 @@ public:
 				pEnemy->GetWeaponCollider()->SetActive(false);
 			}
 
-			// プレイヤーに当たったか判定する
-			pEnemy->GetWeaponCollider()->CheckHit(CGame::GetPlayer(), 2.5f);
+			// プレイヤーの取得
+			CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+
+			if (pPlayer)
+			{
+				// プレイヤーに当たったか判定する
+				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f);
+			}
 		}
 
 		if (pEnemy->GetMotion()->IsCurrentMotionEnd(CEnemyLeader::CLOSE_ATTACK_02))
@@ -483,7 +506,7 @@ public:
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::DOUBT, 10);
 
 		// プレイヤー取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーへの方向ベクトル
 		D3DXVECTOR3 toPlayer = pPlayer->GetPos() - pEnemy->GetPos();
@@ -511,7 +534,7 @@ public:
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
 		// 視界内判定をするためにプレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// 移動量の取得
 		D3DXVECTOR3 move = pEnemy->GetMove();
@@ -586,7 +609,7 @@ public:
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
 		// 視界内判定をするためにプレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
@@ -683,7 +706,7 @@ public:
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
 		// 視界内判定をするためにプレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
@@ -783,7 +806,7 @@ public:
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
 		// 視界内判定をするためにプレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// 移動量の取得
 		D3DXVECTOR3 move = pEnemy->GetMove();
@@ -854,7 +877,7 @@ public:
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
 		// 視界内判定のためにプレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// 移動量の取得
 		D3DXVECTOR3 move = pEnemy->GetMove();
@@ -933,7 +956,7 @@ public:
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
 		// プレイヤーの取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーの方向
 		D3DXVECTOR3 toTarget = pPlayer->GetPos() - pEnemy->GetPos();
@@ -942,7 +965,9 @@ public:
 		D3DXVec3Normalize(&toTarget, &toTarget);
 
 		CModel** models = pEnemy->GetModels();
-		for (int i = 0; i < pEnemy->GetNumModels(); i++)
+		int num = pEnemy->GetNumModels();// モデル数
+
+		for (int i = 0; i < num; i++)
 		{
 			// アウトラインを赤にする
 			models[i]->SetOutlineColor(VEC4_RED);
@@ -1019,7 +1044,9 @@ public:
 	void OnExit(CEnemyLeader* pEnemy)override
 	{
 		CModel** models = pEnemy->GetModels();
-		for (int i = 0; i < pEnemy->GetNumModels(); i++)
+		int num = pEnemy->GetNumModels();// モデル数
+
+		for (int i = 0; i < num; i++)
 		{
 			// アウトラインを通常(黒色)に戻す
 			models[i]->SetOutlineColor(VEC4_BLACK);
@@ -1045,7 +1072,7 @@ public:
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::DISCOVER, 10);
 
 		// プレイヤー取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーへの方向ベクトル
 		D3DXVECTOR3 toPlayer = pPlayer->GetPos() - pEnemy->GetPos();

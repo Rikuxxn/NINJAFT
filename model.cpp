@@ -25,6 +25,7 @@ CModel::CModel()
 	m_pos			= INIT_VEC3;		// 位置
 	m_rot			= INIT_VEC3;		// 向き
 	m_move			= INIT_VEC3;		// 移動量
+	m_col			= INIT_XCOL_WHITE;	// 色
 	m_pMesh			= nullptr;			// メッシュへのポインタ
 	m_pBuffMat		= nullptr;			// マテリアルへのポインタ
 	m_dwNumMat		= NULL;				// マテリアル数
@@ -290,8 +291,16 @@ void CModel::DrawNormal(LPDIRECT3DDEVICE9 pDevice)
 
 	for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
 	{
-		// マテリアル設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+		// 元のマテリアル色に補正を掛ける
+		D3DMATERIAL9 mat = pMat[nCntMat].MatD3D;
+
+		mat.Diffuse.r *= m_col.r;
+		mat.Diffuse.g *= m_col.g;
+		mat.Diffuse.b *= m_col.b;
+		mat.Diffuse.a *= m_col.a;
+
+		// マテリアルの設定
+		pDevice->SetMaterial(&mat);
 
 		// テクスチャ設定
 		if (m_nIdxTexture[nCntMat] == -1)

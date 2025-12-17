@@ -80,7 +80,7 @@ HRESULT CResultTime::Init(void)
 	}
 
 	// ƒRƒƒ“‚Ì¶¬
-	CColon::Create(D3DXVECTOR3(m_basePos.x + 2 * m_digitWidth, m_basePos.y, 0.0f), m_digitWidth / 2, m_digitHeight);
+	CColon::Create(D3DXVECTOR3(m_basePos.x + 2 * m_digitWidth, m_basePos.y, 0.0f), m_digitWidth / 2, m_digitHeight, true);
 
 	// ƒRƒƒ“‚Ì•
 	float colonWidth = m_digitWidth / 2;

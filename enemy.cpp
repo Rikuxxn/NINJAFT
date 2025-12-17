@@ -223,6 +223,43 @@ bool CEnemy::IsPlayerInSight(CPlayer* pPlayer)
 
 	return false; // 視界外
 }
+//=============================================================================
+// サブ敵のアクション判定
+//=============================================================================
+bool CEnemy::IsSubAction(EEnemyAction type)
+{
+	auto subs = CCharacterManager::GetInstance().GetCharacters<CEnemySub>();
+
+	for (auto* sub : subs)
+	{
+		if (sub->GetRequestedAction() == type)
+		{
+			// 一体でもリクエストされていたら
+			return true;
+		}
+	}
+
+	return false;
+}
+//=============================================================================
+// リーダー敵のアクション判定
+//=============================================================================
+bool CEnemy::IsLeaderAction(EEnemyAction type)
+{
+	// リーダー敵の取得
+	CEnemyLeader* pEnemyLeader = CCharacterManager::GetInstance().GetCharacter<CEnemyLeader>();
+
+	if (pEnemyLeader)
+	{
+		// 指定した行動を要求されていたら
+		if (pEnemyLeader->GetRequestedAction() == type)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 
 //=============================================================================
@@ -346,7 +383,7 @@ void CEnemyLeader::Update(void)
 	}
 
 	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	// AIを更新（現在の行動のリクエスト）
 	if (GetAI() && pPlayer)
@@ -442,7 +479,7 @@ void CEnemySub::Update(void)
 	CEnemy::Update();  // 共通処理
 
 	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	// AIを更新（現在の行動のリクエスト）
 	if (GetAI() && pPlayer)

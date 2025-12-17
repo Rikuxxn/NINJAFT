@@ -35,6 +35,7 @@ public:
 	void SetOutlineShaderConstants(LPDIRECT3DDEVICE9 pDevice);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = D3DXToRadian(rot); }
+	void SetCol(D3DXCOLOR col) { m_col = col; }
 	void SetParent(CModel* pModel) { m_pParent = pModel; }
 	void SetOffsetPos(const D3DXVECTOR3& pos) { m_OffsetPos = pos; }
 	void SetOffsetRot(const D3DXVECTOR3& rot) { m_OffsetRot = rot; }
@@ -46,6 +47,7 @@ public:
 	D3DXMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXCOLOR GetCol(void) { return m_col; }
 	D3DXVECTOR3 GetOffsetPos(void) const { return m_OffsetPos; }
 	D3DXVECTOR3 GetOffsetRot(void) const { return m_OffsetRot; }
 	const char* GetPath(void) { return m_Path; }
@@ -55,6 +57,7 @@ private:
 	int* m_nIdxTexture;
 	D3DXVECTOR3 m_pos;						// 位置
 	D3DXVECTOR3 m_rot;						// 向き
+	D3DXCOLOR m_col;						// 色
 	D3DXVECTOR3 m_move;						// 移動量
 	LPD3DXMESH m_pMesh;						// メッシュへのポインタ
 	LPD3DXBUFFER m_pBuffMat;				// マテリアルへのポインタ

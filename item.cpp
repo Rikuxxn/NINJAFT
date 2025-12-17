@@ -208,7 +208,7 @@ CTutorialItem::~CTutorialItem()
 void CTutorialItem::Execute(void)
 {
 	// チュートリアル画面に移行
-	CManager::GetFade()->SetFade(CScene::MODE_GAME);
+	CManager::GetFade()->SetFade(CScene::MODE_TUTORIAL);
 }
 
 

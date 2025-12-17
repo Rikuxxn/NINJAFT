@@ -19,6 +19,7 @@
 #include "random"
 #include "grass.h"
 #include "player.h"
+#include "tutorial.h"
 
 // JSON‚ÌŽg—p
 using json = nlohmann::json;
@@ -1741,7 +1742,7 @@ void CBlockManager::LoadFromJson(const char* filename)
 //=============================================================================
 bool CBlockManager::IsPlayerInGrass(void)
 {
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 	if (!pPlayer)
 	{
 		return false;
@@ -1772,7 +1773,7 @@ bool CBlockManager::IsPlayerInGrass(void)
 //=============================================================================
 bool CBlockManager::IsPlayerInTorch(void)
 {
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	if (!pPlayer)
 	{

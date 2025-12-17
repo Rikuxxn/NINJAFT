@@ -144,6 +144,15 @@ HRESULT CTitle::Init(void)
 	// 項目選択の初期化処理
 	m_pItemSelect->Init();
 
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
+
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamParameter(D3DXVECTOR3(437.4f, 116.0f, 90.3f),
+		D3DXVECTOR3(124.0f, 265.5f, -630.5f),
+		D3DXVECTOR3(-0.19f, 0.41f, 0.0f),
+		0.0f);
+
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
@@ -210,6 +219,18 @@ void CTitle::Update(void)
 //=============================================================================
 void CTitle::Draw(void)
 {
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
+
+	if (!pCamera->GetMode() == CCamera::MODE_EDIT)
+	{
+		// カメラの設定
+		pCamera->SetCamParameter(D3DXVECTOR3(437.4f, 116.0f, 90.3f),
+			D3DXVECTOR3(124.0f, 265.5f, -630.5f),
+			D3DXVECTOR3(-0.19f, 0.41f, 0.0f),
+			0.0f);
+	}
+
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 

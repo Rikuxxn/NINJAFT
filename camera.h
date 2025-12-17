@@ -50,6 +50,7 @@ public:
 	void SetDis(float fDistance) { m_fDistance = fDistance; }
 	int  SetTimer(int nTime) { return m_nTimer = nTime * 60; }
 	void SetCamMode(int nTimer, D3DXVECTOR3 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot);
+	void SetCamParameter(D3DXVECTOR3 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot, float fDistance);
 	void SetShakeTargetPos(D3DXVECTOR3 targetpos) { m_targetPos = targetpos; }
 	void SetCameraShake(bool flag) { m_isCameraShakeOn = flag; }
 

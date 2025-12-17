@@ -215,4 +215,20 @@ private:
 
 };
 
+//*****************************************************************************
+// 血しぶきパーティクルクラス
+//*****************************************************************************
+class CBloodSplatter : public CParticle
+{
+public:
+	CBloodSplatter();
+	~CBloodSplatter();
+
+	HRESULT Init(void);
+	void Update(void);
+
+private:
+
+};
+
 #endif

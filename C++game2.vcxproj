@@ -170,6 +170,7 @@
     <ClCompile Include="block.cpp" />
     <ClCompile Include="blocklist.cpp" />
     <ClCompile Include="blockmanager.cpp" />
+    <ClCompile Include="blood.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="charactermanager.cpp" />
     <ClCompile Include="collisionUtils.cpp" />
@@ -243,6 +244,7 @@
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="title.cpp" />
+    <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="weaponcollider.cpp" />
   </ItemGroup>
@@ -251,6 +253,7 @@
     <ClInclude Include="block.h" />
     <ClInclude Include="blocklist.h" />
     <ClInclude Include="blockmanager.h" />
+    <ClInclude Include="blood.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="charactermanager.h" />
     <ClInclude Include="collisionUtils.h" />
@@ -319,10 +322,12 @@
     <ClInclude Include="SEpopupeffect.h" />
     <ClInclude Include="shadowS.h" />
     <ClInclude Include="sound.h" />
+    <ClInclude Include="specbase.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="title.h" />
+    <ClInclude Include="tutorial.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="weaponcollider.h" />
   </ItemGroup>

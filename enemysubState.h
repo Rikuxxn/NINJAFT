@@ -39,7 +39,7 @@ public:
 	void OnUpdate(CEnemySub* pEnemy)override
 	{
 		// 視界内判定をするために、プレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーとの距離を算出
 		D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
@@ -144,7 +144,7 @@ public:
 	void OnUpdate(CEnemySub* pEnemy)override
 	{
 		// 距離を求めるために、プレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーとの距離を算出
 		D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
@@ -307,7 +307,7 @@ public:
 		}
 
 		// プレイヤーの取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーに向かう
 		D3DXVECTOR3 dir = pPlayer->GetPos() - pEnemy->GetPos();
@@ -416,7 +416,7 @@ public:
 	void OnUpdate(CEnemySub* pEnemy)override
 	{
 		// 距離を求めるために、プレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーとの距離を算出
 		D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
@@ -541,7 +541,7 @@ public:
 	void OnUpdate(CEnemySub* pEnemy)override
 	{
 		// 距離を求めるために、プレイヤーを取得
-		CPlayer* pPlayer = CGame::GetPlayer();
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 		// プレイヤーとの距離を算出
 		D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
@@ -670,10 +670,12 @@ public:
 			CParticle::Create<COnibiParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(0.7f, 0.6f, 1.0f, 0.5f), 40, 1);
 		}
 
-		if (CEnemy* leader = pEnemy->GetLeader())
+		CEnemyLeader* pEnemyLeader = CCharacterManager::GetInstance().GetCharacter<CEnemyLeader>();
+
+		if (pEnemyLeader)
 		{
 			// リーダーに向かう
-			D3DXVECTOR3 dir = leader->GetPos() - pEnemy->GetPos();
+			D3DXVECTOR3 dir = pEnemyLeader->GetPos() - pEnemy->GetPos();
 			float distance = D3DXVec3Length(&dir);
 
 			// 目標の角度を算出
@@ -707,7 +709,7 @@ public:
 			D3DXVec3Normalize(&dir, &dir);
 
 			// 目標速度計算
-			float moveSpeed = CEnemySub::INVESTIGATE_SPEED;
+			float moveSpeed = CEnemySub::FOLLOW_SPEED;
 			D3DXVECTOR3 targetMove = dir * moveSpeed;
 
 			if (targetMove.x != 0.0f || targetMove.z != 0.0f)

@@ -24,12 +24,9 @@
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-CPlayer* CGame::m_pPlayer = nullptr;				// プレイヤーへのポインタ
-CEnemy* CGame::m_pEnemy = nullptr;					// 敵へのポインタ
 CTime* CGame::m_pTime = nullptr;					// タイムへのポインタ
 CBlock* CGame::m_pBlock= nullptr;					// ブロックへのポインタ
 CBlockManager* CGame::m_pBlockManager= nullptr;		// ブロックマネージャーへのポインタ
-CObjectBillboard* CGame::m_pBillboard = nullptr;	// ビルボードへのポインタ
 CPauseManager* CGame::m_pPauseManager = nullptr;	// ポーズマネージャーへのポインタ
 bool CGame::m_isPaused = false;						// trueならポーズ中
 int CGame::m_nSeed = 0;								// マップのシード値
@@ -87,11 +84,12 @@ HRESULT CGame::Init(void)
 	//// 配置情報の読み込み
 	//m_pBlockManager->LoadFromJson("data/game_info.json");
 
-	CCharacterManager characterManager;
+	// キャラクターマネージャーの生成
+	auto& charaMgr = CCharacterManager::GetInstance();
 
 	// プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
-	characterManager.AddCharacter(m_pPlayer);
+	charaMgr.AddCharacter(m_pPlayer);
 
 	// リーダー敵の生成
 	CEnemyLeader* pLeader =
@@ -100,7 +98,7 @@ HRESULT CGame::Init(void)
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 			);
 	m_pEnemy = pLeader;
-	characterManager.AddCharacter(pLeader);
+	charaMgr.AddCharacter(pLeader);
 
 	// サブ敵生成
 	constexpr int NUM_SUB_ENEMIES = 50;
@@ -120,18 +118,12 @@ HRESULT CGame::Init(void)
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 				);
 
-		// リーダーの設定
-		pSub->SetLeader(pLeader);
-
-		// サブの設定
-		pLeader->SetSub(pSub);
-
-		characterManager.AddCharacter(pSub);
+		charaMgr.AddCharacter(pSub);
 		subEnemies.push_back(pSub);
 	}
 
 	// タイムの生成
-	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f);
+	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, true);
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
@@ -181,6 +173,9 @@ HRESULT CGame::Init(void)
 //=============================================================================
 void CGame::Uninit(void)
 {
+	// キャラクターマネージャーの破棄
+	CCharacterManager::GetInstance().Destroy();
+
 	// ブロックマネージャーの破棄
 	if (m_pBlockManager != nullptr)
 	{
@@ -215,7 +210,7 @@ void CGame::Update(void)
 	m_timer++;
 
 	if (m_timer >= 15)// 一定間隔で生成
-	{// 塵の生成
+	{// 桜の生成
 		// リセット
 		m_timer = 0;
 

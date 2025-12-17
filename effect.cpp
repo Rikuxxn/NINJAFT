@@ -24,6 +24,7 @@ CEffect::CEffect(int nPriority) : CObjectBillboard(nPriority)
 	m_nIdxTexture	= 0;		// テクスチャインデックス
 	m_fGravity		= 0.0f;		// 重力
 	m_bBlend		= true;		// アルファブレンドするかどうが
+	m_bTurn			= false;	// 回転するか
 }
 //=============================================================================
 // デストラクタ
@@ -53,6 +54,7 @@ CEffect* CEffect::Create(const EffectDesc& desc)
 	pEffect->SetGravity(desc.fGravity);
 	pEffect->SetDecRadius(desc.fDecRadius);
 	pEffect->SetBlend(desc.bBlend);
+	pEffect->SetTurn(desc.bTurn);
 
 	return pEffect;
 }
@@ -81,6 +83,21 @@ void CEffect::Update(void)
 {
 	// ビルボードオブジェクトの更新処理
 	CObjectBillboard::Update();
+
+	if (m_bTurn)// 回転あり
+	{
+		// 向きの取得
+		D3DXVECTOR3 rot = GetRot();
+
+		// 回転させる
+		rot.z += TURN_SPEED;
+
+		// 向きの設定
+		SetRot(rot);
+
+		// ビルボードオブジェクトの更新処理(回転)
+		CObjectBillboard::UpdateTurn();
+	}
 
 	m_move.y -= m_fGravity; // 重力加速度
 

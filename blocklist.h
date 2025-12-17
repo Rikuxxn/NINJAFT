@@ -189,7 +189,7 @@ public:
 private:
 	static constexpr float TRIGGER_DISTANCE = 40.0f;	// 判定距離
 	static constexpr int SPAWN_TIME = 180;				// 生成までの時間
-	static constexpr int GET_THRESHOLD = 2;				// 取得数閾値
+	static constexpr int GET_THRESHOLD = 3;				// 取得数閾値
 	static constexpr float GUAGE_RATE = 100.0f;			// ゲージの最大量
 	static constexpr float GUAGE_DECREASE_SPEED = 0.23f;// ゲージの減る量
 

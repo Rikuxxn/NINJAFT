@@ -93,30 +93,6 @@ void CCamera::Uninit(void)
 //=============================================================================
 void CCamera::Update(void)
 {
-	// タイトル画面だったら
-	if (CManager::GetMode() == MODE_TITLE)
-	{// カメラの位置の設定
-		m_posV = D3DXVECTOR3(437.4f, 116.0f, 90.3f);
-		m_posR = D3DXVECTOR3(124.0f, 265.5f, -630.5f);
-		m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);// 固定でいい
-		m_rot = D3DXVECTOR3(-0.19f, 0.41f, 0.0f);
-		m_fDistance = sqrtf(
-			((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x)) +
-			((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y)) +
-			((m_posV.z - m_posR.z) * (m_posV.z - m_posR.z)));
-	}
-	else if (CManager::GetMode() == MODE_RESULT)
-	{// カメラの位置の設定
-		m_posV = D3DXVECTOR3(64.0f, 170.8f, 50.6f);
-		m_posR = D3DXVECTOR3(-41.4f, 152.2f, -112.4f);
-		m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);// 固定でいい
-		m_rot = D3DXVECTOR3(0.10f, 0.57f, 0.0f);
-		m_fDistance = sqrtf(
-			((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x)) +
-			((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y)) +
-			((m_posV.z - m_posR.z) * (m_posV.z - m_posR.z)));
-	}
-
 	// リスナーの位置の更新
 	CManager::GetSound()->UpdateListener(m_posV);
 
@@ -315,7 +291,8 @@ void CCamera::EditCamera(void)
 //=============================================================================
 void CCamera::GameCamera(void)
 {
-	if (CManager::GetMode() != MODE_GAME || m_Mode == MODE_DIRECTION)
+	if ((CManager::GetMode() != CScene::MODE_GAME && CManager::GetMode() != CScene::MODE_TUTORIAL) || 
+		m_Mode == MODE_DIRECTION)
 	{
 		return;
 	}
@@ -393,6 +370,27 @@ void CCamera::AdjustCameraPosition(const D3DXVECTOR3& playerPos)
 
 	// 注視点はプレイヤーの頭
 	m_posR = playerEye;
+}
+//=============================================================================
+// カメラのパラメータ設定処理
+//=============================================================================
+void CCamera::SetCamParameter(D3DXVECTOR3 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot, float fDistance)
+{
+	m_posV = posV;
+	m_posR = posR;
+	m_rot = rot;
+
+	if (fDistance <= 0.0f)
+	{
+		m_fDistance = sqrtf(
+			((m_posV.x - m_posR.x) * (m_posV.x - m_posR.x)) +
+			((m_posV.y - m_posR.y) * (m_posV.y - m_posR.y)) +
+			((m_posV.z - m_posR.z) * (m_posV.z - m_posR.z)));
+	}
+	else
+	{
+		m_fDistance = fDistance;
+	}
 }
 //=============================================================================
 // 演出カメラの設定処理

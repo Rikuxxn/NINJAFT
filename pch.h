@@ -61,6 +61,7 @@
 #define INIT_VEC3	(D3DXVECTOR3(0.0f, 0.0f, 0.0f))
 #define INIT_COL	(D3DCOLOR_RGBA (0, 0, 0, 255))
 #define INIT_XCOL	(D3DXCOLOR (0.0f, 0.0f, 0.0f, 1.0f))
+#define INIT_XCOL_WHITE	(D3DXCOLOR (1.0f, 1.0f, 1.0f, 1.0f))
 
 #define VEC4_WHITE (D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f))
 #define VEC4_BLACK (D3DXVECTOR4(0.0f, 0.0f, 0.0f, 1.0f))

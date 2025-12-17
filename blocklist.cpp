@@ -18,6 +18,7 @@
 #include "collisionUtils.h"
 #include "motion.h"
 #include "time.h"
+#include "tutorial.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -193,7 +194,7 @@ void CTorchBlock::Update(void)
 	CBlock::Update();
 
 	// プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	if (!pPlayer)
 	{
@@ -218,8 +219,18 @@ void CTorchBlock::Update(void)
 //=============================================================================
 void CTorchBlock::UpdateLight(void)
 {
-	// 時間の割合を取得
-	float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
+	float progress = 0.0f;
+
+	if (CManager::GetMode() == CScene::MODE_TUTORIAL)
+	{
+		// 時間の割合を取得
+		progress = CTutorial::GetTime()->GetProgress(); // 0.0～0.1
+	}
+	else if (CManager::GetMode() == CScene::MODE_GAME)
+	{
+		// 時間の割合を取得
+		progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
+	}
 
 	// ======== 夜のフェード処理 ========
 	float torchIntensity = 0.0f;
@@ -288,7 +299,12 @@ void CWaterBlock::Update(void)
 	CSound* pSound = CManager::GetSound();
 
 	// プレイヤーの足元に波紋を生成するため、プレイヤーの取得をする
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+
+	if (!pPlayer)
+	{
+		return;
+	}
 
 	// 移動しているときに生成するため、入力を取得する
 	InputData input = pPlayer->GatherInput();
@@ -468,7 +484,7 @@ void CBuriedTreasureBlock::Update(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	if (!pPlayer)
 	{
@@ -506,8 +522,7 @@ void CBuriedTreasureBlock::Update(void)
 		bool isMoving = pPlayer->GetIsMoving();
 
 		// ゲージを減らす
-		if (!isDamage && !isMoving && 
-			(pMouse->GetPress(0) || pJoypad->GetPress(CInputJoypad::JOYKEY_A)))
+		if (!isDamage && !isMoving && pPlayer->GetControlFlag())
 		{
 			m_guageRate -= m_guageDecreaseSpeed;
 
@@ -661,7 +676,7 @@ void CExitBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	if (!pPlayer)
 	{
@@ -671,6 +686,9 @@ void CExitBlock::Update(void)
 	// 脱出可能だったら
 	if (AvailableExit())
 	{
+		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+		CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
 		// 対象との距離を求めるためにプレイヤーの位置を取得
 		D3DXVECTOR3 playerPos = pPlayer->GetPos();
 
@@ -678,8 +696,14 @@ void CExitBlock::Update(void)
 		D3DXVECTOR3 disPos = playerPos - GetPos();
 		float distance = D3DXVec3Length(&disPos);
 
-		// 範囲内だったら
-		if (distance < TRIGGER_DISTACE)
+		// 範囲外だったら
+		if (distance > TRIGGER_DISTACE)
+		{
+			return;
+		}
+
+		// 任意のボタンを押したら脱出
+		if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A))
 		{
 			m_isEscape = true;
 		}
@@ -691,7 +715,7 @@ void CExitBlock::Update(void)
 bool CExitBlock::IsHitPlayer(CPlayer* pPlayer)
 {
 	//=====================================================================
-	// プレスブロック側（OBB）
+	// ブロック側（OBB）
 	//=====================================================================
 	OBB obb;
 	obb.center = GetPos();

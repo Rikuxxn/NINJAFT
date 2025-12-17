@@ -25,12 +25,12 @@ class CCharacter : public CObject
 {
 public:
     CCharacter(int nPriority = 2);
-    ~CCharacter();
+    virtual ~CCharacter();
 
-    HRESULT Init(void) = 0;
-    void Uninit(void) = 0;
-    void Update(void) = 0;
-    void Draw(void) = 0;
+    virtual HRESULT Init(void) = 0;
+    virtual void Uninit(void) = 0;
+    virtual void Update(void) = 0;
+    virtual void Draw(void) = 0;
 
     // 当たり判定の生成
     void CreatePhysics(float radius, float height, btScalar mass);
@@ -143,12 +143,12 @@ private:
 class CCharacterManager
 {
 public:
-    //// インスタンスの取得
-    //static CCharacterManager& GetInstance(void)
-    //{
-    //    static CCharacterManager instance;
-    //    return instance;
-    //}
+    // インスタンスの取得
+    static CCharacterManager& GetInstance(void)
+    {
+        static CCharacterManager instance;
+        return instance;
+    }
 
     // キャラクター追加処理
     void AddCharacter(CCharacter* pChar)
@@ -157,7 +157,7 @@ public:
         m_characters.push_back(pChar);
     }
 
-    // キャラクターの取得処理
+    // 単体キャラクターの取得処理
     template <class characterType>
     characterType* GetCharacter(void)
     {
@@ -171,6 +171,21 @@ public:
         return nullptr;
     }
 
+    // 複数体キャラクターの取得処理
+    template <class characterType>
+    std::vector<characterType*> GetCharacters(void)
+    {
+        std::vector<characterType*> result;
+        for (auto* c : m_characters)
+        {
+            if (auto* casted = dynamic_cast<characterType*>(c))
+            {
+                result.push_back(casted);
+            }
+        }
+        return result;
+    }
+
     void Init(void)
     {
         for (auto chara : m_characters)
@@ -180,15 +195,8 @@ public:
         }
     }
 
-    void Uninit(void)
+    void Destroy(void)
     {
-        for (auto chara : m_characters)
-        {
-            // キャラクターの終了処理
-            chara->Uninit();
-            delete chara;
-        }
-
         // リストのクリア(空にする)
         m_characters.clear();
     }
@@ -212,6 +220,12 @@ public:
     }
 
 private:
+    CCharacterManager() = default;
+    ~CCharacterManager() = default;
+
+    CCharacterManager(const CCharacterManager&) = delete;
+    CCharacterManager& operator=(const CCharacterManager&) = delete;
+
     std::vector<CCharacter*> m_characters;// キャラクターのリスト
 };
 

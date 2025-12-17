@@ -34,6 +34,7 @@ CTime::CTime(int nPriority) : CObject(nPriority)
 	m_nStartSeconds = 0;						// 経過時間の割合の結果代入用
 	m_isTimeUp = false;							// タイムアップフラグ
 	m_isActive = false;							// アクティブフラグ
+	m_isVisible = true;							// 表示フラグ
 }
 //=============================================================================
 // デストラクタ
@@ -45,7 +46,7 @@ CTime::~CTime()
 //=============================================================================
 // 生成処理
 //=============================================================================
-CTime* CTime::Create(int minutes, int seconds,float baseX,float baseY,float digitWidth,float digitHeight)
+CTime* CTime::Create(int minutes, int seconds,float baseX,float baseY,float digitWidth,float digitHeight, bool visibleFlag)
 {
 	CTime* pTime;
 
@@ -57,6 +58,7 @@ CTime* CTime::Create(int minutes, int seconds,float baseX,float baseY,float digi
 	pTime->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
 	pTime->m_digitWidth = digitWidth;
 	pTime->m_digitHeight = digitHeight;
+	pTime->m_isVisible = visibleFlag;
 
 	// 経過時間の割合を求めるために変数に代入
 	pTime->m_nStartMinutes = pTime->m_nMinutes;
@@ -88,7 +90,7 @@ HRESULT CTime::Init(void)
 	}
 
 	// コロンの生成
-	CColon::Create(D3DXVECTOR3(m_basePos.x + 2 * m_digitWidth, m_basePos.y, 0.0f), m_digitWidth / 2, m_digitHeight);
+	CColon::Create(D3DXVECTOR3(m_basePos.x + 2 * m_digitWidth, m_basePos.y, 0.0f), m_digitWidth / 2, m_digitHeight, m_isVisible);
 
 	// コロンの幅
 	float colonWidth = m_digitWidth / 2;
@@ -231,6 +233,12 @@ void CTime::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	// 表示OFFの場合はスキップ
+	if (!m_isVisible)
+	{
+		return;
+	}
+
 	for (int nCnt = 0; nCnt < DIGITS; nCnt++)
 	{
 		if (m_apNumber[nCnt])
@@ -275,7 +283,8 @@ CColon::CColon(int nPriority) : CObject(nPriority)
 	m_pos = D3DXVECTOR3(0.0f,0.0f,0.0f);	// 位置
 	m_fWidth = 0.0f;						// 幅
 	m_fHeight = 0.0f;						// 高さ
-	m_nIdxTexture = 0;
+	m_nIdxTexture = 0;						// テクスチャインデックス
+	m_isVisible = true;						// 表示フラグ
 }
 //=============================================================================
 // コロンのデストラクタ
@@ -287,7 +296,7 @@ CColon::~CColon()
 //=============================================================================
 // コロンの生成処理
 //=============================================================================
-CColon* CColon::Create(D3DXVECTOR3 pos, float fWidth, float fHeight)
+CColon* CColon::Create(D3DXVECTOR3 pos, float fWidth, float fHeight, bool visibleFlag)
 {
 	CColon* pColon;
 
@@ -296,6 +305,7 @@ CColon* CColon::Create(D3DXVECTOR3 pos, float fWidth, float fHeight)
 	pColon->m_pos = pos;
 	pColon->m_fWidth = fWidth;
 	pColon->m_fHeight = fHeight;
+	pColon->SetVisible(visibleFlag);
 
 	// 初期化処理
 	pColon->Init();
@@ -388,6 +398,12 @@ void CColon::Draw(void)
 
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	// 表示OFFの場合はスキップ
+	if (!m_isVisible)
+	{
+		return;
+	}
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));

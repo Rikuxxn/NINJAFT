@@ -1,0 +1,298 @@
+//=============================================================================
+//
+// チュートリアル処理 [tutorial.cpp]
+// Author : RIKU TANEKAWA
+//
+//=============================================================================
+
+//*****************************************************************************
+// インクルードファイル
+//*****************************************************************************
+#include "tutorial.h"
+#include "manager.h"
+#include "result.h"
+#include "particle.h"
+#include "charactermanager.h"
+#include "player.h"
+#include "meshdome.h"
+#include "blocklist.h"
+
+
+//*****************************************************************************
+// 静的メンバ変数宣言
+//*****************************************************************************
+CTime* CTutorial::m_pTime = nullptr;					// タイムへのポインタ
+CBlock* CTutorial::m_pBlock = nullptr;					// ブロックへのポインタ
+CBlockManager* CTutorial::m_pBlockManager = nullptr;	// ブロックマネージャーへのポインタ
+
+//=============================================================================
+// コンストラクタ
+//=============================================================================
+CTutorial::CTutorial() : CScene(CScene::MODE_TUTORIAL)
+{
+	// 値のクリア
+	m_pLight = nullptr;
+	m_timer = 0;
+}
+//=============================================================================
+// デストラクタ
+//=============================================================================
+CTutorial::~CTutorial()
+{
+	// なし
+}
+//=============================================================================
+// 初期化処理
+//=============================================================================
+HRESULT CTutorial::Init(void)
+{
+	// ブロックマネージャーの生成
+	m_pBlockManager = new CBlockManager;
+
+	// ブロックマネージャーの初期化
+	m_pBlockManager->Init();
+
+	// ライトの生成
+	m_pLight = new CLight;
+
+	// ライトの初期化
+	m_pLight->Init();
+
+	// 配置情報の読み込み
+	m_pBlockManager->LoadFromJson("data/game_info.json");
+
+	// キャラクターマネージャーの生成
+	auto& charaMgr = CCharacterManager::GetInstance();
+
+	// プレイヤーの生成
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
+	charaMgr.AddCharacter(m_pPlayer);
+	m_pPlayer->SetControlFlag(true);// 操作許可しておく
+
+	// タイムの生成
+	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, false);
+
+	// メッシュドームの生成
+	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
+
+	// 音の取得
+	CSound* pSound = CManager::GetSound();
+
+	// ゲームBGMの再生
+	if (pSound)
+	{
+		pSound->Play(CSound::SOUND_LABEL_GAMEBGM);
+	}
+
+	return S_OK;
+}
+//=============================================================================
+// 終了処理
+//=============================================================================
+void CTutorial::Uninit(void)
+{
+	// キャラクターマネージャーの破棄
+	CCharacterManager::GetInstance().Destroy();
+
+	// ブロックマネージャーの破棄
+	if (m_pBlockManager != nullptr)
+	{
+		m_pBlockManager->Uninit();
+
+		delete m_pBlockManager;
+		m_pBlockManager = nullptr;
+	}
+
+	// ライトの破棄
+	if (m_pLight != nullptr)
+	{
+		delete m_pLight;
+		m_pLight = nullptr;
+	}
+}
+//=============================================================================
+// 更新処理
+//=============================================================================
+void CTutorial::Update(void)
+{
+	m_timer++;
+
+	if (m_timer >= 15)// 一定間隔で生成
+	{// 桜の生成
+		// リセット
+		m_timer = 0;
+
+		// パーティクル生成
+		CParticle::Create<CBlossomParticle>(INIT_VEC3, m_pPlayer->GetPos(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
+	}
+
+	CFade* pFade = CManager::GetFade();
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	UpdateLight();
+
+	//// TABキーでポーズON/OFF
+	//if (pKeyboard->GetTrigger(DIK_TAB) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START))
+	//{
+	//	// ポーズSE
+	//	CManager::GetSound()->Play(CSound::SOUND_LABEL_PAUSE);
+
+	//	// ポーズ切り替え前の状態を記録
+	//	bool wasPaused = m_isPaused;
+
+	//	m_isPaused = !m_isPaused;
+
+	//	// ポーズ状態に応じて音を制御
+	//	if (m_isPaused && !wasPaused)
+	//	{
+	//		// 一時停止する
+	//		CManager::GetSound()->PauseAll();
+	//	}
+	//	else if (!m_isPaused && wasPaused)
+	//	{
+	//		// 再開する
+	//		CManager::GetSound()->ResumeAll();
+	//	}
+	//}
+
+	// ブロックマネージャーの更新処理
+	m_pBlockManager->Update();
+
+#ifdef _DEBUG
+	CInputKeyboard* pInputKeyboard = CManager::GetInputKeyboard();
+
+	if (pFade->GetFade() == CFade::FADE_NONE && pInputKeyboard->GetTrigger(DIK_RETURN))
+	{
+		// ゲーム画面に移行
+		pFade->SetFade(MODE_GAME);
+	}
+#endif
+
+}
+//=============================================================================
+// ライトの色更新処理
+//=============================================================================
+void CTutorial::UpdateLight(void)
+{
+	float progress = m_pTime->GetProgress(); // 0.0～0.1
+
+	// ======== 各時間帯のメインライト色 ========
+	D3DXCOLOR evening(1.0f, 0.65f, 0.35f, 1.0f); // 夕方
+	D3DXCOLOR night(0.15f, 0.18f, 0.35f, 1.0f);  // 夜
+	D3DXCOLOR morning(0.95f, 0.8f, 0.7f, 1.0f);  // 明け方
+
+	D3DXCOLOR mainColor;
+
+	// ======== 時間帯ごとに補間 ========
+	if (progress < 0.30f)
+	{// 夕方
+		float t = progress / 0.30f;
+		D3DXColorLerp(&mainColor, &evening, &night, t);
+	}
+	else if (progress < 0.90f)
+	{// 夜
+		float t = (progress - 0.30f) / (0.90f - 0.30f);
+		D3DXColorLerp(&mainColor, &night, &morning, t);
+	}
+	else
+	{// 明け方
+		float t = (progress - 0.90f) / (1.0f - 0.90f);
+		D3DXColorLerp(&mainColor, &morning, &evening, t);
+	}
+
+	// ======== 光の向き補間 ========
+	D3DXVECTOR3 dirEvening(0.5f, -1.0f, 0.3f);
+	D3DXVECTOR3 dirNight(0.0f, -1.0f, 0.0f);
+	D3DXVECTOR3 dirMorning(-0.3f, -1.0f, -0.2f);
+	D3DXVECTOR3 mainDir;
+
+	if (progress < 0.5f)
+	{
+		float t = progress / 0.5f;
+		D3DXVec3Lerp(&mainDir, &dirEvening, &dirNight, t);
+	}
+	else
+	{
+		float t = (progress - 0.5f) / 0.5f;
+		D3DXVec3Lerp(&mainDir, &dirNight, &dirMorning, t);
+	}
+	D3DXVec3Normalize(&mainDir, &mainDir);
+
+	// 再設定
+	CLight::Uninit();
+
+	m_pBlockManager->UpdateLight();
+
+	// メインライト
+	CLight::AddLight(
+		D3DLIGHT_DIRECTIONAL,
+		mainColor,
+		mainDir,
+		D3DXVECTOR3(0.0f, 300.0f, 0.0f)
+	);
+
+	// サブライト
+	D3DXCOLOR skyEvening(0.4f, 0.45f, 0.8f, 1.0f);
+	D3DXCOLOR skyNight(0.1f, 0.15f, 0.3f, 1.0f);
+	D3DXCOLOR skyMorning(0.6f, 0.7f, 1.0f, 1.0f);
+	D3DXCOLOR skyColor;
+
+	if (progress < 0.5f)
+	{
+		D3DXColorLerp(&skyColor, &skyEvening, &skyNight, progress / 0.5f);
+	}
+	else
+	{
+		D3DXColorLerp(&skyColor, &skyNight, &skyMorning, (progress - 0.5f) / 0.5f);
+	}
+
+	CLight::AddLight(
+		D3DLIGHT_DIRECTIONAL,
+		skyColor,
+		D3DXVECTOR3(0.0f, -1.0f, 0.0f),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	);
+
+	// 補助光
+	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f;
+	warmFactor = max(0.0f, warmFactor);
+
+	CLight::AddLight(
+		D3DLIGHT_DIRECTIONAL,
+		D3DXCOLOR(0.5f + 0.2f * warmFactor, 0.3f, 0.25f, 1.0f),
+		D3DXVECTOR3(-0.3f, 0.0f, -0.7f),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	);
+}
+//=============================================================================
+// 描画処理
+//=============================================================================
+void CTutorial::Draw(void)
+{
+
+}
+//=============================================================================
+// デバイスリセット通知
+//=============================================================================
+void CTutorial::OnDeviceReset(void)
+{
+	// ゲームライトの更新処理
+	UpdateLight();
+}
+//=============================================================================
+// サムネイルリリース通知
+//=============================================================================
+void CTutorial::ReleaseThumbnail(void)
+{
+	m_pBlockManager->ReleaseThumbnailRenderTarget();
+}
+//=============================================================================
+// サムネイルリセット通知
+//=============================================================================
+void CTutorial::ResetThumbnail(void)
+{
+	m_pBlockManager->InitThumbnailRenderTarget(CManager::GetRenderer()->GetDevice());
+	m_pBlockManager->GenerateThumbnailsForResources(); // キャッシュも再作成
+}
+

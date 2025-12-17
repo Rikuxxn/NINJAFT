@@ -17,6 +17,7 @@
 #include "playerState.h"
 #include "time.h"
 #include "shadowS.h"
+#include "tutorial.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -109,8 +110,8 @@ HRESULT CPlayer::Init(void)
 	// HPの設定
 	SetHp(10.0f);
 
-	// ゲージを生成
-	SetGuages({ 100.0f, 100.0f, 0.0f }, { 0.0f,1.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f }, 420.0f, 20.0f);
+	//// ゲージを生成
+	//SetGuages({ 100.0f, 100.0f, 0.0f }, { 0.0f,1.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f }, 420.0f, 20.0f);
 
 	return S_OK;
 }
@@ -191,14 +192,17 @@ void CPlayer::Update(void)
 
 	if (m_smokeActive && (m_isStealth || m_pMotion->IsCurrentMotion(START)))
 	{
-		// 生成位置
-		D3DXVECTOR3 spawnPos1 = GetPos();
-		D3DXVECTOR3 spawnPos2 = GetPos();
-		spawnPos2.y += 60.0f;
+		for (int i = 0; i < 3; i++)
+		{
+			D3DXVECTOR3 pos = GetPos();
+			pos.y += i * 30.0f;
 
-		// 煙パーティクルの生成
-		CParticle::Create<CSmokeParticle>(INIT_VEC3, spawnPos1, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120, 5);
-		CParticle::Create<CSmokeParticle>(INIT_VEC3, spawnPos2, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120, 5);
+			CParticle::Create<CSmokeParticle>(
+				INIT_VEC3, pos,
+				D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+				120, 8   // 数を増やす
+				);
+		}
 
 		m_smokeTimer--;
 
@@ -243,23 +247,36 @@ void CPlayer::Update(void)
 	}
 
 	// 時間の割合を取得
-	float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
+	float progress = 0.0f; // 0.0～0.1
+
+	if (CManager::GetMode() == CScene::MODE_TUTORIAL)
+	{
+		progress = CTutorial::GetTime()->GetProgress(); // 0.0～0.1
+	}
+	else if (CManager::GetMode() == CScene::MODE_GAME)
+	{
+		progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
+	}
+
 	bool isNight = (progress > 0.30f && progress <= 0.90f);
 
 	// 特定のブロックに当たっているか判定する
 	bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
 
 	D3DXVECTOR4 outlineColor = VEC4_BLACK; // 通常は黒
+	float modelAlpha = 1.0f;// モデルのアルファ値
 
 	if (playerInTorch)// 灯籠に近づく
 	{
 		if (!m_isStealth && m_bIsMoving)
 		{
 			outlineColor = VEC4_RED; // 赤色
+			modelAlpha = 1.0f;
 		}
 		else
 		{
 			outlineColor = VEC4_YELLOW; // 黄色
+			modelAlpha = 1.0f;
 		}
 	}
 	else if (playerInGrass)// 草に入る
@@ -267,18 +284,26 @@ void CPlayer::Update(void)
 		if (!m_isStealth && m_bIsMoving)
 		{
 			outlineColor = VEC4_RED; // 赤色
+			modelAlpha = 1.0f;
 		}
 		else
 		{
-			outlineColor = VEC4_WHITE;	// 白
+			outlineColor = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.1f);	// 半透明
+			modelAlpha = 0.1f;
 		}
 	}
 
 	// 色を適用
 	CModel** models = GetModels();
-	for (int i = 0; i < GetNumModels(); i++)
+	int num = GetNumModels();
+
+	for (int i = 0; i < num; i++)
 	{
+		// アウトラインカラーの設定
 		models[i]->SetOutlineColor(outlineColor);
+
+		// モデルカラーの設定
+		models[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, modelAlpha));
 	}
 
 	// モーションの更新処理

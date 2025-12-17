@@ -20,6 +20,9 @@
 #include "enemyAI.h"
 #include "player.h"
 
+// 前方宣言
+class CEnemyLeader;
+class CEnemySub;
 
 //*****************************************************************************
 // 敵クラス
@@ -218,34 +221,8 @@ public:
 	}
 
 	bool IsPlayerInSight(CPlayer* pPlayer);
-	bool IsSubAction(EEnemyAction type)
-	{
-		std::vector<CEnemy*> subs = m_pSub;
-
-		for (auto* sub : subs)
-		{
-			if (sub->GetRequestedAction() == type)
-			{
-				// 一体でもリクエストされていたら
-				return true;
-			}
-		}
-
-		return false;
-	}
-	bool IsLeaderAction(EEnemyAction type)
-	{
-		if (CEnemy* leader = m_pLeader)
-		{
-			// 指定した行動を要求されていたら
-			if (m_pLeader->GetRequestedAction() == type)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+	bool IsSubAction(EEnemyAction type);
+	bool IsLeaderAction(EEnemyAction type);
 
 	//*****************************************************************************
 	// setter関数
@@ -274,8 +251,6 @@ public:
 	}
 	void SetSightRange(float range) { m_sightRange = range; }
 	void SetSightAngle(float angle) { m_sightAngle = angle; }
-	void SetLeader(CEnemy* leader) { m_pLeader = leader; }
-	void SetSub(CEnemy* sub) { m_pSub.push_back(sub); }
 	void SetAI(std::unique_ptr<IEnemyAI> ai) { m_pAI = std::move(ai); }
 	void SetControlFlag(bool flag) { m_canControl = flag; }
 	void SetSoundCount(int nCount) { m_makeSoundCount = nCount; }
@@ -293,8 +268,6 @@ public:
 	bool IsInvestigating(void) { return m_returnToPatrol; }
 	CModel** GetModels(void) { return m_apModel; }
 	int GetNumModels(void) { return m_nNumModel; }
-	CEnemy* GetLeader(void) const { return m_pLeader; }
-	std::vector<CEnemy*> GetSub(void) const { return m_pSub; }
 	IEnemyAI* GetAI(void) { return m_pAI.get(); }
 	bool GetControlFlag(void) { return m_canControl; }
 	int GetSoundCount(void) { return m_makeSoundCount; }
@@ -321,9 +294,6 @@ private:
 	bool m_returnToPatrol;					// 最寄りの巡回ポイントに戻るフラグ
 	bool m_canControl;						// 操作フラグ
 	int m_makeSoundCount;					// 音発生数
-
-	CEnemy* m_pLeader = nullptr;
-	std::vector<CEnemy*> m_pSub;
 	std::unique_ptr<IEnemyAI> m_pAI;
 };
 
@@ -337,9 +307,9 @@ public:
 	CEnemyLeader();
 	~CEnemyLeader();
 
-	static constexpr float SPEED = 5.0f;				// 移動スピード
-	static constexpr float INVESTIGATE_SPEED = 10.0f;	// 調査時の移動スピード
-	static constexpr float CHASE_SPEED = 10.0f;			// 追跡時の移動スピード
+	static constexpr float SPEED = 7.0f;				// 移動スピード
+	static constexpr float INVESTIGATE_SPEED = 15.0f;	// 調査時の移動スピード
+	static constexpr float CHASE_SPEED = 15.0f;			// 追跡時の移動スピード
 
 	// リーダー敵モーションの種類
 	typedef enum
@@ -398,7 +368,8 @@ public:
 
 	static constexpr float SPEED = 5.0f;				// 移動スピード
 	static constexpr float INVESTIGATE_SPEED = 10.0f;	// 調査時の移動スピード
-	static constexpr float CHASE_SPEED = 10.0f;			// 追跡時の移動スピード
+	static constexpr float CHASE_SPEED = 12.0f;			// 追跡時の移動スピード
+	static constexpr float FOLLOW_SPEED = 15.0f;		// 追従時のスピード
 	static constexpr float CHASE_DISTANCE = 150.0f;		// 追跡状態になる距離
 
 	// サブ敵モーションの種類

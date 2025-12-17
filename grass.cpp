@@ -46,8 +46,8 @@ void CGrassBlock::Update(void)
 	float nearestDist = FLT_MAX;
 	D3DXVECTOR3 nearestDiff(0, 0, 0);
 
-	CPlayer* pPlayer = CGame::GetPlayer();
-	CEnemy* pEnemy = CGame::GetEnemy();
+	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+	CEnemy* pEnemy = CCharacterManager::GetInstance().GetCharacter<CEnemy>();
 
 	// --- ƒvƒŒƒCƒ„[ ---
 	if (pPlayer)

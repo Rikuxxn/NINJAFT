@@ -12,6 +12,8 @@
 //*****************************************************************************
 #include "meshcylinder.h"
 #include "blocklist.h"
+#include "blood.h"
+#include "specbase.h"
 
 // 前方宣言
 class CPlayer_StandState;
@@ -19,6 +21,7 @@ class CPlayer_MoveState;
 class CPlayer_StealthMoveState;
 class CPlayer_DamageState;
 class CPlayer_StartState;
+class CPlayer_InjuryState;
 
 //*****************************************************************************
 // プレイヤーの待機状態
@@ -38,17 +41,29 @@ public:
 		// 入力を取得
 		InputData input = pPlayer->GatherInput();
 
+		// プレイヤーHP条件
+		CPlayerHPAmount hpAmount;
+
 		// 移動入力とステルスボタンが押されていたら
 		if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && input.stealth)
 		{
 			// 忍び足移動状態へ移行
 			m_pMachine->ChangeState<CPlayer_StealthMoveState>();
 		}
+
 		// 移動入力のみだったら移動ステートに移行
 		else if((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && !input.stealth)
 		{
-			// 移動状態へ移行
-			m_pMachine->ChangeState<CPlayer_MoveState>();
+			if (!hpAmount.IsSatisfieBy(*pPlayer))
+			{
+				// 負傷状態へ移行
+				m_pMachine->ChangeState<CPlayer_InjuryState>();
+			}
+			else
+			{
+				// 移動状態へ移行
+				m_pMachine->ChangeState<CPlayer_MoveState>();
+			}
 		}
 
 		D3DXVECTOR3 move = pPlayer->GetMove();
@@ -81,8 +96,6 @@ public:
 	{
 		// 移動モーション
 		pPlayer->GetMotion()->StartBlendMotion(CPlayer::MOVE, 10);
-
-		m_particleTimer = 0;
 	}
 
 	void OnUpdate(CPlayer* pPlayer)override
@@ -93,11 +106,31 @@ public:
 		// フラグ更新
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
+		// プレイヤーHP条件
+		CPlayerHPAmount hpAmount;
+
+		if (!hpAmount.IsSatisfieBy(*pPlayer))
+		{
+			// 負傷状態
+			m_pMachine->ChangeState<CPlayer_InjuryState>();
+			return;
+		}
+
 		// 埋蔵金の取得数に応じてスピードを遅くする
 		int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
 
+		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
+		CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
+
 		float speedRate = 1.0f - treasureCount * 0.05f;// 5%ずつ低下
 		speedRate = max(speedRate, 0.5f); // 最大50%
+
+		// ダッシュ入力
+		if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(CInputJoypad::JOYKEY_RB)) &&
+			treasureCount <= 5)
+		{
+			speedRate = 1.5f;
+		}
 
 		// モーションスピードを遅くしていく
 		pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
@@ -150,6 +183,9 @@ public:
 			}
 		}
 
+		// プレイヤーの位置取得
+		D3DXVECTOR3 pos = pPlayer->GetPos();
+
 		CModelEffect* pModelEffect = nullptr;
 
 		if (pPlayer->GetIsMoving() && pPlayer->GetOnGround())
@@ -177,7 +213,7 @@ public:
 				rot.z = ((rand() % 360) / 180.0f) * D3DX_PI;
 
 				// モデルエフェクトの生成
-				pModelEffect = CModelEffect::Create("data/MODELS/effectModel_step.x", pPlayer->GetPos(), rot,
+				pModelEffect = CModelEffect::Create("data/MODELS/effectModel_step.x", pos, rot,
 					move, D3DXVECTOR3(0.3f, 0.3f, 0.3f), 180, 0.01f, 0.008f);
 			}
 		}
@@ -211,6 +247,143 @@ private:
 	static constexpr int DASH_PARTICLE_INTERVAL = 10; // パーティクル発生間隔（フレーム数）
 
 	int m_particleTimer;	// パーティクル生成タイマー
+};
+
+//*****************************************************************************
+// プレイヤーの負傷状態
+//*****************************************************************************
+class CPlayer_InjuryState :public StateBase<CPlayer>
+{
+public:
+
+	void OnStart(CPlayer* pPlayer)override
+	{
+		// 負傷モーション
+		pPlayer->GetMotion()->StartBlendMotion(CPlayer::INJURY, 10);
+	}
+
+	void OnUpdate(CPlayer* pPlayer)override
+	{
+		// 入力取得
+		InputData input = pPlayer->GatherInput();
+
+		// フラグ更新
+		pPlayer->UpdateMovementFlags(input.moveDir);
+
+		//// 埋蔵金の取得数に応じてスピードを遅くする
+		//int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
+
+		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
+		CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
+
+		//float speedRate = 1.0f - treasureCount * 0.05f;// 5%ずつ低下
+		//speedRate = max(speedRate, 0.5f); // 最大50%
+
+		//// プレイヤーHP条件
+		//CPlayerHPAmount hpAmount;
+
+		//// ダッシュ入力
+		//if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(CInputJoypad::JOYKEY_RB)) &&
+		//	(treasureCount <= 5 && hpAmount.IsSatisfieBy(*pPlayer)))
+		//{
+		//	speedRate = 1.5f;
+		//}
+
+		//// モーションスピードを遅くしていく
+		//pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
+
+		// 目標速度計算
+		float moveSpeed = CPlayer::INJURY_SPEED /** speedRate*/;
+
+		D3DXVECTOR3 targetMove = input.moveDir;
+
+		if (targetMove.x != 0.0f || targetMove.z != 0.0f)
+		{
+			D3DXVec3Normalize(&targetMove, &targetMove);
+
+			targetMove *= moveSpeed;
+		}
+		else
+		{
+			targetMove = D3DXVECTOR3(0, 0, 0);
+		}
+
+		// 現在速度との補間（イージング）
+		const float accelRate = 0.15f;
+		D3DXVECTOR3 currentMove = pPlayer->GetMove();
+
+		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
+		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+
+		// 補間後の速度をプレイヤーにセット
+		pPlayer->SetMove(currentMove);
+
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
+		CBlockManager* pBlockManager = CGame::GetBlockManager();
+
+		// 特定のブロックに当たっているか判定する
+		bool playerInWater = pBlockManager->IsPlayerInWater();
+
+		if (pSound && !playerInWater)
+		{
+			// 足音SEの再生
+			if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
+			{
+				pSound->Play(CSound::SOUND_LABEL_STEP);
+			}
+			else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
+			{
+				pSound->Play(CSound::SOUND_LABEL_STEP);
+			}
+		}
+
+		// プレイヤーの位置取得
+		D3DXVECTOR3 pos = pPlayer->GetPos();
+
+		if (pPlayer->GetHp() <= 3.0f)
+		{
+			m_bloodTimer++;
+
+			if (m_bloodTimer >= BLOOD_INTERVAL)
+			{
+				m_bloodTimer = 0;
+
+				// 地面に埋もれないように少し上に上げる
+				pos.y += 2.0f;
+
+				// 血痕の生成
+				CBlood::Create(pos, D3DXVECTOR3(90.0f, 0.0f, 0.0f), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), 25.0f, 25.0f);
+			}
+		}
+
+		if (input.stealth && (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f))
+		{
+			// 忍び足移動状態へ移行
+			m_pMachine->ChangeState<CPlayer_StealthMoveState>();
+			return;
+		}
+
+		// 移動していなければ待機ステートに戻す
+		if (!pPlayer->GetIsMoving())
+		{
+			// 待機状態
+			m_pMachine->ChangeState<CPlayer_StandState>();
+		}
+	}
+
+	void OnExit(CPlayer* pPlayer)override
+	{
+		// モーションスピードを通常に戻す
+		pPlayer->GetMotion()->SetMotionSpeedRate(1.0f);
+	}
+
+private:
+	static constexpr int BLOOD_INTERVAL = 40; // 血痕生成間隔（フレーム数）
+
+	int m_bloodTimer;		// 血痕生成タイマー
 };
 
 //*****************************************************************************
@@ -305,9 +478,17 @@ public:
 
 		// ダメージモーション
 		pPlayer->GetMotion()->StartBlendMotion(CPlayer::DAMAGE, 10);
+		
+		// 敵の取得
+		CEnemy* pEnemy = CCharacterManager::GetInstance().GetCharacter<CEnemy>();
+
+		if (pEnemy)
+		{
+			return;
+		}
 
 		// 最初の勢い（後方への初速）
-		D3DXVECTOR3 damageDir = CGame::GetEnemy()->GetForward();
+		D3DXVECTOR3 damageDir = pEnemy->GetForward();
 		D3DXVec3Normalize(&damageDir, &damageDir);
 
 		float forwardPower = 120.0f; // 初速パワー

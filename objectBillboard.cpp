@@ -23,6 +23,7 @@ CObjectBillboard::CObjectBillboard(int nPriority) : CObject(nPriority)
 	memset(m_szPath, 0, sizeof(m_szPath));	// ファイルパス
 	m_pVtxBuff		= nullptr;				// 頂点バッファへのポインタ
 	m_pos			= INIT_VEC3;			// 位置
+	m_rot			= INIT_VEC3;			// 向き
 	m_col			= INIT_XCOL;			// 色
 	m_mtxWorld		= {};					// ワールドマトリックス
 	m_fSize			= 0.0f;					// サイズ(エフェクト半径)
@@ -125,6 +126,35 @@ void CObjectBillboard::Update(void)
 	pVtx[1].col = m_col;
 	pVtx[2].col = m_col;
 	pVtx[3].col = m_col;
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
+}
+//=============================================================================
+// 更新処理(回転)
+//=============================================================================
+void CObjectBillboard::UpdateTurn(void)
+{
+	VERTEX_3D* pVtx;// 頂点情報へのポインタ
+
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	float c = cosf(m_rot.z);
+	float s = sinf(m_rot.z);
+
+	// 元の頂点を回転
+	for (int i = 0; i < 4; i++)
+	{
+		float x = pVtx[i].pos.x;
+		float y = pVtx[i].pos.y;
+
+		pVtx[i].pos.x = x * c - y * s;
+		pVtx[i].pos.y = x * s + y * c;
+
+		// 色の更新
+		pVtx[i].col = m_col;
+	}
 
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();

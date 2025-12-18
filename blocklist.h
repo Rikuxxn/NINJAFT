@@ -231,9 +231,15 @@ public:
 		// --- 埋蔵金ブロックが一定数取得されたか確認 ---
 		auto buriedTreasureBlocks = CBlockManager::GetBlocksOfType<CBuriedTreasureBlock>();
 
+		// 埋蔵金が存在しなかったらtrueを返す
+		if (buriedTreasureBlocks.empty())
+		{
+			return true;
+		}
+
 		for (CBuriedTreasureBlock* treasure : buriedTreasureBlocks)
 		{
-			if (treasure->IsGet() || buriedTreasureBlocks.empty())
+			if (treasure->IsGet())
 			{
 				return true;
 			}
@@ -272,6 +278,12 @@ public:
 	{
 		// --- ドアブロックが開いたか確認 ---
 		auto doorBlocks = CBlockManager::GetBlocksOfType<CDoorBlock>();
+
+		// 存在しなかったらtrueを返す
+		if (doorBlocks.empty())
+		{
+			return true;
+		}
 
 		for (CDoorBlock* door : doorBlocks)
 		{

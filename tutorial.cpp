@@ -16,6 +16,7 @@
 #include "player.h"
 #include "meshdome.h"
 #include "blocklist.h"
+#include "ui.h"
 
 
 //*****************************************************************************
@@ -59,7 +60,7 @@ HRESULT CTutorial::Init(void)
 	m_pLight->Init();
 
 	// 配置情報の読み込み
-	m_pBlockManager->LoadFromJson("data/game_info.json");
+	m_pBlockManager->LoadFromJson("data/block_tutorial.json");
 
 	// キャラクターマネージャーの生成
 	auto& charaMgr = CCharacterManager::GetInstance();
@@ -67,13 +68,34 @@ HRESULT CTutorial::Init(void)
 	// プレイヤーの生成
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
 	charaMgr.AddCharacter(m_pPlayer);
-	m_pPlayer->SetControlFlag(true);// 操作許可しておく
 
 	// タイムの生成
 	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, false);
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
+
+	// 「チュートリアル」UI生成
+	auto tutorial = CUITexture::Create("data/TEXTURE/ui_tutorial.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+
+	// スキップUI生成
+	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+
+	// 「チュートリアル」UI登録
+	CUIManager::GetInstance()->AddUI("Tutorial", tutorial);
+
+	// スキップUI登録
+	CUIManager::GetInstance()->AddUI("Skip_XInput", skip_xinput);
+	CUIManager::GetInstance()->AddUI("Skip_Keyboard", skip_keyboard);
+
+	// UI初期設定
+	tutorial->Hide();
+	skip_xinput->Hide();
+
+	m_startState = StartState::WaitStart;
+	m_stateTimer = 190;   // 開始時の初期待機
+	m_canControl = false;
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -128,36 +150,53 @@ void CTutorial::Update(void)
 
 	CFade* pFade = CManager::GetFade();
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
+	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	auto skip_xinput = CUIManager::GetInstance()->GetUI("Skip_XInput");
+	auto skip_keyboard = CUIManager::GetInstance()->GetUI("Skip_Keyboard");
+
+	// 入力デバイスに応じてUIを切り替える
+	if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
+	{
+		// 表示
+		skip_keyboard->Hide();
+		skip_xinput->Show();
+	}
+	else if (pKeyboard->GetAnyKeyTrigger())
+	{
+		// 表示
+		skip_xinput->Hide();
+		skip_keyboard->Show();
+	}
+
+	// UIの更新
+	UIUpdate();
 
 	UpdateLight();
 
-	//// TABキーでポーズON/OFF
-	//if (pKeyboard->GetTrigger(DIK_TAB) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START))
-	//{
-	//	// ポーズSE
-	//	CManager::GetSound()->Play(CSound::SOUND_LABEL_PAUSE);
-
-	//	// ポーズ切り替え前の状態を記録
-	//	bool wasPaused = m_isPaused;
-
-	//	m_isPaused = !m_isPaused;
-
-	//	// ポーズ状態に応じて音を制御
-	//	if (m_isPaused && !wasPaused)
-	//	{
-	//		// 一時停止する
-	//		CManager::GetSound()->PauseAll();
-	//	}
-	//	else if (!m_isPaused && wasPaused)
-	//	{
-	//		// 再開する
-	//		CManager::GetSound()->ResumeAll();
-	//	}
-	//}
-
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
+
+	// 任意のボタンを押したとき
+	if (pFade->GetFade() == CFade::FADE_NONE &&
+		(pKeyboard->GetTrigger(DIK_TAB) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START)))
+	{
+		// ゲーム画面に移行
+		pFade->SetFade(MODE_GAME);
+	}
+
+	// --- 脱出したか確認 ---
+	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();
+
+	for (CExitBlock* exit : exitBlocks)
+	{
+		if (pFade->GetFade() == CFade::FADE_NONE && exit->IsEscape())
+		{
+			// ゲーム画面に移行
+			pFade->SetFade(MODE_GAME);
+		}
+	}
 
 #ifdef _DEBUG
 	CInputKeyboard* pInputKeyboard = CManager::GetInputKeyboard();
@@ -264,6 +303,60 @@ void CTutorial::UpdateLight(void)
 		D3DXVECTOR3(-0.3f, 0.0f, -0.7f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 	);
+}
+//=============================================================================
+// UIの更新処理
+//=============================================================================
+void CTutorial::UIUpdate(void)
+{
+	CFade* pFade = CManager::GetFade();
+
+	// UIの取得
+	auto tutorial = CUIManager::GetInstance()->GetUI("Tutorial");
+
+	switch (m_startState)
+	{
+	case StartState::WaitStart:
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			// 開始SEの再生
+			if (pSound)
+			{
+				pSound->Play(CSound::SOUND_LABEL_START);
+			}
+
+			// UI表示
+			tutorial->Show();
+
+			m_startState = StartState::Hidden;
+			m_stateTimer = 180;  // UI表示時間
+		}
+		break;
+
+	case StartState::Hidden:
+		m_stateTimer--;
+
+		if (m_stateTimer <= 0.0f)
+		{
+			// UI非表示
+			tutorial->FadeOut(60.0f);
+
+			// 操作フラグをtrueにする
+			m_pPlayer->SetControlFlag(true);
+
+			m_startState = StartState::Idle;
+		}
+		break;
+
+	case StartState::Idle:
+
+		break;
+	}
 }
 //=============================================================================
 // 描画処理

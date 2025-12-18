@@ -369,11 +369,6 @@ void CPlayer::Draw(void)
 //=============================================================================
 void CPlayer::Respawn(D3DXVECTOR3 pos)
 {
-	if (CManager::GetMode() != MODE_GAME)
-	{
-		return;
-	}
-
 	D3DXVECTOR3 respawnPos = pos; // 任意の位置
 
 	GetPos() = respawnPos;
@@ -520,9 +515,10 @@ InputData CPlayer::GatherInput(void)
 
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
-	XINPUT_STATE* pStick = CInputJoypad::GetStickAngle();		// スティックの取得
+	XINPUT_STATE* pStick = pJoypad->GetStickAngle();		// スティックの取得
 	CCamera* pCamera = CManager::GetCamera();					// カメラの取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();						// カメラ角度の取得
+	CFade* pFade = CManager::GetFade();
 
 	if (this == nullptr || !m_canControl)
 	{
@@ -542,7 +538,7 @@ InputData CPlayer::GatherInput(void)
 	// ---------------------------
 	// タメージ状態中は移動入力無効化
 	// ---------------------------
-	if (m_pMotion->IsCurrentMotion(DAMAGE))
+	if (m_pMotion->IsCurrentMotion(DAMAGE)/* || !pFade->GetFade() == CFade::FADE_NONE*/)
 	{
 		return input;
 	}

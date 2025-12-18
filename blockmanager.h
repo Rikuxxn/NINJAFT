@@ -117,16 +117,22 @@ public:
 
         for (CBlock* block : m_blocksByType[type])
         {
-            // 実際にインスタンスが T 型か確認
+            if (!block)
+            {
+                continue;
+            }
+
+            // タイプで判別する
+            if (block->GetType() != type)
+            {
+                continue;
+            }
+
             if (T* t = dynamic_cast<T*>(block))
             {
-                if (block->GetType() == type)
-                {
-                    result.push_back(t);
-                }
+                result.push_back(t);
             }
         }
-
         return result;
     }
 

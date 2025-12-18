@@ -128,20 +128,20 @@ HRESULT CGame::Init(void)
 	// ƒƒbƒVƒ…ƒh[ƒ€‚Ì¶¬
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
-	// ”C–±ŠJŽnUI¶¬
-	auto mission = CUITexture::Create("data/TEXTURE/ui_mission2.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	// ƒ‹[ƒ‹UI¶¬
+	auto rule = CUITexture::Create("data/TEXTURE/ui_rule.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
 	// ”C–±Ž¸”sUI¶¬
 	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
-	// ”C–±ŠJŽnUI“o˜^
-	CUIManager::GetInstance()->AddUI("Mission", mission);
+	// ƒ‹[ƒ‹UI“o˜^
+	CUIManager::GetInstance()->AddUI("Rule", rule);
 
 	// ”C–±Ž¸”sUI“o˜^
 	CUIManager::GetInstance()->AddUI("MissionFailure", mission_failure);
 
 	// ¶¬’¼Œã‚ÉŠeUI‚ÌÝ’è‚ð‚·‚é
-	mission->Hide();
+	rule->Hide();
 	mission_failure->Hide();
 
 	m_startState = StartState::WaitStart;
@@ -440,6 +440,10 @@ void CGame::UIUpdate(void)
 {
 	CFade* pFade = CManager::GetFade();
 
+	// UI‚ÌŽæ“¾
+	auto rule = CUIManager::GetInstance()->GetUI("Rule");
+	auto mission_failure = CUIManager::GetInstance()->GetUI("MissionFailure");
+
 	switch (m_startState)
 	{
 	case StartState::WaitStart:
@@ -457,8 +461,7 @@ void CGame::UIUpdate(void)
 			}
 
 			// UI•\Ž¦
-			auto mission = CUIManager::GetInstance()->GetUI("Mission");
-			mission->Show();
+			rule->Show();
 
 			m_startState = StartState::Hidden;
 			m_stateTimer = 180;  // UI•\Ž¦ŽžŠÔ
@@ -471,8 +474,7 @@ void CGame::UIUpdate(void)
 		if (m_stateTimer <= 0.0f)
 		{
 			// UI”ñ•\Ž¦
-			auto mission = CUIManager::GetInstance()->GetUI("Mission");
-			mission->FadeOut(60.0f);
+			rule->FadeOut(60.0f);
 
 			// ‘€ìƒtƒ‰ƒO‚ðtrue‚É‚·‚é
 			m_pPlayer->SetControlFlag(true);
@@ -502,7 +504,6 @@ void CGame::UIUpdate(void)
 			m_stateTimer = 180;
 
 			// UI•\Ž¦
-			auto mission_failure = CUIManager::GetInstance()->GetUI("MissionFailure");
 			mission_failure->FadeIn(120.0f);
 
 			m_startState = StartState::WaitEnd;

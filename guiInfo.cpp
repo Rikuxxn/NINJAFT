@@ -22,7 +22,7 @@ void CGuiInfo::PlayerInfo(void)
 {
 	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
-	if (!pPlayer || CManager::GetMode() != MODE_GAME)
+	if (!pPlayer)
 	{
 		return;
 	}
@@ -120,7 +120,7 @@ void CGuiInfo::EnemyInfo(void)
 {
 	CEnemy* pEnemy = CCharacterManager::GetInstance().GetCharacter<CEnemy>();
 
-	if (!pEnemy || CManager::GetMode() != MODE_GAME)
+	if (!pEnemy)
 	{
 		return;
 	}

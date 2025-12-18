@@ -832,7 +832,7 @@ void CBloodSplatter::Update(void)
 
 		desc.move.x = cosf(angle) * speed;
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 100) / 100.0f + 0.9f; // 上方向
+		desc.move.y = (rand() % 50) / 100.0f + 0.9f; // 上方向
 
 		// 色の設定
 		desc.col = GetCol();

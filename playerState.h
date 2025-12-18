@@ -109,6 +109,7 @@ public:
 		// プレイヤーHP条件
 		CPlayerHPAmount hpAmount;
 
+		// 満たしていたら
 		if (!hpAmount.IsSatisfieBy(*pPlayer))
 		{
 			// 負傷状態
@@ -270,27 +271,8 @@ public:
 		// フラグ更新
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
-		//// 埋蔵金の取得数に応じてスピードを遅くする
-		//int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
-
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
 		CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
-
-		//float speedRate = 1.0f - treasureCount * 0.05f;// 5%ずつ低下
-		//speedRate = max(speedRate, 0.5f); // 最大50%
-
-		//// プレイヤーHP条件
-		//CPlayerHPAmount hpAmount;
-
-		//// ダッシュ入力
-		//if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(CInputJoypad::JOYKEY_RB)) &&
-		//	(treasureCount <= 5 && hpAmount.IsSatisfieBy(*pPlayer)))
-		//{
-		//	speedRate = 1.5f;
-		//}
-
-		//// モーションスピードを遅くしていく
-		//pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
 
 		// 目標速度計算
 		float moveSpeed = CPlayer::INJURY_SPEED /** speedRate*/;
@@ -374,10 +356,9 @@ public:
 		}
 	}
 
-	void OnExit(CPlayer* pPlayer)override
+	void OnExit(CPlayer* /*pPlayer*/)override
 	{
-		// モーションスピードを通常に戻す
-		pPlayer->GetMotion()->SetMotionSpeedRate(1.0f);
+
 	}
 
 private:
@@ -479,10 +460,10 @@ public:
 		// ダメージモーション
 		pPlayer->GetMotion()->StartBlendMotion(CPlayer::DAMAGE, 10);
 		
-		// 敵の取得
+		// リーダー敵の取得
 		CEnemy* pEnemy = CCharacterManager::GetInstance().GetCharacter<CEnemy>();
 
-		if (pEnemy)
+		if (!pEnemy)
 		{
 			return;
 		}

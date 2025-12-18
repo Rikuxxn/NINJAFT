@@ -43,9 +43,9 @@ void CItemSelect::Init(void)
     // äeçÄñ⁄ÇÃà íu
     std::vector<D3DXVECTOR3> Positions =
     {
-        D3DXVECTOR3(420.0f, 490.0f, 0.0f),
-        D3DXVECTOR3(420.0f, 600.0f, 0.0f),
-        D3DXVECTOR3(420.0f, 710.0f, 0.0f)
+        D3DXVECTOR3(420.0f, 510.0f, 0.0f),
+        D3DXVECTOR3(420.0f, 650.0f, 0.0f),
+        D3DXVECTOR3(420.0f, 790.0f, 0.0f)
     };
 
     for (int i = 0; i < (int)Positions.size(); i++)
@@ -57,13 +57,13 @@ void CItemSelect::Init(void)
         switch (i)
         {
         case 0:
-            item = CItem::Create(CItem::ITEM_ID_PLAY, Pos, 120.0f, 50.0f);
+            item = CItem::Create(CItem::ITEM_ID_PLAY, Pos, 150.0f, 60.0f);
             break;
         case 1:
-            item = CItem::Create(CItem::ITEM_ID_TUTORIAL, Pos, 160.0f, 50.0f);
+            item = CItem::Create(CItem::ITEM_ID_TUTORIAL, Pos, 150.0f, 60.0f);
             break;
         case 2:
-            item = CItem::Create(CItem::ITEM_ID_EXIT, Pos, 120.0f, 50.0f);
+            item = CItem::Create(CItem::ITEM_ID_EXIT, Pos, 150.0f, 60.0f);
             break;
         }
 

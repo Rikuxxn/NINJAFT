@@ -15,7 +15,6 @@
 // 静的メンバ変数宣言
 //*****************************************************************************
 LPDIRECTINPUT8 CInput::m_pInput = nullptr;		// DirectInputオブジェクトへのポインタ
-XINPUT_STATE CInputJoypad::m_joyKeyState = {};
 DIMOUSESTATE CInputMouse::m_mouseState = {};
 
 //=============================================================================
@@ -511,7 +510,7 @@ bool CInputMouse::GetMouseState(DIMOUSESTATE* mouseState)
 		return false;
 	}
 
-	// マウスの状態を取得(長いから代入した)
+	// マウスの状態を取得
 	HRESULT hr = pMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)mouseState);
 
 	if (FAILED(hr))

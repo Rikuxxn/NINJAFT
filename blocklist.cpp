@@ -19,6 +19,7 @@
 #include "motion.h"
 #include "time.h"
 #include "tutorial.h"
+#include "enemy.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -484,7 +485,9 @@ void CBuriedTreasureBlock::Update(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
+	// キャラクターの取得
 	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+	CEnemyLeader* pEnemyLeader = CCharacterManager::GetInstance().GetCharacter<CEnemyLeader>();
 
 	if (!pPlayer)
 	{
@@ -572,15 +575,19 @@ void CBuriedTreasureBlock::Update(void)
 		// 取得カウントを増やす
 		m_getCount++;
 
-		// 埋蔵金が取られたことを通知して、リストから位置を削除する
-		CGame::GetBlockManager()->OnTreasureCollected(GetPos());
-
-		// 削除予約
-		Kill();
+		if (pEnemyLeader)
+		{
+			// 埋蔵金が取られたことを通知して、リストから位置を削除する
+			CGame::GetBlockManager()->OnTreasureCollected(GetPos());
+		}
 
 		// ゲージも削除する
 		m_pGuage->Uninit();
 		m_pFrame->Uninit();
+
+		// 削除予約
+		Kill();
+		return;
 	}
 }
 

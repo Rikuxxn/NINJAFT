@@ -103,9 +103,10 @@ public:
 	bool GetAnyPress(void);
 	bool GetAnyTrigger(void);
 	bool GetStick(void);
-	static XINPUT_STATE* GetStickAngle(void);
+	XINPUT_STATE* GetStickAngle(void);
+	XINPUT_STATE GetState(void) { return m_joyKeyState; }
 private:
-	static XINPUT_STATE m_joyKeyState;			// ジョイパッドのプレス情報
+	XINPUT_STATE m_joyKeyState;			// ジョイパッドのプレス情報
 	XINPUT_STATE m_joyKeyStateTrigger;			// ジョイパッドのトリガー情報
 	XINPUT_STATE m_joyKeyStateRelease;			// ジョイパッドのリリース情報
 	XINPUT_STATE m_aOldJoyKeyState;				// ジョイパッドの前回の情報

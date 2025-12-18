@@ -28,9 +28,17 @@ public:
 	CTutorial();
 	~CTutorial();
 
+	enum StartState
+	{
+		WaitStart,      // 少し待つ
+		Hidden,			// UI非表示
+		Idle,			// アイドリング
+	};
+
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
+	void UIUpdate(void);
 	virtual void UpdateLight(void);
 	void Draw(void);
 	void OnDeviceReset(void) override;
@@ -38,6 +46,7 @@ public:
 	void ResetThumbnail(void) override;
 
 	static CTime* GetTime(void) { return m_pTime; }
+	static CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
 
 private:
 	CPlayer* m_pPlayer;					// プレイヤーへのポインタ
@@ -48,7 +57,9 @@ private:
 
 	CLight* m_pLight;
 	int m_timer;								// パーティクル生成タイマー
-
+	StartState m_startState;
+	float m_stateTimer;							// UI遅延タイマー
+	bool m_canControl;
 };
 
 #endif

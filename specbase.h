@@ -38,9 +38,9 @@ public:
 	{
 		// HP�̎擾
 		float nLife = player.GetHp();
-		const float threshold = 3.0f;
+		const float threshold = 5.0f;
 
-		return nLife >= 3.0f;
+		return nLife > threshold;
 	}
 };
 

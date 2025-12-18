@@ -114,11 +114,13 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         if (pSound && playerInGrass)
         {
             // ‘SE‚ÌÄ¶
-            if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
+            if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9) ||
+                pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
             {
                 pSound->Play(CSound::SOUND_LABEL_GRASS);
             }
-            else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
+            else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
+                pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
             {
                 pSound->Play(CSound::SOUND_LABEL_GRASS);
             }

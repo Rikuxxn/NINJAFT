@@ -137,6 +137,15 @@ HRESULT CResult::Init(void)
 		D3DXVECTOR3(0.10f, 0.57f, 0.0f),
 		0.0f);
 
+	// ‰¹‚ÌŽæ“¾
+	CSound* pSound = CManager::GetSound();
+
+	// ƒŠƒUƒ‹ƒgSE‚ÌÄ¶
+	if (pSound)
+	{
+		pSound->Play(CSound::SOUND_LABEL_RESULTSE);
+	}
+
 	return S_OK;
 }
 //=============================================================================

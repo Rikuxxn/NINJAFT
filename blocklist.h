@@ -257,6 +257,7 @@ private:
 	float m_baseRotY;		// 基準の角度
 	float m_rotY;			// Y角度
 	static bool m_isOpen;	// 開いたかどうか
+	bool m_prevOpen;		// 直前に開いたか
 };
 
 //*****************************************************************************

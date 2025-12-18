@@ -29,8 +29,11 @@ public:
 	int GetCollisionFlags(void) const override { return btCollisionObject::CF_NO_CONTACT_RESPONSE; }
 	float GetMaxTiltDistance(void) const { return m_distMax; }
 private:
+	static constexpr float DIST_MAX = 35.0f;
+
 	D3DXVECTOR3 m_rotVel;
 	float m_distMax;
+	bool m_prevIn;
 };
 
 #endif

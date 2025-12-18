@@ -22,7 +22,7 @@ CGrassBlock::CGrassBlock(int nPriority) : CBlock(nPriority)
 {
 	// 値のクリア
 	m_rotVel = INIT_VEC3;
-	m_distMax = 35.0f;
+	m_distMax = DIST_MAX;
 }
 //=============================================================================
 // デストラクタ

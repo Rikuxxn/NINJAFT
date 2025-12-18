@@ -440,7 +440,7 @@ HRESULT CEnemySub::Init(void)
 	SetupModels(pModels, nNumModels);
 
 	// カプセルコライダーの設定
-	CreatePhysics(0.0f, CAPSULE_HEIGHT, 0.1f);
+	CreatePhysics(0.0f, 0.0f, 0.1f);
 
 	btRigidBody* pRigid = GetRigidBody();
 

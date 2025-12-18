@@ -23,6 +23,8 @@ public:
 	{
 		SOUND_LABEL_GAMEBGM = 0,	// ゲームBGM
 		SOUND_LABEL_TITLEBGM,
+		SOUND_LABEL_TUTORIALBGM,
+		SOUND_LABEL_RESULTSE,
 		SOUND_LABEL_PAUSE,
 		SOUND_LABEL_SELECT,
 		SOUND_LABEL_ENTER,
@@ -34,6 +36,7 @@ public:
 		SOUND_LABEL_SLASH_1,
 		SOUND_LABEL_SLASH_2,
 		SOUND_LABEL_DAMAGE,
+		SOUND_LABEL_GATE_OPEN,
 
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
@@ -90,6 +93,8 @@ private:
 	{
 		{"data/BGM/gameBGM.wav", -1},			// ゲームBGM
 		{"data/BGM/titleBGM.wav", -1},			// タイトルBGM
+		{"data/BGM/tutorialBGM.wav", -1},		// チュートリアルBGM
+		{"data/SE/resultSE.wav", 0},			// リザルトSE
 		{"data/SE/menu.wav", 0},				// ポーズSE
 		{"data/SE/select.wav", 0},				// 選択SE
 		{"data/SE/enter.wav", 0},				// 決定SE
@@ -101,6 +106,7 @@ private:
 		{"data/SE/slash_1.wav", 0},				// 斬撃1SE
 		{"data/SE/slash_2.wav", 0},				// 斬撃2SE
 		{"data/SE/damage.wav", 0},				// ダメージSE
+		{"data/SE/gate_open.wav", 0},			// 開門SE
 	};
 
 	SoundData m_SoundData[SOUND_LABEL_MAX];

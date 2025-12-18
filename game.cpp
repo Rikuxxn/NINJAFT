@@ -108,7 +108,7 @@ HRESULT CGame::Init(void)
 		// リーダーの周囲に配置
 		D3DXVECTOR3 offset(
 			(rand() % 200 - 100),  // -100～100
-			30.0f,
+			50.0f,
 			(rand() % 200 - 100)
 		);
 

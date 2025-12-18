@@ -100,10 +100,10 @@ HRESULT CTutorial::Init(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
-	// ゲームBGMの再生
+	// チュートリアルBGMの再生
 	if (pSound)
 	{
-		pSound->Play(CSound::SOUND_LABEL_GAMEBGM);
+		pSound->Play(CSound::SOUND_LABEL_TUTORIALBGM);
 	}
 
 	return S_OK;

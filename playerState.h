@@ -132,9 +132,11 @@ public:
 		{
 			speedRate = 1.5f;
 		}
-
-		// モーションスピードを遅くしていく
-		pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
+		else
+		{
+			// モーションスピードを遅くしていく
+			pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
+		}
 
 		// 目標速度計算
 		float moveSpeed = CPlayer::PLAYER_SPEED * speedRate;
@@ -164,25 +166,6 @@ public:
 		
 		// 音の取得
 		CSound* pSound = CManager::GetSound();
-
-		// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
-		CBlockManager* pBlockManager = CGame::GetBlockManager();
-
-		// 特定のブロックに当たっているか判定する
-		bool playerInWater = pBlockManager->IsPlayerInWater();
-
-		if (pSound && !playerInWater)
-		{
-			// 足音SEの再生
-			if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
-			{
-				pSound->Play(CSound::SOUND_LABEL_STEP);
-			}
-			else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
-			{
-				pSound->Play(CSound::SOUND_LABEL_STEP);
-			}
-		}
 
 		// プレイヤーの位置取得
 		D3DXVECTOR3 pos = pPlayer->GetPos();
@@ -325,7 +308,11 @@ public:
 		// プレイヤーの位置取得
 		D3DXVECTOR3 pos = pPlayer->GetPos();
 
-		if (pPlayer->GetHp() <= 3.0f)
+		// プレイヤーHP条件
+		CPlayerHPAmount hpAmount;
+
+		// 満たしていたら
+		if (!hpAmount.IsSatisfieBy(*pPlayer))
 		{
 			m_bloodTimer++;
 
@@ -362,7 +349,7 @@ public:
 	}
 
 private:
-	static constexpr int BLOOD_INTERVAL = 40; // 血痕生成間隔（フレーム数）
+	static constexpr int BLOOD_INTERVAL = 50; // 血痕生成間隔（フレーム数）
 
 	int m_bloodTimer;		// 血痕生成タイマー
 };

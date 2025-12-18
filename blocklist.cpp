@@ -359,14 +359,20 @@ void CWaterBlock::Update(void)
 		CMeshCylinder::Create(pos, D3DXCOLOR(0.3f, 0.7f, 1.0f, 0.9f), 5.0f, 8.0f, 0.5f, 50, 0.03f);
 	};
 
-	if (pPlayer && isOverlap && pPlayer->GetMotion()->IsCurrentMotion(CPlayer::MOVE))
+	// プレイヤーの条件
+	bool playerCondition = !pPlayer->IsStealth() && pPlayer->GetIsMoving() &&
+		!pPlayer->GetMotion()->IsCurrentMotion(CPlayer::DAMAGE);
+
+	if (pPlayer && isOverlap && playerCondition)
 	{
 		// 水SEの再生
-		if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
+		if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9) ||
+			pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
 		{
 			spawnCylinder();
 		}
-		else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
+		else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
+			pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
 		{
 			spawnCylinder();
 		}
@@ -485,9 +491,8 @@ void CBuriedTreasureBlock::Update(void)
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
-	// キャラクターの取得
+	// プレイヤーの取得
 	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
-	CEnemyLeader* pEnemyLeader = CCharacterManager::GetInstance().GetCharacter<CEnemyLeader>();
 
 	if (!pPlayer)
 	{
@@ -575,6 +580,9 @@ void CBuriedTreasureBlock::Update(void)
 		// 取得カウントを増やす
 		m_getCount++;
 
+		// リーダー敵の取得
+		CEnemyLeader* pEnemyLeader = CCharacterManager::GetInstance().GetCharacter<CEnemyLeader>();
+
 		if (pEnemyLeader)
 		{
 			// 埋蔵金が取られたことを通知して、リストから位置を削除する
@@ -604,6 +612,7 @@ CDoorBlock::CDoorBlock()
 	// 値のクリア
 	m_baseRotY = 0.0f;	// 基準の角度
 	m_rotY = 0.0f;		// Y角度
+	m_prevOpen = false;	// 直前に開いたか
 }
 //=============================================================================
 // 扉ブロックのデストラクタ
@@ -626,6 +635,23 @@ void CDoorBlock::Update(void)
 	}
 
 	m_isOpen = true;
+
+	// 一回だけ通す
+	bool n = m_isOpen;
+
+	if (n && !m_prevOpen)
+	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// 開門SE
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_GATE_OPEN);
+		}
+	}
+
+	m_prevOpen = n;
 
 	// 初期角度が正なら -90°回転、負なら +90°回転
 	float targetRotY = m_baseRotY + ((m_baseRotY >= 0.0f) ? -ROT_LIMIT : +ROT_LIMIT);
@@ -683,6 +709,7 @@ void CExitBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
+	// プレイヤーの取得
 	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
 	if (!pPlayer)

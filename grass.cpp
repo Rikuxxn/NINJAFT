@@ -98,6 +98,29 @@ void CGrassBlock::Update(void)
 		float dist = D3DXVec3Length(&diff);
 
 		pPlayer->SetInGrass(dist < m_distMax);
+
+		if (dist < m_distMax)
+		{
+			// 音の取得
+			CSound* pSound = CManager::GetSound();
+
+			if (pSound)
+			{
+				// 草SEの再生
+				if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9) ||
+					pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
+				{
+					pSound->StopByLabel(CSound::SOUND_LABEL_GRASS);
+					pSound->Play(CSound::SOUND_LABEL_GRASS);
+				}
+				else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
+					pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
+				{
+					pSound->StopByLabel(CSound::SOUND_LABEL_GRASS);
+					pSound->Play(CSound::SOUND_LABEL_GRASS);
+				}
+			}
+		}
 	}
 
 	// バネ ＋ ダンピング

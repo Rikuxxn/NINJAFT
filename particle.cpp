@@ -749,7 +749,7 @@ void CSmokeParticle::Update(void)
 
 		desc.move.x = cosf(angle) * speed;
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 100) / 100.0f + 0.9f; // 上方向
+		desc.move.y = (rand() % 100) / 80.0f + 0.9f; // 上方向
 
 		// 色の設定
 		desc.col = GetCol();
@@ -764,7 +764,7 @@ void CSmokeParticle::Update(void)
 		desc.fGravity = 0.005f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 0.53f;
+		desc.fDecRadius = 0.63f;
 
 		// アルファブレンドの設定フラグ
 		desc.bBlend = false;

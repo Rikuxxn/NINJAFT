@@ -40,9 +40,11 @@ CPlayer::CPlayer()
 	m_isInTorch			= false;						// 灯籠の範囲内か
 	m_isStealth			= false;						// ステルス状態か
 	m_prevIn			= false;						// 直前に入ったか
+	m_prevMoving		= false;						// 直前に動いていたか
 	m_canControl		= false;						// 操作フラグ
 	m_smokeTimer		= 30;							// 煙生成時間
 	m_smokeActive		= true;							// 煙フラグ
+	m_isGameStartSmoke	= true;							// ゲーム開始フラグ
 	m_isDead			= false;						// 死亡したか
 }
 //=============================================================================
@@ -183,14 +185,37 @@ void CPlayer::Update(void)
 	// 特定のブロックに当たっているか判定する
 	bool playerInGrass = pBlockManager->IsPlayerInGrass();
 
-	bool isIn = playerInGrass || m_smokeActive;
+	// 草に入った
+	bool enteredGrass = playerInGrass && !m_prevIn;
 
-	if (isIn && !m_prevIn)
+	// 動いている
+	bool isMoving = m_bIsMoving;
+
+	// 草の中で止まった
+	bool stoppedInGrass = playerInGrass && !isMoving && m_prevMoving;
+
+	if (enteredGrass && (!isMoving || m_isStealth))
 	{
 		m_smokeActive = true;
+		m_smokeTimer = 10;
 	}
 
-	if (m_smokeActive && (m_isStealth || m_pMotion->IsCurrentMotion(START)))
+	// 草の中で 移動 → 停止
+	if (stoppedInGrass && !m_pMotion->IsCurrentMotion(STEALTH_MOVE))
+	{
+		m_smokeActive = true;
+		m_smokeTimer = 10;
+	}
+
+	// ゲーム開始時
+	if (m_isGameStartSmoke)
+	{
+		m_smokeActive = true;
+		m_smokeTimer = 10;
+		m_isGameStartSmoke = false;
+	}
+
+	if (m_smokeActive && (playerInGrass || !m_isGameStartSmoke))
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -199,21 +224,19 @@ void CPlayer::Update(void)
 
 			CParticle::Create<CSmokeParticle>(
 				INIT_VEC3, pos,
-				D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-				120, 8   // 数を増やす
+				D3DXCOLOR(1, 1, 1, 1),
+				120, 8
 				);
 		}
 
-		m_smokeTimer--;
-
-		if (m_smokeTimer <= 0)
+		if (--m_smokeTimer <= 0)
 		{
-			m_smokeTimer = 10;
 			m_smokeActive = false;
 		}
 	}
 
-	m_prevIn = isIn;
+	m_prevIn = playerInGrass;
+	m_prevMoving = isMoving;
 
 	// 向きの更新処理
 	UpdateRotation(0.09f);
@@ -518,7 +541,6 @@ InputData CPlayer::GatherInput(void)
 	XINPUT_STATE* pStick = pJoypad->GetStickAngle();		// スティックの取得
 	CCamera* pCamera = CManager::GetCamera();					// カメラの取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();						// カメラ角度の取得
-	CFade* pFade = CManager::GetFade();
 
 	if (this == nullptr || !m_canControl)
 	{
@@ -612,13 +634,5 @@ void CPlayer::Damage(float fDamage)
 
 		// ダメージステートへ
 		m_stateMachine.ChangeState<CPlayer_DamageState>();
-	}
-
-	// 死亡時
-	if (IsDead())
-	{
-		//// 死亡状態
-		//m_stateMachine.ChangeState<CPlayer_DeadState>();
-		return;
 	}
 }

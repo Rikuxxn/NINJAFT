@@ -134,11 +134,19 @@ HRESULT CGame::Init(void)
 	// 任務失敗UI生成
 	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
 
+	// 脱出UI生成
+	auto escape_xinput = CUITexture::Create("data/TEXTURE/ui_escape_xinput.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto escape_keyboard = CUITexture::Create("data/TEXTURE/ui_escape_keyboard.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+
 	// ルールUI登録
 	CUIManager::GetInstance()->AddUI("Rule", rule);
 
 	// 任務失敗UI登録
 	CUIManager::GetInstance()->AddUI("MissionFailure", mission_failure);
+
+	// 脱出UI登録
+	CUIManager::GetInstance()->AddUI("Escape_XInput", escape_xinput);
+	CUIManager::GetInstance()->AddUI("Escape_Keyboard", escape_keyboard);
 
 	// 生成直後に各UIの設定をする
 	rule->Hide();
@@ -254,6 +262,10 @@ void CGame::Update(void)
 	// UIの更新
 	UIUpdate();
 
+	// 脱出UIの取得
+	auto escape_xinput = CUIManager::GetInstance()->GetUI("Escape_XInput");
+	auto escape_keyboard = CUIManager::GetInstance()->GetUI("Escape_Keyboard");
+
 	// --- 脱出したか確認 ---
 	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();
 
@@ -287,6 +299,31 @@ void CGame::Update(void)
 			// リザルト画面に移行
 			pFade->SetFade(MODE_RESULT);
 		}
+
+		// 範囲内のとき
+		if (exit->IsIn())
+		{
+			// 入力デバイスに応じてUIを切り替える
+			if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
+			{
+				// 表示
+				escape_keyboard->Hide();
+				escape_xinput->Show();
+			}
+			else if (pKeyboard->GetAnyKeyTrigger())
+			{
+				// 表示
+				escape_xinput->Hide();
+				escape_keyboard->Show();
+			}
+		}
+		else
+		{
+			// 非表示
+			escape_xinput->Hide();
+			escape_keyboard->Hide();
+		}
+
 	}
 
 #ifdef _DEBUG

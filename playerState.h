@@ -54,7 +54,7 @@ public:
 		// 移動入力のみだったら移動ステートに移行
 		else if((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && !input.stealth)
 		{
-			if (!hpAmount.IsSatisfieBy(*pPlayer))
+			if (!hpAmount.IsSatisfiedBy(*pPlayer))
 			{
 				// 負傷状態へ移行
 				m_pMachine->ChangeState<CPlayer_InjuryState>();
@@ -110,7 +110,7 @@ public:
 		CPlayerHPAmount hpAmount;
 
 		// 満たしていたら
-		if (!hpAmount.IsSatisfieBy(*pPlayer))
+		if (!hpAmount.IsSatisfiedBy(*pPlayer))
 		{
 			// 負傷状態
 			m_pMachine->ChangeState<CPlayer_InjuryState>();
@@ -164,9 +164,6 @@ public:
 		// 補間後の速度をプレイヤーにセット
 		pPlayer->SetMove(currentMove);
 		
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
 		// プレイヤーの位置取得
 		D3DXVECTOR3 pos = pPlayer->GetPos();
 
@@ -254,9 +251,6 @@ public:
 		// フラグ更新
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
-		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
-		CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
-
 		// 目標速度計算
 		float moveSpeed = CPlayer::INJURY_SPEED /** speedRate*/;
 
@@ -312,7 +306,7 @@ public:
 		CPlayerHPAmount hpAmount;
 
 		// 満たしていたら
-		if (!hpAmount.IsSatisfieBy(*pPlayer))
+		if (!hpAmount.IsSatisfiedBy(*pPlayer))
 		{
 			m_bloodTimer++;
 
@@ -323,8 +317,11 @@ public:
 				// 地面に埋もれないように少し上に上げる
 				pos.y += 2.0f;
 
+				// 血痕のサイズをランダムにする
+				float size = (rand()% 15) + 5.0f;
+
 				// 血痕の生成
-				CBlood::Create(pos, D3DXVECTOR3(90.0f, 0.0f, 0.0f), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), 25.0f, 25.0f);
+				CBlood::Create(pos, D3DXVECTOR3(90.0f, 0.0f, 0.0f), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), size, size);
 			}
 		}
 

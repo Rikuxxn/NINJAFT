@@ -275,6 +275,7 @@ public:
 	bool IsHitPlayer(CPlayer* pPlayer);
 
 	bool IsEscape(void) { return m_isEscape; }
+	bool IsIn(void) { return m_isIn; }
 	bool AvailableExit(void)
 	{
 		// --- ドアブロックが開いたか確認 ---
@@ -298,9 +299,10 @@ public:
 	}
 
 private:
-	static constexpr float TRIGGER_DISTACE = 90.0f;
+	static constexpr float TRIGGER_DISTACE = 110.0f;
 
 	bool m_isEscape;	// 脱出したかどうか
+	bool m_isIn;		// 範囲内フラグ
 };
 
 #endif

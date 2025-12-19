@@ -108,23 +108,23 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     {
         m_soundTimer++;
 
-        // 音の取得
-        CSound* pSound = CManager::GetSound();
+        //// 音の取得
+        //CSound* pSound = CManager::GetSound();
 
-        if (pSound && playerInGrass)
-        {
-            // 草SEの再生
-            if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9) ||
-                pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
-            {
-                pSound->Play(CSound::SOUND_LABEL_GRASS);
-            }
-            else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
-                pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
-            {
-                pSound->Play(CSound::SOUND_LABEL_GRASS);
-            }
-        }
+        //if (pSound && playerInGrass)
+        //{
+        //    // 草SEの再生
+        //    if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9) ||
+        //        pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
+        //    {
+        //        pSound->Play(CSound::SOUND_LABEL_GRASS);
+        //    }
+        //    else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
+        //        pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
+        //    {
+        //        pSound->Play(CSound::SOUND_LABEL_GRASS);
+        //    }
+        //}
 
         // プレイヤーの位置を取得
         D3DXVECTOR3 pos = pPlayer->GetPos();

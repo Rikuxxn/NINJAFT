@@ -82,6 +82,11 @@ HRESULT CTutorial::Init(void)
 	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
 	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
 
+	// 開始UI生成
+	auto start_xinput = CUITexture::Create("data/TEXTURE/ui_mission_start_xinput.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto start_keyboard = CUITexture::Create("data/TEXTURE/ui_mission_start_keyboard.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+
+
 	// 「チュートリアル」UI登録
 	CUIManager::GetInstance()->AddUI("Tutorial", tutorial);
 
@@ -89,9 +94,15 @@ HRESULT CTutorial::Init(void)
 	CUIManager::GetInstance()->AddUI("Skip_XInput", skip_xinput);
 	CUIManager::GetInstance()->AddUI("Skip_Keyboard", skip_keyboard);
 
+	// 開始UI登録
+	CUIManager::GetInstance()->AddUI("Start_XInput", start_xinput);
+	CUIManager::GetInstance()->AddUI("Start_Keyboard", start_keyboard);
+
 	// UI初期設定
 	tutorial->Hide();
 	skip_xinput->Hide();
+	start_xinput->Hide();
+	start_keyboard->Hide();
 
 	m_startState = StartState::WaitStart;
 	m_stateTimer = 190;   // 開始時の初期待機
@@ -186,7 +197,11 @@ void CTutorial::Update(void)
 		pFade->SetFade(MODE_GAME);
 	}
 
-	// --- 脱出したか確認 ---
+	// 開始UIの取得
+	auto start_xinput = CUIManager::GetInstance()->GetUI("Start_XInput");
+	auto start_keyboard = CUIManager::GetInstance()->GetUI("Start_Keyboard");
+
+	// --- 脱出したか、範囲内か確認 ---
 	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();
 
 	for (CExitBlock* exit : exitBlocks)
@@ -195,6 +210,30 @@ void CTutorial::Update(void)
 		{
 			// ゲーム画面に移行
 			pFade->SetFade(MODE_GAME);
+		}
+
+		// 範囲内のとき
+		if (exit->IsIn())
+		{
+			// 入力デバイスに応じてUIを切り替える
+			if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
+			{
+				// 表示
+				start_keyboard->Hide();
+				start_xinput->Show();
+			}
+			else if (pKeyboard->GetAnyKeyTrigger())
+			{
+				// 表示
+				start_xinput->Hide();
+				start_keyboard->Show();
+			}
+		}
+		else
+		{
+			// 非表示
+			start_xinput->Hide();
+			start_keyboard->Hide();
 		}
 	}
 

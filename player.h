@@ -83,7 +83,7 @@ public:
 	D3DXVECTOR3 GetForward(void);
 	InputData GatherInput(void);
 	CBlock* FindFrontBlockByRaycast(float rayLength);
-	bool IsStealth(void) { return m_isStealth; }
+	bool IsStealth(void) const { return m_isStealth; }
 	CModel** GetModels(void) { return m_apModel; }
 	int GetNumModels(void) { return m_nNumModel; }
 	bool GetControlFlag(void) { return m_canControl; }
@@ -114,9 +114,11 @@ private:
 	bool m_isInTorch;					// 灯籠の範囲内か
 	bool m_isStealth;					// ステルス状態か
 	bool m_prevIn;						// 直前に入ったか
+	bool m_prevMoving;					// 直前に動いていたか
 	int m_deleyTime;					// 移動までの遅延時間(演出等で使用)
 	bool m_canControl;					// 操作フラグ
 	bool m_smokeActive;					// 煙フラグ
+	bool m_isGameStartSmoke;			// ゲーム開始フラグ
 	int m_smokeTimer;					// 煙生成時間
 	bool m_isDead;						// 死亡したか
 

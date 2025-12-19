@@ -352,6 +352,7 @@ void CWaterBlock::Update(void)
 		// 水SEの再生
 		if (pSound)
 		{
+			pSound->StopByLabel(CSound::SOUND_LABEL_WATER);
 			pSound->Play(CSound::SOUND_LABEL_WATER);
 		}
 
@@ -505,10 +506,6 @@ void CBuriedTreasureBlock::Update(void)
 	// 対象との距離を求める
 	D3DXVECTOR3 disPos = playerPos - GetPos();
 	float distance = D3DXVec3Length(&disPos);
-
-	// 入力判定をするために各インプット処理を取得
-	CInputMouse* pMouse = CManager::GetInputMouse();
-	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
 	// 範囲内に入ったら
 	if (distance < TRIGGER_DISTANCE)
@@ -693,6 +690,7 @@ CExitBlock::CExitBlock(int nPriority) : CBlock(nPriority)
 
 	// 値のクリア
 	m_isEscape = false;
+	m_isIn = false;
 }
 //=============================================================================
 // 出口判定ブロックのデストラクタ
@@ -730,16 +728,21 @@ void CExitBlock::Update(void)
 		D3DXVECTOR3 disPos = playerPos - GetPos();
 		float distance = D3DXVec3Length(&disPos);
 
-		// 範囲外だったら
-		if (distance > TRIGGER_DISTACE)
+		// 範囲内だったら
+		if (distance < TRIGGER_DISTACE)
 		{
-			return;
-		}
+			// 範囲内フラグtrue
+			m_isIn = true;
 
-		// 任意のボタンを押したら脱出
-		if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A))
+			// 任意のボタンを押したら
+			if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A))
+			{
+				m_isEscape = true;
+			}
+		}
+		else
 		{
-			m_isEscape = true;
+			m_isIn = false;
 		}
 	}
 }

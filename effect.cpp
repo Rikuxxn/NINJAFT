@@ -25,6 +25,7 @@ CEffect::CEffect(int nPriority) : CObjectBillboard(nPriority)
 	m_fGravity		= 0.0f;		// 重力
 	m_bBlend		= true;		// アルファブレンドするかどうが
 	m_bTurn			= false;	// 回転するか
+	m_turnSpeed		= 0.0f;		// 回転スピード
 }
 //=============================================================================
 // デストラクタ
@@ -55,6 +56,7 @@ CEffect* CEffect::Create(const EffectDesc& desc)
 	pEffect->SetDecRadius(desc.fDecRadius);
 	pEffect->SetBlend(desc.bBlend);
 	pEffect->SetTurn(desc.bTurn);
+	pEffect->SetTurnSpeed(desc.turnSpeed);
 
 	return pEffect;
 }
@@ -90,7 +92,7 @@ void CEffect::Update(void)
 		D3DXVECTOR3 rot = GetRot();
 
 		// 回転させる
-		rot.z += TURN_SPEED;
+		rot.z += m_turnSpeed;
 
 		// 向きの設定
 		SetRot(rot);

@@ -151,6 +151,8 @@ HRESULT CGame::Init(void)
 	// 生成直後に各UIの設定をする
 	rule->Hide();
 	mission_failure->Hide();
+	escape_xinput->Hide();
+	escape_keyboard->Hide();
 
 	m_startState = StartState::WaitStart;
 	m_stateTimer = 190;   // 開始時の初期待機

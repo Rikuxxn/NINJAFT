@@ -78,8 +78,8 @@ private:
 class CFireParticle : public CParticle
 {
 public:
-	CFireParticle();
-	~CFireParticle();
+	CFireParticle() {}
+	~CFireParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -94,8 +94,8 @@ private:
 class CWaterParticle : public CParticle
 {
 public:
-	CWaterParticle();
-	~CWaterParticle();
+	CWaterParticle() {}
+	~CWaterParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -110,8 +110,8 @@ private:
 class CMoveParticle : public CParticle
 {
 public:
-	CMoveParticle();
-	~CMoveParticle();
+	CMoveParticle() {}
+	~CMoveParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -126,8 +126,8 @@ private:
 class CFloatingParticle : public CParticle
 {
 public:
-	CFloatingParticle();
-	~CFloatingParticle();
+	CFloatingParticle() {}
+	~CFloatingParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -142,8 +142,8 @@ private:
 class CDustParticle : public CParticle
 {
 public:
-	CDustParticle();
-	~CDustParticle();
+	CDustParticle() {}
+	~CDustParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -157,8 +157,8 @@ private:
 class CBlossomParticle : public CParticle
 {
 public:
-	CBlossomParticle();
-	~CBlossomParticle();
+	CBlossomParticle() {}
+	~CBlossomParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -173,8 +173,8 @@ private:
 class CTreasureParticle : public CParticle
 {
 public:
-	CTreasureParticle();
-	~CTreasureParticle();
+	CTreasureParticle() {}
+	~CTreasureParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -189,8 +189,8 @@ private:
 class COnibiParticle : public CParticle
 {
 public:
-	COnibiParticle();
-	~COnibiParticle();
+	COnibiParticle() {}
+	~COnibiParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -205,8 +205,8 @@ private:
 class CSmokeParticle : public CParticle
 {
 public:
-	CSmokeParticle();
-	~CSmokeParticle();
+	CSmokeParticle() {}
+	~CSmokeParticle() {}
 
 	HRESULT Init(void);
 	void Update(void);
@@ -221,8 +221,24 @@ private:
 class CBloodSplatter : public CParticle
 {
 public:
-	CBloodSplatter();
-	~CBloodSplatter();
+	CBloodSplatter() {}
+	~CBloodSplatter() {}
+
+	HRESULT Init(void);
+	void Update(void);
+
+private:
+
+};
+
+//*****************************************************************************
+// ダッシュパーティクルクラス
+//*****************************************************************************
+class CDushParticle : public CParticle
+{
+public:
+	CDushParticle() {}
+	~CDushParticle(){}
 
 	HRESULT Init(void);
 	void Update(void);

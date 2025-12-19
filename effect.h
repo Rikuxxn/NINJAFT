@@ -26,6 +26,7 @@ struct EffectDesc
 	float         fDecRadius	= 0.0f;
 	bool		  bBlend		= true;
 	bool		  bTurn			= false;
+	float		  turnSpeed		= 0.0f;
 };
 
 //*****************************************************************************
@@ -50,13 +51,12 @@ public:
 	void SetDecRadius(float fDecRad) { m_fDecRadius = fDecRad; }
 	void SetBlend(bool enable) { m_bBlend = enable; }
 	void SetTurn(bool enable) { m_bTurn = enable; }
+	void SetTurnSpeed(float speed) { m_turnSpeed = speed; }
 
 	float GetRadius(void) { return m_fRadius; }
 	float GetGravity(void) { return m_fGravity; }
 
 private:
-	static constexpr float TURN_SPEED = 0.04f;
-
 	D3DXVECTOR3 m_move;		// 移動量
 	float m_fRadius;		// 半径
 	int m_nLife;			// 寿命
@@ -65,6 +65,7 @@ private:
 	float m_fDecRadius;		// 半径の減衰量
 	bool m_bBlend;			// アルファブレンドするかどうが
 	bool m_bTurn;			// 回転するか
+	float m_turnSpeed;		// 回転スピード
 };
 
 //*****************************************************************************

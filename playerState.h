@@ -130,10 +130,29 @@ public:
 		if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(CInputJoypad::JOYKEY_RB)) &&
 			treasureCount <= 5)
 		{
+			m_dushTimer++;
+
+			if (m_dushTimer >= 5)
+			{
+				m_dushTimer = 0;
+
+				// 生成位置
+				D3DXVECTOR3 spawnPos = pPlayer->GetPos();
+				spawnPos.y += 20.0f;
+
+				// 生成方向
+				D3DXVECTOR3 dir = pPlayer->GetForward();
+
+				// パーティクル生成
+				CParticle::Create<CDushParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 90, 3);
+			}
+
 			speedRate = 1.5f;
 		}
 		else
 		{
+			m_dushTimer = 0;
+
 			// モーションスピードを遅くしていく
 			pPlayer->GetMotion()->SetMotionSpeedRate(speedRate);
 		}
@@ -167,42 +186,6 @@ public:
 		// プレイヤーの位置取得
 		D3DXVECTOR3 pos = pPlayer->GetPos();
 
-		CModelEffect* pModelEffect = nullptr;
-
-		if (pPlayer->GetIsMoving() && pPlayer->GetOnGround())
-		{
-			m_particleTimer++;
-
-			if (m_particleTimer >= DASH_PARTICLE_INTERVAL)
-			{
-				m_particleTimer = 0;
-
-				// ランダムな角度で横に広がる
-				float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-				float speed = (rand() % 150) / 300.0f + 0.2f;
-
-				// 移動量
-				D3DXVECTOR3 move;
-				move.x = cosf(angle) * speed;
-				move.z = sinf(angle) * speed;
-				move.y = (rand() % 80) / 50.0f + 0.05f; // 少しだけ上方向
-
-				// 向き
-				D3DXVECTOR3 rot;
-				rot.x = ((rand() % 360) / 180.0f) * D3DX_PI;
-				rot.y = ((rand() % 360) / 180.0f) * D3DX_PI;
-				rot.z = ((rand() % 360) / 180.0f) * D3DX_PI;
-
-				// モデルエフェクトの生成
-				pModelEffect = CModelEffect::Create("data/MODELS/effectModel_step.x", pos, rot,
-					move, D3DXVECTOR3(0.3f, 0.3f, 0.3f), 180, 0.01f, 0.008f);
-			}
-		}
-		else
-		{
-			m_particleTimer = 0; // 停止時はリセット
-		}
-
 		if (input.stealth && (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f))
 		{
 			// 忍び足移動状態へ移行
@@ -227,7 +210,7 @@ public:
 private:
 	static constexpr int DASH_PARTICLE_INTERVAL = 10; // パーティクル発生間隔（フレーム数）
 
-	int m_particleTimer;	// パーティクル生成タイマー
+	int m_dushTimer;
 };
 
 //*****************************************************************************

@@ -13,8 +13,8 @@
 #include "game.h"
 #include "result.h"
 #include "ranking.h"
-#include "gameover.h"
 #include "tutorial.h"
+#include "movie.h"
 
 //=============================================================================
 // コンストラクタ
@@ -50,6 +50,11 @@ CScene* CScene::Create(MODE mode)
 		pScene = new CTutorial();
 		break;
 
+	case MODE_MOVIE:
+		// ムービー画面の生成
+		pScene = new CMovie;
+		break;
+
 	case MODE_GAME:
 		// ゲーム画面の生成
 		pScene = new CGame();
@@ -58,11 +63,6 @@ CScene* CScene::Create(MODE mode)
 	case MODE_RESULT:
 		// リザルト画面の生成
 		pScene = new CResult();
-		break;
-
-	case MODE_GAMEOVER:
-		// ゲームオーバー画面の生成
-		pScene = new CGameOver();
 		break;
 
 	case MODE_RANKING:

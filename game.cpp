@@ -25,7 +25,6 @@
 // 静的メンバ変数宣言
 //*****************************************************************************
 CTime* CGame::m_pTime = nullptr;					// タイムへのポインタ
-CBlock* CGame::m_pBlock= nullptr;					// ブロックへのポインタ
 CBlockManager* CGame::m_pBlockManager= nullptr;		// ブロックマネージャーへのポインタ
 CPauseManager* CGame::m_pPauseManager = nullptr;	// ポーズマネージャーへのポインタ
 bool CGame::m_isPaused = false;						// trueならポーズ中
@@ -82,7 +81,7 @@ HRESULT CGame::Init(void)
 	m_pBlockManager->GenerateRandomMap(m_nSeed);
 
 	//// 配置情報の読み込み
-	//m_pBlockManager->LoadFromJson("data/game_info.json");
+	//m_pBlockManager->LoadFromJson("data/game_blockinfo.json");
 
 	// キャラクターマネージャーの生成
 	auto& charaMgr = CCharacterManager::GetInstance();
@@ -107,9 +106,9 @@ HRESULT CGame::Init(void)
 	{
 		// リーダーの周囲に配置
 		D3DXVECTOR3 offset(
-			(rand() % 200 - 100),  // -100～100
+			(float)(rand() % 200 - 100),  // -100～100
 			50.0f,
-			(rand() % 200 - 100)
+			(float)(rand() % 200 - 100)
 		);
 
 		CEnemySub* pSub =
@@ -224,8 +223,11 @@ void CGame::Update(void)
 		// リセット
 		m_timer = 0;
 
+		// プレイヤーの位置を基準に生成
+		D3DXVECTOR3 playerPos = m_pPlayer->GetPos();
+
 		// パーティクル生成
-		CParticle::Create<CBlossomParticle>(INIT_VEC3, m_pPlayer->GetPos(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
+		CParticle::Create<CBlossomParticle>(INIT_VEC3, playerPos, D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
 	}
 
 	CFade* pFade = CManager::GetFade();
@@ -237,9 +239,6 @@ void CGame::Update(void)
 	// TABキーでポーズON/OFF
 	if (pKeyboard->GetTrigger(DIK_TAB) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START))
 	{
-		// ポーズSE
-		CManager::GetSound()->Play(CSound::SOUND_LABEL_PAUSE);
-
 		// ポーズ切り替え前の状態を記録
 		bool wasPaused = m_isPaused;
 
@@ -362,7 +361,7 @@ void CGame::Update(void)
 #endif
 }
 //=============================================================================
-// ライトの色更新処理
+// ライト更新処理
 //=============================================================================
 void CGame::UpdateLight(void)
 {

@@ -13,7 +13,6 @@
 #include "scene.h"
 #include "blockmanager.h"
 #include "pausemanager.h"
-#include "block.h"
 #include "rankingmanager.h"
 
 // --- 前方宣言 ---
@@ -52,7 +51,6 @@ public:
 	void ResetThumbnail(void) override;
 
 	static CTime* GetTime(void) { return m_pTime; }
-	static CBlock* GetBlock(void) { return m_pBlock; }
 	static CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
 	static CPauseManager* GetPauseManager(void) { return m_pPauseManager; }
 	static bool GetisPaused(void) { return m_isPaused; };
@@ -63,7 +61,6 @@ private:
 	CPlayer* m_pPlayer;					// プレイヤーへのポインタ
 	CEnemy* m_pEnemy;					// 敵へのポインタ
 	static CTime* m_pTime;						// タイムへのポインタ
-	static CBlock* m_pBlock;					// ブロックへのポインタ
 	static CBlockManager* m_pBlockManager;		// ブロックマネージャーへのポインタ
 	static CPauseManager* m_pPauseManager;		// ポーズマネージャーへのポインタ
 	std::unique_ptr<CGrid> m_pGrid;				// グリッドへのポインタ

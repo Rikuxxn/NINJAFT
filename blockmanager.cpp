@@ -932,7 +932,7 @@ void CBlockManager::GenerateRandomMap(int seed)
 	srand(seed);
 
 	// 配置情報の読み込み
-	LoadFromJson("data/game_info.json");
+	LoadFromJson("data/game_blockinfo.json");
 
 	// 原点を中心に配置するためのオフセット計算
 	const float offsetX = -(GRID_X * AREA_SIZE) / 2.0f + AREA_SIZE / 2.0f;

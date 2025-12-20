@@ -183,7 +183,6 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="FileDialogUtils.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="gameover.cpp" />
     <ClCompile Include="grass.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="guage.cpp" />
@@ -210,6 +209,7 @@
     <ClCompile Include="meshdome.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="motion.cpp" />
+    <ClCompile Include="movie.cpp" />
     <ClCompile Include="number.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="object2D.cpp" />
@@ -269,7 +269,6 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="FileDialogUtils.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="gameover.h" />
     <ClInclude Include="grass.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="guage.h" />
@@ -294,6 +293,7 @@
     <ClInclude Include="meshdome.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="motion.h" />
+    <ClInclude Include="movie.h" />
     <ClInclude Include="number.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="object2D.h" />

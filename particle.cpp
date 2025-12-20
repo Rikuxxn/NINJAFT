@@ -185,9 +185,9 @@ void CWaterParticle::Update(void)
 
 
 //=============================================================================
-// 移動時パーティクルの初期化処理
+// 埃パーティクルの初期化処理
 //=============================================================================
-HRESULT CMoveParticle::Init(void)
+HRESULT CDustParticle::Init(void)
 {
 	// テクスチャを設定しておく
 	SetPath("data/TEXTURE/smoke.jpg");
@@ -198,9 +198,9 @@ HRESULT CMoveParticle::Init(void)
 	return S_OK;
 }
 //=============================================================================
-// 移動時パーティクルの更新処理
+// 埃パーティクルの更新処理
 //=============================================================================
-void CMoveParticle::Update(void)
+void CDustParticle::Update(void)
 {
 	int nMaxParticle = GetMaxParticle();
 
@@ -217,26 +217,26 @@ void CMoveParticle::Update(void)
 
 		// ランダムな角度で横に広がる
 		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-		float speed = (rand() % 150) / 300.0f + 0.2f;
+		float speed = (rand() % 50) / 100.0f + 0.02f;
 
 		desc.move.x = cosf(angle) * speed;
+		desc.move.y = (rand() % 20) / 200.0f + 0.02f;
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 100) / 50.0f + 0.05f; // 少しだけ上方向
 
 		// 色の設定
 		desc.col = GetCol();
 
 		// 半径の設定
-		desc.fRadius = 15.0f + (rand() % 10);
+		desc.fRadius = 5.0f + (rand() % 10);
 
 		// 寿命の設定
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.0f;
+		desc.fGravity = 0.01f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 1.5f;
+		desc.fDecRadius = 0.2f;
 
 		// エフェクトの設定
 		CEffect::Create(desc);
@@ -300,81 +300,6 @@ void CFloatingParticle::Update(void)
 
 		// 半径の減衰量の設定
 		desc.fDecRadius = 0.8f;
-
-		// エフェクトの設定
-		CEffect::Create(desc);
-	}
-
-	// パーティクルの更新処理
-	CParticle::Update();
-}
-
-
-//=============================================================================
-// 塵パーティクルの初期化処理
-//=============================================================================
-HRESULT CDustParticle::Init(void)
-{
-	// テクスチャを設定しておく
-	SetPath("data/TEXTURE/smoke.jpg");
-
-	// パーティクルの初期化処理
-	CParticle::Init();
-
-	return S_OK;
-}
-//=============================================================================
-// 塵パーティクルの更新処理
-//=============================================================================
-void CDustParticle::Update(void)
-{
-	int nMaxParticle = GetMaxParticle();
-
-	// パーティクル生成
-	for (int nCnt = 0; nCnt < nMaxParticle; nCnt++)//発生させたい粒子の数
-	{
-		EffectDesc desc;
-
-		// テクスチャの指定
-		desc.path = "data/TEXTURE/smoke.jpg";
-
-		// 半径を決めてランダム位置にスポーン
-		float radiusMax = 550.0f;
-
-		// 0.0～1.0 の乱数
-		float r = (rand() % 10000) / 10000.0f;
-
-		// 平方根を取って均一に分布させる
-		float radius = sqrtf(r) * radiusMax;
-
-		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-		float height = (rand() % 400) - 30.0f; // -30～370くらい
-
-		// 位置
-		D3DXVECTOR3 offPos = GetPos();
-		desc.pos.x = offPos.x + cosf(angle) * radius;
-		desc.pos.z = offPos.z + sinf(angle) * radius;
-		desc.pos.y = offPos.y + height;
-
-		// 移動量
-		desc.move.x = (rand() % 100 - 50) / 500.0f;
-		desc.move.z = (rand() % 100 - 50) / 500.0f;
-		desc.move.y = (rand() % 50) / 200.0f + 0.01f;
-
-		// 色の設定
-		desc.col = GetCol();
-
-		// 半径の設定
-		desc.fRadius = 6.0f + (rand() % 6);
-
-		// 寿命の設定
-		desc.nLife = 200 + (rand() % 200);
-
-		// 重力の設定
-		desc.fGravity = 0.0f;
-
-		// 半径の減衰量の設定
-		desc.fDecRadius = 0.03f;
 
 		// エフェクトの設定
 		CEffect::Create(desc);
@@ -509,7 +434,7 @@ void CTreasureParticle::Update(void)
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.01f;
+		desc.fGravity = 1.0f;
 
 		// 半径の減衰量の設定
 		desc.fDecRadius = 1.5f;
@@ -635,7 +560,7 @@ void CSmokeParticle::Update(void)
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.005f;
+		desc.fGravity = 0.01f;
 
 		// 半径の減衰量の設定
 		desc.fDecRadius = 0.63f;
@@ -690,27 +615,31 @@ void CBloodSplatter::Update(void)
 		desc.pos = GetPos();
 
 		// ランダムな角度で横に広がる
-		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-		float speed = (rand() % 200) / 250.0f + 0.2f;
+		float angle = ((rand() % 360) / -180.0f);
+		float speed = (rand() % 300) / 100.0f + 0.2f;
 
+		// 方向
+		D3DXVECTOR3 dir = GetDir();
+
+		// 移動量
 		desc.move.x = cosf(angle) * speed;
+		desc.move.y = (rand() % 20) / 600.0f + 0.9f; // 上方向
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 50) / 100.0f + 0.9f; // 上方向
 
 		// 色の設定
 		desc.col = GetCol();
 
 		// 半径の設定
-		desc.fRadius = 21.0f + (rand() % 22);
+		desc.fRadius = 7.0f + (rand() % 3);
 
 		// 寿命の設定
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.005f;
+		desc.fGravity = -1.0f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 0.53f;
+		desc.fDecRadius = 0.3f;
 
 		// エフェクトの設定
 		CEffect::Create(desc);
@@ -774,7 +703,7 @@ void CDushParticle::Update(void)
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.005f;
+		desc.fGravity = 0.0f;
 
 		// 半径の減衰量の設定
 		desc.fDecRadius = 0.53f;

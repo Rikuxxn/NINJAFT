@@ -73,7 +73,7 @@ HRESULT CTitle::Init(void)
 	ResetLight();
 
 	// JSONの読み込み
-	m_pBlockManager->LoadFromJson("data/block_title.json");
+	m_pBlockManager->LoadFromJson("data/title_blockinfo.json");
 
 	// ダミープレイヤーの生成
 	CDummyPlayer::Create(D3DXVECTOR3(300.0f, 110.0f, -10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::NEUTRAL);

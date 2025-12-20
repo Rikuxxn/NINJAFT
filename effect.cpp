@@ -101,7 +101,7 @@ void CEffect::Update(void)
 		CObjectBillboard::UpdateTurn();
 	}
 
-	m_move.y -= m_fGravity; // 重力加速度
+	m_move.y += m_fGravity; // 重力加速度
 
 	// 位置の取得
 	D3DXVECTOR3 Pos = GetPos();
@@ -122,7 +122,7 @@ void CEffect::Update(void)
 
 	m_nLife--;
 
-	if (m_nLife <= 0)
+	if (m_nLife <= 0 || m_fRadius <= 0.0f)
 	{
 		// エフェクトの終了
 		Uninit();

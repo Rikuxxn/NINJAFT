@@ -183,7 +183,7 @@ CPlay::~CPlay()
 void CPlay::Execute(void)
 {
 	// ƒQ[ƒ€‰æ–Ê‚ÉˆÚs
-	CManager::GetFade()->SetFade(CScene::MODE_GAME);
+	CManager::GetFade()->SetFade(CScene::MODE_MOVIE);
 }
 
 

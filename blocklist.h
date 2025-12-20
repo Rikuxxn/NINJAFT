@@ -17,31 +17,6 @@
 class CPlayer;
 class CBlock;
 
-//*****************************************************************************
-// 木箱ブロッククラス
-//*****************************************************************************
-class CWoodBoxBlock : public CBlock
-{
-public:
-	CWoodBoxBlock();
-	~CWoodBoxBlock();
-
-	static TYPE GetStaticType(void) { return TYPE_WOODBOX; }
-
-	HRESULT Init(void);
-	void Update(void);
-	void Respawn(D3DXVECTOR3 resPos) override;
-
-	bool IsDynamicBlock(void) const override { return true; }
-	btVector3 GetAngularFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
-	btScalar GetMass(void) const { return MASS; }  // 質量の取得
-
-private:
-	static constexpr float MASS = 1.0f;
-	static constexpr float RESPAWN_HEIGHT = -800.0f;
-
-	D3DXVECTOR3 m_ResPos;	// リスポーン位置
-};
 
 //*****************************************************************************
 // 壁ブロッククラス
@@ -191,7 +166,7 @@ private:
 	static constexpr int SPAWN_TIME = 180;				// 生成までの時間
 	static constexpr int GET_THRESHOLD = 3;				// 取得数閾値
 	static constexpr float GUAGE_RATE = 100.0f;			// ゲージの最大量
-	static constexpr float GUAGE_DECREASE_SPEED = 0.23f;// ゲージの減る量
+	static constexpr float GUAGE_DECREASE_SPEED = 0.19f;// ゲージの減る量
 
 	int m_effectTimer;									// エフェクト生成タイマー
 	C3DGuage* m_pFrame;									// 枠
@@ -278,18 +253,18 @@ public:
 	bool IsIn(void) { return m_isIn; }
 	bool AvailableExit(void)
 	{
-		// --- ドアブロックが開いたか確認 ---
-		auto doorBlocks = CBlockManager::GetBlocksOfType<CDoorBlock>();
+		// --- 埋蔵金ブロックが一定数取得されたか確認 ---
+		auto buriedTreasureBlocks = CBlockManager::GetBlocksOfType<CBuriedTreasureBlock>();
 
-		// 存在しなかったらtrueを返す
-		if (doorBlocks.empty())
+		// 埋蔵金が存在しなかったらtrueを返す
+		if (buriedTreasureBlocks.empty())
 		{
 			return true;
 		}
 
-		for (CDoorBlock* door : doorBlocks)
+		for (CBuriedTreasureBlock* treasure : buriedTreasureBlocks)
 		{
-			if (door->IsOpen())
+			if (treasure->IsGet())
 			{
 				return true;
 			}
@@ -303,6 +278,78 @@ private:
 
 	bool m_isEscape;	// 脱出したかどうか
 	bool m_isIn;		// 範囲内フラグ
+};
+
+//*****************************************************************************
+// 門ブロッククラス
+//*****************************************************************************
+class CGateBlock : public CBlock
+{
+public:
+	CGateBlock();
+	~CGateBlock();
+
+	static TYPE GetStaticType(void) { return TYPE_GATE; }
+
+	void LoadFromJson(const json& b) override
+	{
+		CBlock::LoadFromJson(b);
+
+		// 初期角度を m_rotY に度数で保存
+		D3DXVECTOR3 rot = GetRot();             // ラジアン
+		m_baseRotY = D3DXToDegree(rot.y);       // 度に変換して基準角度
+
+		// 開始位置を保存
+		m_startPosX = GetPos().x;
+	}
+
+	void Update(void);
+	void GameGateUpdate(void);
+	void MovieGateUpdate(void);
+
+private:
+	static constexpr int   MAX_STEP				= 3;		// 移動する段階数
+	static constexpr float MOVE_UNIT			= 52.0f;	// 移動距離
+	static constexpr float DELAY_TIME			= 240.0f;	// 遅延時間
+	static constexpr float SHAKE_POWER			= 1.5f;		// 揺れ幅
+	static constexpr float SHAKE_SPEED			= 20.0f;	// 細かさ
+	static constexpr float SHAKE_START_TIME		= 0.0f;		// すでに使ってる
+	static constexpr float SHAKE_DURATION		= 120.0f;	// 揺れる時間
+	static constexpr float PRE_SHAKE_RANGE		= 0.02f;	// 予兆揺れ境界(～%手前から揺らす)
+	static constexpr float SIDE_OFFSET			= 20.0f;	// 埃パーティクル生成位置オフセット
+	static constexpr float CLOSE_DURATION		= 20.0f;	// 閉じるフレーム数
+
+	float m_baseRotY;		// 基準の角度
+	float m_startPosX;		// 開始位置
+	float m_movieTime;		// 移動時間
+	int   m_prevStep ;		// 直前の段階数
+	bool  m_bClosing;		// 閉じているか
+	float m_closeTimer;		// タイマー
+	float m_fromX;
+	float m_toX;
+
+};
+
+//*****************************************************************************
+// ギアブロッククラス
+//*****************************************************************************
+class CGearBlock : public CBlock
+{
+public:
+	CGearBlock();
+	~CGearBlock();
+
+	static TYPE GetStaticType(void) { return TYPE_GEAR; }
+
+	void Update(void);
+	void GameGearUpdate(void);
+	void MovieGearUpdate(void);
+
+private:
+	static constexpr float ROT_SPEED = 0.05f;
+	static constexpr int DELAY_TIME = 120;
+
+	int m_turnTimer;
 };
 
 #endif

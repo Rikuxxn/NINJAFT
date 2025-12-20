@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// チュートリアル処理 [tutorial.cpp]
+// ムービー処理 [movie.cpp]
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
@@ -8,44 +8,40 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include "tutorial.h"
+#include "movie.h"
 #include "manager.h"
-#include "result.h"
-#include "particle.h"
-#include "charactermanager.h"
-#include "player.h"
 #include "meshdome.h"
-#include "blocklist.h"
-#include "ui.h"
+#include "time.h"
+#include "particle.h"
 
 
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-CTime* CTutorial::m_pTime = nullptr;					// タイムへのポインタ
-CBlock* CTutorial::m_pBlock = nullptr;					// ブロックへのポインタ
-CBlockManager* CTutorial::m_pBlockManager = nullptr;	// ブロックマネージャーへのポインタ
+CTime* CMovie::m_pTime = nullptr;					// タイムへのポインタ
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTutorial::CTutorial() : CScene(CScene::MODE_TUTORIAL)
+CMovie::CMovie() : CScene(CScene::MODE_MOVIE)
 {
 	// 値のクリア
+	m_pBlockManager = nullptr;
 	m_pLight = nullptr;
 	m_timer = 0;
+	m_particleTimer = 0;
 }
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CTutorial::~CTutorial()
+CMovie::~CMovie()
 {
 	// なし
 }
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CTutorial::Init(void)
+HRESULT CMovie::Init(void)
 {
 	// ブロックマネージャーの生成
 	m_pBlockManager = new CBlockManager;
@@ -60,53 +56,23 @@ HRESULT CTutorial::Init(void)
 	m_pLight->Init();
 
 	// 配置情報の読み込み
-	m_pBlockManager->LoadFromJson("data/tutorial_blockinfo.json");
-
-	// キャラクターマネージャーの生成
-	auto& charaMgr = CCharacterManager::GetInstance();
-
-	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
-	charaMgr.AddCharacter(m_pPlayer);
+	m_pBlockManager->LoadFromJson("data/movie_blockinfo.json");
 
 	// タイムの生成
 	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, false);
+	//m_pTime->SetActiveFlag(true);
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
-	// 「チュートリアル」UI生成
-	auto tutorial = CUITexture::Create("data/TEXTURE/ui_tutorial.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
 
-	// スキップUI生成
-	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-
-	// 開始UI生成
-	auto start_xinput = CUITexture::Create("data/TEXTURE/ui_mission_start_xinput.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto start_keyboard = CUITexture::Create("data/TEXTURE/ui_mission_start_keyboard.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-
-
-	// 「チュートリアル」UI登録
-	CUIManager::GetInstance()->AddUI("Tutorial", tutorial);
-
-	// スキップUI登録
-	CUIManager::GetInstance()->AddUI("Skip_XInput", skip_xinput);
-	CUIManager::GetInstance()->AddUI("Skip_Keyboard", skip_keyboard);
-
-	// 開始UI登録
-	CUIManager::GetInstance()->AddUI("Start_XInput", start_xinput);
-	CUIManager::GetInstance()->AddUI("Start_Keyboard", start_keyboard);
-
-	// UI初期設定
-	tutorial->Hide();
-	skip_xinput->Hide();
-	start_xinput->Hide();
-	start_keyboard->Hide();
-
-	m_startState = StartState::WaitStart;
-	m_stateTimer = 190;   // 開始時の初期待機
-	m_canControl = false;
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamParameter(D3DXVECTOR3(-164.0f, 95.0f, 222.0f),
+		D3DXVECTOR3(223.0f, 41.0f, 885.0f),
+		D3DXVECTOR3(0.07f, -2.60f, 0.0f),
+		0.0f);
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -117,16 +83,16 @@ HRESULT CTutorial::Init(void)
 		pSound->Play(CSound::SOUND_LABEL_TUTORIALBGM);
 	}
 
+	// 画面遷移タイマーを設定
+	m_timer = FADE_TIME;
+
 	return S_OK;
 }
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CTutorial::Uninit(void)
+void CMovie::Uninit(void)
 {
-	// キャラクターマネージャーの破棄
-	CCharacterManager::GetInstance().Destroy();
-
 	// ブロックマネージャーの破棄
 	if (m_pBlockManager != nullptr)
 	{
@@ -146,17 +112,20 @@ void CTutorial::Uninit(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CTutorial::Update(void)
+void CMovie::Update(void)
 {
-	m_timer++;
+	m_particleTimer++;
 
-	if (m_timer >= 15)// 一定間隔で生成
+	if (m_particleTimer >= 15)// 一定間隔で生成
 	{// 桜の生成
 		// リセット
-		m_timer = 0;
+		m_particleTimer = 0;
+
+		// カメラの位置を取得して視点を基準に生成
+		D3DXVECTOR3 camPosR = CManager::GetCamera()->GetPosR();
 
 		// パーティクル生成
-		CParticle::Create<CBlossomParticle>(INIT_VEC3, m_pPlayer->GetPos(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
+		CParticle::Create<CBlossomParticle>(INIT_VEC3, camPosR, D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
 	}
 
 	CFade* pFade = CManager::GetFade();
@@ -164,76 +133,24 @@ void CTutorial::Update(void)
 	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
-	auto skip_xinput = CUIManager::GetInstance()->GetUI("Skip_XInput");
-	auto skip_keyboard = CUIManager::GetInstance()->GetUI("Skip_Keyboard");
-
-	// 入力デバイスに応じてUIを切り替える
-	if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
-	{
-		// 表示
-		skip_keyboard->Hide();
-		skip_xinput->Show();
-	}
-	else if (pKeyboard->GetAnyKeyTrigger())
-	{
-		// 表示
-		skip_xinput->Hide();
-		skip_keyboard->Show();
-	}
-
-	// UIの更新
-	UIUpdate();
-
+	// ライトの更新処理
 	UpdateLight();
 
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
 
-	// 任意のボタンを押したとき
-	if (pFade->GetFade() == CFade::FADE_NONE &&
-		(pKeyboard->GetTrigger(DIK_TAB) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START)))
+	// カウントダウン
+	m_timer--;
+
+	// 一定時間経過したら画面遷移
+	if (m_timer <= 0)
 	{
-		// ムービー画面に移行
-		pFade->SetFade(MODE_MOVIE);
-	}
+		m_timer = 0;
 
-	// 開始UIの取得
-	auto start_xinput = CUIManager::GetInstance()->GetUI("Start_XInput");
-	auto start_keyboard = CUIManager::GetInstance()->GetUI("Start_Keyboard");
-
-	// --- 脱出したか、範囲内か確認 ---
-	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();
-
-	for (CExitBlock* exit : exitBlocks)
-	{
-		if (pFade->GetFade() == CFade::FADE_NONE && exit->IsEscape())
+		if (pFade->GetFade() == CFade::FADE_NONE)
 		{
-			// ムービー画面に移行
-			pFade->SetFade(MODE_MOVIE);
-		}
-
-		// 範囲内のとき
-		if (exit->IsIn())
-		{
-			// 入力デバイスに応じてUIを切り替える
-			if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
-			{
-				// 表示
-				start_keyboard->Hide();
-				start_xinput->Show();
-			}
-			else if (pKeyboard->GetAnyKeyTrigger())
-			{
-				// 表示
-				start_xinput->Hide();
-				start_keyboard->Show();
-			}
-		}
-		else
-		{
-			// 非表示
-			start_xinput->Hide();
-			start_keyboard->Hide();
+			// ゲーム画面に移行
+			pFade->SetFade(MODE_GAME);
 		}
 	}
 
@@ -243,19 +160,19 @@ void CTutorial::Update(void)
 	if (pFade->GetFade() == CFade::FADE_NONE && pInputKeyboard->GetTrigger(DIK_RETURN))
 	{
 		// ゲーム画面に移行
-		pFade->SetFade(MODE_MOVIE);
+		pFade->SetFade(MODE_GAME);
 	}
 #endif
 
 }
 //=============================================================================
-// ライトの色更新処理
+// ライト更新処理
 //=============================================================================
-void CTutorial::UpdateLight(void)
+void CMovie::UpdateLight(void)
 {
 	float progress = m_pTime->GetProgress(); // 0.0～0.1
 
-	// ======== 各時間帯のメインライト色 ========
+// ======== 各時間帯のメインライト色 ========
 	D3DXCOLOR evening(1.0f, 0.65f, 0.35f, 1.0f); // 夕方
 	D3DXCOLOR night(0.15f, 0.18f, 0.35f, 1.0f);  // 夜
 	D3DXCOLOR morning(0.95f, 0.8f, 0.7f, 1.0f);  // 明け方
@@ -334,7 +251,7 @@ void CTutorial::UpdateLight(void)
 
 	// 補助光
 	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f;
-	warmFactor = max(0.0f, warmFactor);
+	warmFactor = std::max(0.0f, warmFactor);
 
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,
@@ -344,70 +261,26 @@ void CTutorial::UpdateLight(void)
 	);
 }
 //=============================================================================
-// UIの更新処理
-//=============================================================================
-void CTutorial::UIUpdate(void)
-{
-	CFade* pFade = CManager::GetFade();
-
-	// UIの取得
-	auto tutorial = CUIManager::GetInstance()->GetUI("Tutorial");
-
-	switch (m_startState)
-	{
-	case StartState::WaitStart:
-		m_stateTimer--;
-
-		if (m_stateTimer <= 0.0f)
-		{
-			// 音の取得
-			CSound* pSound = CManager::GetSound();
-
-			// 開始SEの再生
-			if (pSound)
-			{
-				pSound->Play(CSound::SOUND_LABEL_START);
-			}
-
-			// UI表示
-			tutorial->Show();
-
-			m_startState = StartState::Hidden;
-			m_stateTimer = 180;  // UI表示時間
-		}
-		break;
-
-	case StartState::Hidden:
-		m_stateTimer--;
-
-		if (m_stateTimer <= 0.0f)
-		{
-			// UI非表示
-			tutorial->FadeOut(60.0f);
-
-			// 操作フラグをtrueにする
-			m_pPlayer->SetControlFlag(true);
-
-			m_startState = StartState::Idle;
-		}
-		break;
-
-	case StartState::Idle:
-
-		break;
-	}
-}
-//=============================================================================
 // 描画処理
 //=============================================================================
-void CTutorial::Draw(void)
+void CMovie::Draw(void)
 {
+	// カメラの取得
+	CCamera* pCamera = CManager::GetCamera();
 
+	if (!pCamera->GetMode() == CCamera::MODE_EDIT)
+	{
+		// カメラの設定
+		pCamera->SetCamParameter(D3DXVECTOR3(-164.0f, 95.0f, 222.0f),
+			D3DXVECTOR3(223.0f, 41.0f, 885.0f),
+			D3DXVECTOR3(0.07f, -2.60f, 0.0f),
+			0.0f);
+	}
 }
 //=============================================================================
 // デバイスリセット通知
 //=============================================================================
-void CTutorial::OnDeviceReset(void)
+void CMovie::OnDeviceReset(void)
 {
 	// ゲームライトの更新処理
 	UpdateLight();
@@ -415,16 +288,15 @@ void CTutorial::OnDeviceReset(void)
 //=============================================================================
 // サムネイルリリース通知
 //=============================================================================
-void CTutorial::ReleaseThumbnail(void)
+void CMovie::ReleaseThumbnail(void)
 {
 	m_pBlockManager->ReleaseThumbnailRenderTarget();
 }
 //=============================================================================
 // サムネイルリセット通知
 //=============================================================================
-void CTutorial::ResetThumbnail(void)
+void CMovie::ResetThumbnail(void)
 {
 	m_pBlockManager->InitThumbnailRenderTarget(CManager::GetRenderer()->GetDevice());
 	m_pBlockManager->GenerateThumbnailsForResources(); // キャッシュも再作成
 }
-

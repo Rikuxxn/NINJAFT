@@ -98,7 +98,8 @@ void CBlock::InitFactory(void)
 	m_BlockFactoryMap[CBlock::TYPE_BURIED_TREASURE] = []() -> CBlock* { return new CBuriedTreasureBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_DOOR]			= []() -> CBlock* { return new CDoorBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_GHOSTOBJECT]		= []() -> CBlock* { return new CExitBlock(); };
-	m_BlockFactoryMap[CBlock::TYPE_WOODBOX]			= []() -> CBlock* { return new CWoodBoxBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_GATE]			= []() -> CBlock* { return new CGateBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_GEAR]			= []() -> CBlock* { return new CGearBlock(); };
 }
 //=============================================================================
 // ‰Šú‰»ˆ—

@@ -68,7 +68,7 @@ HRESULT CResult::Init(void)
 	ResetLight();
 
 	// JSONの読み込み
-	m_pBlockManager->LoadFromJson("data/block_result.json");
+	m_pBlockManager->LoadFromJson("data/result_blockinfo.json");
 
 	// 背景の生成
 	CBackground::Create(D3DXVECTOR3(360.0f, 540.0f, 0.0f), 360.0f, 540.0f, "data/TEXTURE/.png");
@@ -181,7 +181,9 @@ void CResult::Update(void)
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();		// ゲームパッドの入力取得
 	CFade* pFade = CManager::GetFade();
 
-	if (pFade->GetFade() == CFade::FADE_NONE && (pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	if (pFade->GetFade() == CFade::FADE_NONE && 
+		(pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||
+			CManager::GetInputKeyboard()->GetTrigger(DIK_RETURN)))
 	{
 		// ランキング画面に移行
 		pFade->SetFade(MODE_RANKING);

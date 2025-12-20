@@ -20,66 +20,12 @@
 #include "time.h"
 #include "tutorial.h"
 #include "enemy.h"
+#include "movie.h"
+#include "easing.h"
+
 
 // 名前空間stdの使用
 using namespace std;
-
-//=============================================================================
-// 木箱ブロックのコンストラクタ
-//=============================================================================
-CWoodBoxBlock::CWoodBoxBlock()
-{
-	// 値のクリア
-	m_ResPos = INIT_VEC3;// リスポーン位置
-}
-//=============================================================================
-// 木箱ブロックのデストラクタ
-//=============================================================================
-CWoodBoxBlock::~CWoodBoxBlock()
-{
-	// なし
-}
-//=============================================================================
-// 木箱ブロックの初期化処理
-//=============================================================================
-HRESULT CWoodBoxBlock::Init(void)
-{
-	// ブロックの初期化処理
-	CBlock::Init();
-
-	// 最初の位置をリスポーン位置に設定
-	m_ResPos = GetPos();
-
-	// 動的に戻す
-	SetEditMode(false);
-
-	return S_OK;
-}
-//=============================================================================
-// 木箱ブロックの更新処理
-//=============================================================================
-void CWoodBoxBlock::Update()
-{
-	CBlock::Update(); // 共通処理
-}
-//=============================================================================
-// リスポーン処理
-//=============================================================================
-void CWoodBoxBlock::Respawn(D3DXVECTOR3 resPos)
-{
-	// 動かすためにキネマティックにする
-	SetEditMode(true);
-
-	// リスポーン位置に設定
-	SetPos(resPos);
-	SetRot(INIT_VEC3);
-
-	// コライダーの更新
-	UpdateCollider();
-
-	// 動的に戻す
-	SetEditMode(false);
-}
 
 
 //=============================================================================
@@ -793,4 +739,281 @@ bool CExitBlock::IsHitPlayer(CPlayer* pPlayer)
 	// 交差チェック
 	//=========================================================================
 	return IsHitOBBvsAABB(obb, playerMin, playerMax);
+}
+
+
+//=============================================================================
+// 門ブロックのコンストラクタ
+//=============================================================================
+CGateBlock::CGateBlock()
+{
+	// 値のクリア
+	m_baseRotY		= 0.0f;			// 基準の角度
+	m_movieTime		= DELAY_TIME;	// 遅延時間
+	m_prevStep		= 0;			// 直前の段階数
+	m_bClosing		= false;		// 閉じているか
+	m_closeTimer	= 0.0f;			// タイマー
+	m_fromX			= 0.0f;
+	m_toX			= 0.0f;
+}
+//=============================================================================
+// 門ブロックのデストラクタ
+//=============================================================================
+CGateBlock::~CGateBlock()
+{
+	// なし
+}
+//=============================================================================
+// 門ブロックの更新処理
+//=============================================================================
+void CGateBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+	// ゲームシーンだったら
+	if (CManager::GetMode() == CScene::MODE_GAME)
+	{
+		GameGateUpdate();
+	}
+	// ムービーシーンだったら
+	else if (CManager::GetMode() == CScene::MODE_MOVIE)
+	{
+		MovieGateUpdate();
+	}
+}
+//=============================================================================
+// ゲームシーン門ブロックの閉じる処理
+//=============================================================================
+void CGateBlock::GameGateUpdate(void)
+{
+	// 時間の割合を取得
+	float progress = CGame::GetTime()->GetProgress(); // 0.0～1.0
+
+	// 時間の割合に応じて段階で門を閉じる
+	int step = 0;
+
+	if (progress >= 0.99f)
+	{
+		step = MAX_STEP; // 閉じ切る
+	}
+	else
+	{
+		step =(int)(progress * MAX_STEP);
+		step = std::clamp(step, 0, MAX_STEP - 1);
+	}
+
+	// =========================
+	// 予兆揺れ判定
+	// =========================
+	float shakeX = 0.0f;
+
+	float nextBorder = (float)(step + 1) / MAX_STEP;
+
+	if (!m_bClosing && progress < 0.99f &&
+		progress >= nextBorder - PRE_SHAKE_RANGE)
+	{
+		// 予兆揺れ
+		shakeX = sinf(progress * 500.0f * SHAKE_SPEED) * SHAKE_POWER;
+
+		// 少し下げた位置に生成
+		D3DXVECTOR3 spawnBase = GetPos();
+		spawnBase.y -= 50.0f;
+
+		// 中心
+		D3DXVECTOR3 spawnCenter = spawnBase;
+
+		// 中心から左右
+		D3DXVECTOR3 spawnLeft = spawnBase;
+		spawnLeft.x -= SIDE_OFFSET;
+
+		D3DXVECTOR3 spawnRight = spawnBase;
+		spawnRight.x += SIDE_OFFSET;
+
+		// 埃パーティクル生成
+		CParticle::Create<CDustParticle>(INIT_VEC3, spawnCenter,
+			D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
+
+		CParticle::Create<CDustParticle>(INIT_VEC3, spawnLeft,
+			D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
+
+		CParticle::Create<CDustParticle>(INIT_VEC3, spawnRight,
+			D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
+	}
+
+	// =========================
+	// 閉じ開始トリガー
+	// =========================
+	if (step != m_prevStep)
+	{
+		m_bClosing = true;
+		m_closeTimer = 0.0f;
+
+		m_fromX = m_prevStep * MOVE_UNIT;
+		m_toX = step * MOVE_UNIT;
+	}
+
+	// =========================
+	// 閉じアニメ（イージング）
+	// =========================
+	float moveX = step * MOVE_UNIT;
+
+	if (m_bClosing)
+	{
+		float t = m_closeTimer / CLOSE_DURATION;
+		t = std::clamp(t, 0.0f, 1.0f);
+
+		moveX = CEasing::Ease(m_fromX, m_toX, t, CEasing::EaseOutCubic);
+
+		m_closeTimer++;
+
+		if (t >= 1.0f)
+		{
+			m_bClosing = false;
+		}
+	}
+
+	m_prevStep = step;
+
+	// 位置を取得して反映する
+	D3DXVECTOR3 pos = GetPos();
+
+	// 揺れを反映した位置にする
+	if (m_baseRotY == 0.0f)
+	{
+		pos.x = m_startPosX + moveX + shakeX;
+	}
+	else if (m_baseRotY == -180.0f)
+	{
+		pos.x = m_startPosX - moveX + shakeX;
+	}
+
+	// 位置を設定する
+	SetPos(pos);
+}
+//=============================================================================
+// ムービーシーン門ブロックの更新処理
+//=============================================================================
+void CGateBlock::MovieGateUpdate(void)
+{
+	float shakeX = 0.0f;
+
+	// カウントダウン
+	m_movieTime--;
+
+	if (m_movieTime <= 0.0f)
+	{
+		float t = -m_movieTime; // 揺れ開始からの経過時間
+
+		// 揺れている間だけ
+		if (t <= SHAKE_DURATION)
+		{
+			shakeX = sinf(t * SHAKE_SPEED) * SHAKE_POWER;
+
+			// 少し下げた位置に生成
+			D3DXVECTOR3 spawnBase = GetPos();
+			spawnBase.y -= 50.0f;
+
+			D3DXVECTOR3 spawnCenter = spawnBase;
+
+			D3DXVECTOR3 spawnLeft = spawnBase;
+			spawnLeft.x -= SIDE_OFFSET;
+
+			D3DXVECTOR3 spawnRight = spawnBase;
+			spawnRight.x += SIDE_OFFSET;
+
+			// 埃パーティクル生成
+			CParticle::Create<CDustParticle>(INIT_VEC3, spawnCenter,
+				D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
+
+			CParticle::Create<CDustParticle>(INIT_VEC3, spawnLeft,
+				D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
+
+			CParticle::Create<CDustParticle>(INIT_VEC3, spawnRight,
+				D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
+		}
+		else
+		{
+			shakeX = 0.0f; // 完全停止
+		}
+	}
+
+	// 位置を取得して反映する
+	D3DXVECTOR3 pos = GetPos();
+	pos.x = m_startPosX + shakeX;
+
+	SetPos(pos);
+}
+
+
+//=============================================================================
+// ギアブロックのコンストラクタ
+//=============================================================================
+CGearBlock::CGearBlock()
+{
+	// 値のクリア
+	m_turnTimer = DELAY_TIME;
+}
+//=============================================================================
+// ギアブロックのデストラクタ
+//=============================================================================
+CGearBlock::~CGearBlock()
+{
+	// なし
+}
+//=============================================================================
+// ギアブロックの更新処理
+//=============================================================================
+void CGearBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+	// ゲームシーンだったら
+	if (CManager::GetMode() == CScene::MODE_GAME)
+	{
+		GameGearUpdate();
+	}
+	// ムービーシーンだったら
+	else if (CManager::GetMode() == CScene::MODE_MOVIE)
+	{
+		MovieGearUpdate();
+	}
+}
+//=============================================================================
+// ギアブロックの更新処理
+//=============================================================================
+void CGearBlock::GameGearUpdate(void)
+{
+	// 向きを取得して、回転させる
+	D3DXVECTOR3 rot = GetRot();
+
+	rot.z += ROT_SPEED;
+
+	// 向きを設定する
+	SetRot(rot);
+}
+//=============================================================================
+// ギアブロックの更新処理
+//=============================================================================
+void CGearBlock::MovieGearUpdate(void)
+{
+	m_turnTimer--;
+
+	// タイマーが0になるまで回転しない
+	if (m_turnTimer >= 0)
+	{
+		return;
+	}
+
+	// 0にしておく
+	m_turnTimer = 0;
+
+	// 向きを取得して、回転させる
+	D3DXVECTOR3 rot = GetRot();
+
+	rot.z += ROT_SPEED;
+
+	// 向きを設定する
+	SetRot(rot);
 }

@@ -53,6 +53,14 @@
   },
   {
     "type": 13,
-    "filepath": "data/MODELS/woodbox.x"
+    "filepath": "data/MODELS/gate.x"
+  },
+  {
+    "type": 14,
+    "filepath": "data/MODELS/board.x"
+  },
+  {
+    "type": 15,
+    "filepath": "data/MODELS/gear.x"
   }
 ]

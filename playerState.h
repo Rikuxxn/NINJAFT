@@ -453,6 +453,19 @@ public:
 		velocity.setY(m_verticalVelocity);
 		velocity.setZ(move.z);
 		pPlayer->GetRigidBody()->setLinearVelocity(velocity);
+
+		//// 生成位置
+		//D3DXVECTOR3 spawnPos = pPlayer->GetPos();
+		//spawnPos.y += 70.0f;
+
+		//// 生成方向
+		//D3DXVECTOR3 dir = pPlayer->GetForward();
+
+		//for (int n = 0; n < 6; n++)
+		//{
+		//	// 血しぶきパーティクル生成
+		//	CParticle::Create<CBloodSplatter>(-dir, spawnPos, D3DXCOLOR(0.8f, 0.0f, 0.0f, 0.8f), 900, 3);
+		//}
 	}
 
 	void OnUpdate(CPlayer* pPlayer)override

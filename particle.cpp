@@ -434,7 +434,7 @@ void CTreasureParticle::Update(void)
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 1.0f;
+		desc.fGravity = 0.0f;
 
 		// 半径の減衰量の設定
 		desc.fDecRadius = 1.5f;
@@ -548,7 +548,7 @@ void CSmokeParticle::Update(void)
 
 		desc.move.x = cosf(angle) * speed;
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 100) / 80.0f + 0.9f; // 上方向
+		desc.move.y = (rand() % 100) / 120.0f + 0.9f; // 上方向
 
 		// 色の設定
 		desc.col = GetCol();

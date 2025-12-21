@@ -315,7 +315,7 @@ private:
 	static constexpr float SHAKE_SPEED			= 20.0f;	// 細かさ
 	static constexpr float SHAKE_START_TIME		= 0.0f;		// すでに使ってる
 	static constexpr float SHAKE_DURATION		= 120.0f;	// 揺れる時間
-	static constexpr float PRE_SHAKE_RANGE		= 0.02f;	// 予兆揺れ境界(～%手前から揺らす)
+	static constexpr float PRE_SHAKE_RANGE		= 0.03f;	// 予兆揺れ境界(～%手前から揺らす)
 	static constexpr float SIDE_OFFSET			= 20.0f;	// 埃パーティクル生成位置オフセット
 	static constexpr float CLOSE_DURATION		= 20.0f;	// 閉じるフレーム数
 

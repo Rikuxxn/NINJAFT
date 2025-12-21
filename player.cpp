@@ -560,7 +560,7 @@ InputData CPlayer::GatherInput(void)
 	// ---------------------------
 	// ƒ^ƒ[ƒWó‘Ô’†‚ÍˆÚ“®“ü—Í–³Œø‰»
 	// ---------------------------
-	if (m_pMotion->IsCurrentMotion(DAMAGE)/* || !pFade->GetFade() == CFade::FADE_NONE*/)
+	if (m_pMotion->IsCurrentMotion(DAMAGE) || m_isDead)
 	{
 		return input;
 	}

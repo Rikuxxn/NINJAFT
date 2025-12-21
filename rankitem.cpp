@@ -67,7 +67,7 @@ HRESULT CRankItem::Init(void)
 		CRank::Create(D3DXVECTOR3(UIbaseX, UIbaseY, 0.0f), m_digitWidth / 2, m_digitHeight, (float)i);
 
 		// ‡ˆÊUI‚Ì•
-		float rankWidth = (m_digitWidth / 2) + 50.0f;
+		float rankWidth = (m_digitWidth / 2) + 30.0f;
 
 		// ƒAƒCƒeƒ€”‚ÌŒ…¶¬
 		for (int n = 0; n < MAX_DIGITS; n++)

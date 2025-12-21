@@ -530,6 +530,9 @@ void CGame::UIUpdate(void)
 		// タイムアップまたはプレイヤーが死んだら
 		if (m_pTime->IsTimeUp() || m_pPlayer->IsDead())
 		{
+			// タイムアップ時に死亡判定にする
+			m_pPlayer->SetIsDead(true);
+
 			m_stateTimer = 120;
 			m_startState = StartState::Failure;
 		}

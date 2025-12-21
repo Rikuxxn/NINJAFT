@@ -93,7 +93,7 @@ private:
 	{
 		{"data/BGM/gameBGM.wav", -1},			// ゲームBGM
 		{"data/BGM/titleBGM.wav", -1},			// タイトルBGM
-		{"data/BGM/tutorialBGM.wav", -1},		// チュートリアルBGM
+		{"data/BGM/wind.wav", -1},				// チュートリアルBGM
 		{"data/SE/resultSE.wav", 0},			// リザルトSE
 		{"data/SE/menu.wav", 0},				// ポーズSE
 		{"data/SE/select.wav", 0},				// 選択SE

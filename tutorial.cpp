@@ -86,6 +86,15 @@ HRESULT CTutorial::Init(void)
 	auto start_xinput = CUITexture::Create("data/TEXTURE/ui_mission_start_xinput.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
 	auto start_keyboard = CUITexture::Create("data/TEXTURE/ui_mission_start_keyboard.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
 
+	// ルールUI生成
+	auto rule_1 = CUITexture::Create("data/TEXTURE/ui_rule1.png", 220.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
+	auto rule_2 = CUITexture::Create("data/TEXTURE/ui_rule2.png", 220.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
+
+	// 操作UI生成
+	auto dush_xinput = CUITexture::Create("data/TEXTURE/ui_operation_dush_xinput.png", 1510.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 210.0f, 35.0f);
+	auto stealth_xinput = CUITexture::Create("data/TEXTURE/ui_operation_stealth_xinput.png", 1510.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 210.0f, 35.0f);
+	auto dush_keyboard = CUITexture::Create("data/TEXTURE/ui_operation_dush_keyboard.png", 1510.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 210.0f, 35.0f);
+	auto stealth_keyboard = CUITexture::Create("data/TEXTURE/ui_operation_stealth_keyboard.png", 1510.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 210.0f, 35.0f);
 
 	// 「チュートリアル」UI登録
 	CUIManager::GetInstance()->AddUI("Tutorial", tutorial);
@@ -98,11 +107,28 @@ HRESULT CTutorial::Init(void)
 	CUIManager::GetInstance()->AddUI("Start_XInput", start_xinput);
 	CUIManager::GetInstance()->AddUI("Start_Keyboard", start_keyboard);
 
+	// ルールUI登録
+	CUIManager::GetInstance()->AddUI("Rule_1", rule_1);
+	CUIManager::GetInstance()->AddUI("Rule_2", rule_2);
+
+	// 操作UI登録
+	CUIManager::GetInstance()->AddUI("Dush_xinput", dush_xinput);
+	CUIManager::GetInstance()->AddUI("Stealth_xinput", stealth_xinput);
+	CUIManager::GetInstance()->AddUI("Dush_keyboard", dush_keyboard);
+	CUIManager::GetInstance()->AddUI("Stealth_keyboard", stealth_keyboard);
+
 	// UI初期設定
 	tutorial->Hide();
-	skip_xinput->Hide();
+	skip_xinput->Show();
+	skip_keyboard->Hide();
 	start_xinput->Hide();
 	start_keyboard->Hide();
+	rule_1->Show();
+	rule_2->Show();
+	dush_xinput->Show();
+	stealth_xinput->Show();
+	dush_keyboard->Hide();
+	stealth_keyboard->Hide();
 
 	m_startState = StartState::WaitStart;
 	m_stateTimer = 190;   // 開始時の初期待機
@@ -164,26 +190,42 @@ void CTutorial::Update(void)
 	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
+	// UIの取得
 	auto skip_xinput = CUIManager::GetInstance()->GetUI("Skip_XInput");
 	auto skip_keyboard = CUIManager::GetInstance()->GetUI("Skip_Keyboard");
+	auto dush_xinput = CUIManager::GetInstance()->GetUI("Dush_xinput");
+	auto dush_keyboard = CUIManager::GetInstance()->GetUI("Dush_keyboard");
+	auto stealth_xinput = CUIManager::GetInstance()->GetUI("Stealth_xinput");
+	auto stealth_keyboard = CUIManager::GetInstance()->GetUI("Stealth_keyboard");
 
 	// 入力デバイスに応じてUIを切り替える
 	if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
 	{
-		// 表示
+		// キーボード表示をOFFにしてXInput表示
 		skip_keyboard->Hide();
+		dush_keyboard->Hide();
+		stealth_keyboard->Hide();
+
 		skip_xinput->Show();
+		dush_xinput->Show();
+		stealth_xinput->Show();
 	}
 	else if (pKeyboard->GetAnyKeyTrigger())
 	{
-		// 表示
+		// XInput表示をOFFにしてキーボード表示
 		skip_xinput->Hide();
+		dush_xinput->Hide();
+		stealth_xinput->Hide();
+
 		skip_keyboard->Show();
+		dush_keyboard->Show();
+		stealth_keyboard->Show();
 	}
 
 	// UIの更新
 	UIUpdate();
 
+	// ライトの更新
 	UpdateLight();
 
 	// ブロックマネージャーの更新処理

@@ -124,7 +124,7 @@ void CSEPopupEffect::SetupParameter(void)
 	desc.nLife = GetLife();
 
 	// d—Í‚Ìİ’è
-	desc.fGravity = 0.14f;
+	desc.fGravity = -0.001f;
 
 	// ”¼Œa‚ÌŒ¸Š—Ê‚Ìİ’è
 	desc.fDecRadius = 0.8f;

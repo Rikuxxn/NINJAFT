@@ -953,6 +953,7 @@ CGearBlock::CGearBlock()
 {
 	// 値のクリア
 	m_turnTimer = DELAY_TIME;
+	m_prevTimeEnd = false;
 }
 //=============================================================================
 // ギアブロックのデストラクタ
@@ -985,6 +986,21 @@ void CGearBlock::Update(void)
 //=============================================================================
 void CGearBlock::GameGearUpdate(void)
 {
+	// 一度だけ通す
+	if (!m_prevTimeEnd)
+	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// ギアSEの再生
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_GEAR);
+		}
+
+		m_prevTimeEnd = true;
+	}
+
 	// 向きを取得して、回転させる
 	D3DXVECTOR3 rot = GetRot();
 
@@ -1005,6 +1021,22 @@ void CGearBlock::MovieGearUpdate(void)
 	{
 		return;
 	}
+
+	bool isTimeEnd = m_turnTimer <= 0;
+
+	if (isTimeEnd && !m_prevTimeEnd)
+	{
+		// 音の取得
+		CSound* pSound = CManager::GetSound();
+
+		// ギアSEの再生
+		if (pSound)
+		{
+			pSound->Play(CSound::SOUND_LABEL_GEAR);
+		}
+	}
+
+	m_prevTimeEnd = isTimeEnd;
 
 	// 0にしておく
 	m_turnTimer = 0;

@@ -37,6 +37,7 @@ public:
 		SOUND_LABEL_SLASH_2,
 		SOUND_LABEL_DAMAGE,
 		SOUND_LABEL_GATE_OPEN,
+		SOUND_LABEL_GEAR,
 
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
@@ -107,6 +108,7 @@ private:
 		{"data/SE/slash_2.wav", 0},				// 斬撃2SE
 		{"data/SE/damage.wav", 0},				// ダメージSE
 		{"data/SE/gate_open.wav", 0},			// 開門SE
+		{"data/SE/gear.wav", -1},				// ギアSE(ループ)
 	};
 
 	SoundData m_SoundData[SOUND_LABEL_MAX];

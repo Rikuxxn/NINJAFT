@@ -350,6 +350,7 @@ private:
 	static constexpr int DELAY_TIME = 120;
 
 	int m_turnTimer;
+	bool m_prevTimeEnd;
 };
 
 #endif

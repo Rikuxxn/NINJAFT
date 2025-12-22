@@ -105,15 +105,15 @@ public:
     }
 
 private:
-    static std::vector<CBlock*> m_blocks;   // ブロック情報
     static std::unordered_map<CBlock::TYPE, std::vector<CBlock*>> m_blocksByType;
+    static std::unordered_map<CBlock::TYPE, std::string> s_FilePathMap;
+    static std::vector<CBlock*> m_blocks;   // ブロック情報
     static CBlock* m_draggingBlock;                                     // ドラッグ中のブロック情報
     static int m_selectedIdx;                                           // 選択中のインデックス
     int m_prevSelectedIdx;                                              // 前回の選択中のインデックス
     bool m_hasConsumedPayload ;                                         // ペイロード生成済みフラグ
     CDebugProc3D* m_pDebug3D;			                                // 3Dデバッグ表示へのポインタ
     bool m_autoUpdateColliderSize;
-    static std::unordered_map<CBlock::TYPE, std::string> s_FilePathMap;
     static CBlock* m_selectedBlock;                                     // 選択中のブロック
     bool m_isDragging;                                                  // ドラッグ中かどうか
 

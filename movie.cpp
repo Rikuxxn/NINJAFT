@@ -70,9 +70,9 @@ HRESULT CMovie::Init(void)
 	CCamera* pCamera = CManager::GetCamera();
 
 	// カメラの初期位置を設定しておく
-	pCamera->SetCamParameter(D3DXVECTOR3(-164.0f, 95.0f, 222.0f),
-		D3DXVECTOR3(223.0f, 41.0f, 885.0f),
-		D3DXVECTOR3(0.07f, -2.60f, 0.0f),
+	pCamera->SetCamParameter(D3DXVECTOR3(-311.9f, 145.2f, 216.5f),
+		D3DXVECTOR3(121.2f, -37.2f, 864.0f),
+		D3DXVECTOR3(0.23f, -2.55f, 0.0f),
 		0.0f);
 
 	// スキップUI生成
@@ -313,9 +313,9 @@ void CMovie::Draw(void)
 	if (!pCamera->GetMode() == CCamera::MODE_EDIT)
 	{
 		// カメラの設定
-		pCamera->SetCamParameter(D3DXVECTOR3(-164.0f, 95.0f, 222.0f),
-			D3DXVECTOR3(223.0f, 41.0f, 885.0f),
-			D3DXVECTOR3(0.07f, -2.60f, 0.0f),
+		pCamera->SetCamParameter(D3DXVECTOR3(-311.9f, 145.2f, 216.5f),
+			D3DXVECTOR3(121.2f, -37.2f, 864.0f),
+			D3DXVECTOR3(0.23f, -2.55f, 0.0f),
 			0.0f);
 	}
 }

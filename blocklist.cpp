@@ -383,11 +383,11 @@ int CBuriedTreasureBlock::m_getCount = 0;
 CBuriedTreasureBlock::CBuriedTreasureBlock()
 {
 	// 値のクリア
-	m_effectTimer = 0;		// エフェクト生成タイマー
-	m_guageRate;			// ゲージの最大量
-	m_guageDecreaseSpeed;	// ゲージの減る量
-	m_bUiActive = false;	// UIが表示されているか
-	m_getCount = 0;			// 取得数
+	m_effectTimer			= 0;		// エフェクト生成タイマー
+	m_guageRate				= 0.0f;		// ゲージの最大量
+	m_guageDecreaseSpeed	= 0.0f;		// ゲージの減る量
+	m_bUiActive				= false;	// UIが表示されているか
+	m_getCount				= 0;		// 取得数
 }
 //=============================================================================
 // 埋蔵金ブロックのデストラクタ
@@ -553,9 +553,9 @@ bool CDoorBlock::m_isOpen = false;
 CDoorBlock::CDoorBlock()
 {
 	// 値のクリア
-	m_baseRotY = 0.0f;	// 基準の角度
-	m_rotY = 0.0f;		// Y角度
-	m_prevOpen = false;	// 直前に開いたか
+	m_baseRotY	= 0.0f;		// 基準の角度
+	m_rotY		= 0.0f;		// Y角度
+	m_prevOpen	= false;	// 直前に開いたか
 }
 //=============================================================================
 // 扉ブロックのデストラクタ
@@ -753,8 +753,8 @@ CGateBlock::CGateBlock()
 	m_prevStep		= 0;			// 直前の段階数
 	m_bClosing		= false;		// 閉じているか
 	m_closeTimer	= 0.0f;			// タイマー
-	m_fromX			= 0.0f;
-	m_toX			= 0.0f;
+	m_fromX			= 0.0f;			// 移動開始位置
+	m_toX			= 0.0f;			// 移動到達位置
 }
 //=============================================================================
 // 門ブロックのデストラクタ
@@ -952,8 +952,8 @@ void CGateBlock::MovieGateUpdate(void)
 CGearBlock::CGearBlock()
 {
 	// 値のクリア
-	m_turnTimer = DELAY_TIME;
-	m_prevTimeEnd = false;
+	m_turnTimer		= DELAY_TIME;	// 回転までの遅延時間
+	m_prevTimeEnd	= false;		// タイマーが0になったか
 }
 //=============================================================================
 // ギアブロックのデストラクタ

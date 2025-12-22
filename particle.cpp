@@ -227,7 +227,7 @@ void CDustParticle::Update(void)
 		desc.col = GetCol();
 
 		// 半径の設定
-		desc.fRadius = 15.0f + (rand() % 20);
+		desc.fRadius = 10.0f + (rand() % 15);
 
 		// 寿命の設定
 		desc.nLife = GetLife();
@@ -236,7 +236,7 @@ void CDustParticle::Update(void)
 		desc.fGravity = 0.01f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 0.33f;
+		desc.fDecRadius = 0.28f;
 
 		// エフェクトの設定
 		CEffect::Create(desc);

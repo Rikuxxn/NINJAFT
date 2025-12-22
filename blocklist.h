@@ -32,9 +32,9 @@ public:
 	void Update(void);
 
 private:
-	static constexpr float resetDepth = -810.0f;
-	static constexpr float bottomPosZ = 540.0f;
-	static constexpr float moveSpeed = 3.0f;
+	static constexpr float resetDepth	= -810.0f;	// 位置リセットするZ位置
+	static constexpr float bottomPosZ	= 540.0f;	// リセット位置
+	static constexpr float moveSpeed	= 3.0f;		// 移動スピード
 
 };
 
@@ -52,9 +52,9 @@ public:
 	void Update(void);
 
 private:
-	static constexpr float resetDepth = -720.0f;
-	static constexpr float bottomPosZ = 480.0f;
-	static constexpr float moveSpeed = 3.0f;
+	static constexpr float resetDepth	= -720.0f;	// 位置リセットするZ位置
+	static constexpr float bottomPosZ	= 480.0f;	// リセット位置
+	static constexpr float moveSpeed	= 3.0f;		// 移動スピード
 
 };
 
@@ -74,7 +74,7 @@ public:
 	float GetDistMax(void) { return m_distMax; }
 
 private:
-	static constexpr float m_distMax = 110.0f;
+	static constexpr float m_distMax = 110.0f;	// 判定距離
 
 };
 
@@ -107,10 +107,10 @@ public:
 	bool IsHit(void) { return m_isHit; }
 
 private:
-	static constexpr int SPAWN_TIME = 7;		// 生成間隔(フレーム)
-	static constexpr float SPAWN_RADIUS = 10.0f;// 生成半径
+	static constexpr int	SPAWN_TIME		= 7;		// 生成間隔(フレーム)
+	static constexpr float	SPAWN_RADIUS	= 10.0f;	// 生成半径
 
-	bool m_isHit;	// 当たっているか
+	bool m_isHit;										// 当たっているか
 };
 
 //*****************************************************************************
@@ -127,9 +127,9 @@ public:
 	void Update(void);
 
 private:
-	static constexpr float resetDepth = -1110.0f;
-	static constexpr float bottomPosZ = 740.0f;
-	static constexpr float moveSpeed = 3.0f;
+	static constexpr float resetDepth	= -1110.0f;	// 位置リセットするZ位置
+	static constexpr float bottomPosZ	= 740.0f;	// リセット位置
+	static constexpr float moveSpeed	= 3.0f;		// 移動スピード
 
 };
 
@@ -162,19 +162,19 @@ public:
 	int GetCollisionFlags(void) const override { return btCollisionObject::CF_NO_CONTACT_RESPONSE; }
 
 private:
-	static constexpr float TRIGGER_DISTANCE = 40.0f;	// 判定距離
-	static constexpr int SPAWN_TIME = 180;				// 生成までの時間
-	static constexpr int GET_THRESHOLD = 3;				// 取得数閾値
-	static constexpr float GUAGE_RATE = 100.0f;			// ゲージの最大量
-	static constexpr float GUAGE_DECREASE_SPEED = 0.19f;// ゲージの減る量
+	static constexpr float	TRIGGER_DISTANCE		= 40.0f;	// 判定距離
+	static constexpr int	SPAWN_TIME				= 180;		// 生成までの時間
+	static constexpr int	GET_THRESHOLD			= 3;		// 取得数閾値
+	static constexpr float	GUAGE_RATE				= 100.0f;	// ゲージの最大量
+	static constexpr float	GUAGE_DECREASE_SPEED	= 0.19f;	// ゲージの減る量
 
-	int m_effectTimer;									// エフェクト生成タイマー
-	C3DGuage* m_pFrame;									// 枠
-	C3DGuage* m_pGuage;									// メインゲージ
-	float m_guageRate;									// ゲージの最大量
-	float m_guageDecreaseSpeed;							// ゲージの減る量
-	bool m_bUiActive;									// UIの表示・非表示フラグ
-	static int m_getCount;								// 取得数
+	int			m_effectTimer;									// エフェクト生成タイマー
+	C3DGuage*	m_pFrame;										// 枠
+	C3DGuage*	m_pGuage;										// メインゲージ
+	float		m_guageRate;									// ゲージの最大量
+	float		m_guageDecreaseSpeed;							// ゲージの減る量
+	bool		m_bUiActive;									// UIの表示・非表示フラグ
+	static int	m_getCount;										// 取得数
 };
 
 //*****************************************************************************
@@ -226,13 +226,13 @@ public:
 	bool IsOpen(void) { return m_isOpen; }
 
 private:
-	static constexpr float ROT_LIMIT = 90.0f;
-	static constexpr float ROT_SPEED = 0.5f;
+	static constexpr float ROT_LIMIT = 90.0f;	// 回転角度
+	static constexpr float ROT_SPEED = 0.5f;	// 回転スピード
 
-	float m_baseRotY;		// 基準の角度
-	float m_rotY;			// Y角度
-	static bool m_isOpen;	// 開いたかどうか
-	bool m_prevOpen;		// 直前に開いたか
+	float		m_baseRotY;						// 基準の角度
+	float		m_rotY;							// Y角度
+	static bool m_isOpen;						// 開いたかどうか
+	bool		m_prevOpen;						// 直前に開いたか
 };
 
 //*****************************************************************************
@@ -274,10 +274,10 @@ public:
 	}
 
 private:
-	static constexpr float TRIGGER_DISTACE = 110.0f;
+	static constexpr float TRIGGER_DISTACE = 110.0f;	// 判定距離
 
-	bool m_isEscape;	// 脱出したかどうか
-	bool m_isIn;		// 範囲内フラグ
+	bool m_isEscape;									// 脱出したかどうか
+	bool m_isIn;										// 範囲内フラグ
 };
 
 //*****************************************************************************
@@ -309,7 +309,7 @@ public:
 
 private:
 	static constexpr int   MAX_STEP				= 6;		// 移動する段階数
-	static constexpr float MOVE_UNIT			= 24.0f;	// 移動距離
+	static constexpr float MOVE_UNIT			= 44.0f;	// 移動距離
 	static constexpr float DELAY_TIME			= 240.0f;	// 遅延時間
 	static constexpr float SHAKE_POWER			= 1.5f;		// 揺れ幅
 	static constexpr float SHAKE_SPEED			= 20.0f;	// 揺れの細かさ
@@ -318,14 +318,14 @@ private:
 	static constexpr float SIDE_OFFSET			= 30.0f;	// 埃パーティクル生成位置オフセット
 	static constexpr float CLOSE_DURATION		= 20.0f;	// 閉じるフレーム数
 
-	float m_baseRotY;		// 基準の角度
-	float m_startPosX;		// 開始位置
-	float m_movieTime;		// 移動時間
-	int   m_prevStep ;		// 直前の段階数
-	bool  m_bClosing;		// 閉じているか
-	float m_closeTimer;		// タイマー
-	float m_fromX;
-	float m_toX;
+	float m_baseRotY;										// 基準の角度
+	float m_startPosX;										// 開始位置
+	float m_movieTime;										// 移動時間
+	int   m_prevStep ;										// 直前の段階数
+	bool  m_bClosing;										// 閉じているか
+	float m_closeTimer;										// タイマー
+	float m_fromX;											// 移動開始位置
+	float m_toX;											// 移動到達位置
 
 };
 
@@ -345,11 +345,11 @@ public:
 	void MovieGearUpdate(void);
 
 private:
-	static constexpr float ROT_SPEED = 0.05f;
-	static constexpr int DELAY_TIME = 120;
+	static constexpr float ROT_SPEED	= 0.05f;	// 回転スピード
+	static constexpr int DELAY_TIME		= 120;		// 回転までの遅延時間
 
-	int m_turnTimer;
-	bool m_prevTimeEnd;
+	int	 m_turnTimer;								// 回転までの時間カウンター
+	bool m_prevTimeEnd;								// タイマーが0になったか
 };
 
 #endif

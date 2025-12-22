@@ -143,39 +143,39 @@ public:
 	//*****************************************************************************
 	// getter関数
 	//*****************************************************************************
-	virtual D3DXCOLOR GetCol(void) const override;										// カラーの取得
-	TYPE GetType(void) const { return m_Type; }											// タイプの取得
-	btRigidBody* GetRigidBody(void) const { return m_pRigidBody; }						// RigidBodyの取得
-	D3DXVECTOR3 GetColliderSize(void) const { return m_colliderSize; }					// コライダーサイズの取得
-	D3DXVECTOR3 GetColliderOffset(void) const { return m_colliderOffset; }				// コライダーのオフセットの取得
-	virtual btScalar GetMass(void) const { return DEFAULT_MASS; }								// 質量の取得
-	bool IsDead(void) const { return m_isDead; }										// 削除予約の取得
-	D3DXMATRIX GetWorldMatrix(void);
+	virtual D3DXCOLOR GetCol(void) const override;											// カラーの取得
+	TYPE GetType(void) const { return m_Type; }												// タイプの取得
+	btRigidBody* GetRigidBody(void) const { return m_pRigidBody; }							// RigidBodyの取得
+	D3DXVECTOR3 GetColliderSize(void) const { return m_colliderSize; }						// コライダーサイズの取得
+	D3DXVECTOR3 GetColliderOffset(void) const { return m_colliderOffset; }					// コライダーのオフセットの取得
+	virtual btScalar GetMass(void) const { return DEFAULT_MASS; }							// 質量の取得
+	bool IsDead(void) const { return m_isDead; }											// 削除予約の取得
+	D3DXMATRIX GetWorldMatrix(void);														// マトリックス取得
 
-	virtual int GetCollisionFlags(void) const { return 0; }// デフォルトはフラグなし
+	virtual int GetCollisionFlags(void) const { return 0; }									// デフォルトはフラグなし
 	virtual btVector3 GetLinearFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
 	virtual btVector3 GetAngularFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
 	virtual btScalar GetRollingFriction(void) const { return DEFAULT_ROLLING_FRICTION; }
 	virtual btScalar GetFriction(void) const { return DEFAULT_FRICTION; }
 
 private:
-	static constexpr float DEFAULT_MASS = 2.0f;
-	static constexpr float DEFAULT_ROLLING_FRICTION = 0.7f;
-	static constexpr float DEFAULT_FRICTION = 1.0f;
+	static constexpr float DEFAULT_MASS				= 2.0f;				// デフォルト質量
+	static constexpr float DEFAULT_ROLLING_FRICTION = 0.7f;				// デフォルト回転摩擦
+	static constexpr float DEFAULT_FRICTION			= 1.0f;				// デフォルト摩擦
 
-	TYPE m_Type;					// 種類
-	D3DXCOLOR m_col;				// アルファ値
-	D3DXCOLOR m_baseCol;			// ベースのアルファ値
-	bool m_bSelected;				// 選択フラグ
-	btRigidBody* m_pRigidBody;		// 剛体へのポインタ
-	btCollisionShape* m_pShape;		// 当たり判定の形へのポインタ
-	CDebugProc3D* m_pDebug3D;		// 3Dデバッグ表示へのポインタ
-	D3DXVECTOR3 m_prevSize;			// 前回のサイズ
-	D3DXVECTOR3 m_colliderSize;		// コライダーサイズ
-	D3DXVECTOR3 m_colliderOffset;	// コライダーの位置
-	bool m_isEditMode;				// 編集中かどうか
-	static std::unordered_map<TYPE, BlockCreateFunc> m_BlockFactoryMap;
-	bool m_isDead;					// 削除予約フラグ
+	static std::unordered_map<TYPE, BlockCreateFunc> m_BlockFactoryMap;	// ブロックファクトリー
+	TYPE				m_Type;											// 種類
+	D3DXCOLOR			m_col;											// アルファ値
+	D3DXCOLOR			m_baseCol;										// ベースのアルファ値
+	bool				m_bSelected;									// 選択フラグ
+	btRigidBody*		m_pRigidBody;									// 剛体へのポインタ
+	btCollisionShape*	m_pShape;										// 当たり判定の形へのポインタ
+	CDebugProc3D*		m_pDebug3D;										// 3Dデバッグ表示へのポインタ
+	D3DXVECTOR3			m_prevSize;										// 前回のサイズ
+	D3DXVECTOR3			m_colliderSize;									// コライダーサイズ
+	D3DXVECTOR3			m_colliderOffset;								// コライダーの位置
+	bool				m_isEditMode;									// 編集中かどうか
+	bool				m_isDead;										// 削除予約フラグ
 };
 
 #endif

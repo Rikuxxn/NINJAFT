@@ -56,7 +56,7 @@ HRESULT CEnemy::Init(void)
 	// 最初の向き
 	SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
 
-	// 巡回ポイントの設定
+	// 敵の巡回ポイントの設定をするため、マップジェネレーターから位置をもらう
 	auto& patrolPoints = CGenerateMap::GetInstance()->GetPatrolPoints();
 
 	if (!patrolPoints.empty())

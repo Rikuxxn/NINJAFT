@@ -22,7 +22,7 @@
 #include "enemy.h"
 #include "movie.h"
 #include "easing.h"
-
+#include "generateMap.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -529,7 +529,7 @@ void CBuriedTreasureBlock::Update(void)
 		if (pEnemyLeader)
 		{
 			// 埋蔵金が取られたことを通知して、リストから位置を削除する
-			CGame::GetBlockManager()->OnTreasureCollected(GetPos());
+			CGenerateMap::GetInstance()->OnTreasureCollected(GetPos());
 		}
 
 		// ゲージも削除する

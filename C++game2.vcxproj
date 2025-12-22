@@ -183,6 +183,7 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="FileDialogUtils.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="generateMap.cpp" />
     <ClCompile Include="grass.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="guage.cpp" />
@@ -269,6 +270,7 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="FileDialogUtils.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="generateMap.h" />
     <ClInclude Include="grass.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="guage.h" />

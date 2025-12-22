@@ -167,34 +167,7 @@ public:
 	}
 
 	// 一番近い埋蔵金ポイントの設定処理
-	void SetNearestTreasurePosition(void)
-	{
-		auto& list = CGame::GetBlockManager()->GetTreasurePositions();
-
-		// リストが空になったら
-		if (list.empty()) 
-		{
-			return;
-		}
-
-		float minDist = FLT_MAX;
-		int closestIndex = 0;
-
-		for (size_t i = 0; i < list.size(); ++i)
-		{
-			D3DXVECTOR3 dis = list[i] - GetPos();
-
-			// 一番近い埋蔵金ポイントに設定する
-			float dist = D3DXVec3Length(&dis);
-			if (dist < minDist)
-			{
-				minDist = dist;
-				closestIndex = (int)i;
-			}
-		}
-
-		m_nearestTreasurePosition = list[closestIndex];
-	}
+	void SetNearestTreasurePosition(void);
 
 	// 巡回ポイントに到達したか
 	bool HasReachedTarget(void) // 到達判定

@@ -17,6 +17,7 @@
 #include "game.h"
 #include "input.h"
 #include "manager.h"
+#include "generateMap.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -56,7 +57,7 @@ HRESULT CEnemy::Init(void)
 	SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
 
 	// 巡回ポイントの設定
-	auto& patrolPoints = CGame::GetBlockManager()->GetPatrolPoints();
+	auto& patrolPoints = CGenerateMap::GetInstance()->GetPatrolPoints();
 
 	if (!patrolPoints.empty())
 	{
@@ -259,6 +260,37 @@ bool CEnemy::IsLeaderAction(EEnemyAction type)
 	}
 
 	return false;
+}
+//=============================================================================
+// 一番近い埋蔵金ポイントの設定処理
+//=============================================================================
+void CEnemy::SetNearestTreasurePosition(void)
+{
+	auto& list = CGenerateMap::GetInstance()->GetTreasurePositions();
+
+	// リストが空になったら
+	if (list.empty())
+	{
+		return;
+	}
+
+	float minDist = FLT_MAX;
+	int closestIndex = 0;
+
+	for (size_t i = 0; i < list.size(); ++i)
+	{
+		D3DXVECTOR3 dis = list[i] - GetPos();
+
+		// 一番近い埋蔵金ポイントに設定する
+		float dist = D3DXVec3Length(&dis);
+		if (dist < minDist)
+		{
+			minDist = dist;
+			closestIndex = (int)i;
+		}
+	}
+
+	m_nearestTreasurePosition = list[closestIndex];
 }
 
 

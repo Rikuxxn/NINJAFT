@@ -68,7 +68,6 @@ private:
 	static int m_nSeed;							// マップのシード値
 	std::unique_ptr<CRankingManager> m_pRankingManager;			// ランキングへのポインタ
 
-
 	CLight* m_pLight;
 	int m_timer;								// パーティクル生成タイマー
 	StartState m_startState;					

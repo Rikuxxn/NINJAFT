@@ -20,6 +20,7 @@
 #include "blocklist.h"
 #include "resultsoundcount.h"
 #include "grid.h"
+#include "generateMap.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -77,11 +78,11 @@ HRESULT CGame::Init(void)
 
 	m_nSeed = (int)time(nullptr);  // シード値をランダム設定
 
-	// マップランダム生成
-	m_pBlockManager->GenerateRandomMap(m_nSeed);
+	// 壁などの配置情報の読み込み
+	m_pBlockManager->LoadFromJson("data/game_blockinfo.json");
 
-	//// 配置情報の読み込み
-	//m_pBlockManager->LoadFromJson("data/game_blockinfo.json");
+	// ランダムマップ生成
+	CGenerateMap::GetInstance()->GenerateRandomMap(m_nSeed);
 
 	// キャラクターマネージャーの生成
 	auto& charaMgr = CCharacterManager::GetInstance();
@@ -187,6 +188,9 @@ void CGame::Uninit(void)
 {
 	// キャラクターマネージャーの破棄
 	CCharacterManager::GetInstance().Destroy();
+
+	//マップジェネレーターのリストのクリア
+	CGenerateMap::GetInstance()->Uninit();
 
 	// ブロックマネージャーの破棄
 	if (m_pBlockManager != nullptr)

@@ -308,15 +308,14 @@ public:
 	void MovieGateUpdate(void);
 
 private:
-	static constexpr int   MAX_STEP				= 3;		// 移動する段階数
-	static constexpr float MOVE_UNIT			= 52.0f;	// 移動距離
+	static constexpr int   MAX_STEP				= 6;		// 移動する段階数
+	static constexpr float MOVE_UNIT			= 24.0f;	// 移動距離
 	static constexpr float DELAY_TIME			= 240.0f;	// 遅延時間
 	static constexpr float SHAKE_POWER			= 1.5f;		// 揺れ幅
-	static constexpr float SHAKE_SPEED			= 20.0f;	// 細かさ
-	static constexpr float SHAKE_START_TIME		= 0.0f;		// すでに使ってる
+	static constexpr float SHAKE_SPEED			= 20.0f;	// 揺れの細かさ
 	static constexpr float SHAKE_DURATION		= 120.0f;	// 揺れる時間
 	static constexpr float PRE_SHAKE_RANGE		= 0.03f;	// 予兆揺れ境界(～%手前から揺らす)
-	static constexpr float SIDE_OFFSET			= 20.0f;	// 埃パーティクル生成位置オフセット
+	static constexpr float SIDE_OFFSET			= 30.0f;	// 埃パーティクル生成位置オフセット
 	static constexpr float CLOSE_DURATION		= 20.0f;	// 閉じるフレーム数
 
 	float m_baseRotY;		// 基準の角度

@@ -97,6 +97,8 @@ HRESULT CGame::Init(void)
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 			);
 	m_pEnemy = pLeader;
+
+	// キャラクターの追加
 	charaMgr.AddCharacter(pLeader);
 
 	// サブ敵生成
@@ -117,6 +119,7 @@ HRESULT CGame::Init(void)
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 				);
 
+		// キャラクターの追加
 		charaMgr.AddCharacter(pSub);
 		subEnemies.push_back(pSub);
 	}

@@ -177,12 +177,12 @@ void CResult::Update(void)
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
 
-	CInputMouse* pInputMouse = CManager::GetInputMouse();	// マウスの入力取得
+	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();		// ゲームパッドの入力取得
 	CFade* pFade = CManager::GetFade();
 
 	if (pFade->GetFade() == CFade::FADE_NONE && 
-		(pInputMouse->GetTrigger(0) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||
+		(pKeyboard->GetAnyKeyTrigger() || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||
 			CManager::GetInputKeyboard()->GetTrigger(DIK_RETURN)))
 	{
 		// ランキング画面に移行
@@ -190,7 +190,7 @@ void CResult::Update(void)
 	}
 
 #ifdef _DEBUG
-	if (pFade->GetFade() == CFade::FADE_NONE && CManager::GetInputKeyboard()->GetTrigger(DIK_RETURN))
+	if (pFade->GetFade() == CFade::FADE_NONE && pKeyboard->GetAnyKeyTrigger())
 	{
 		// ランキング画面に移行
 		pFade->SetFade(MODE_RANKING);

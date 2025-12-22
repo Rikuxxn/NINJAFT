@@ -68,6 +68,9 @@ private:
 	void NormalizeRotX(void);// 角度の正規化 X軸
 	void NormalizeRotY(void);// 角度の正規化 Y軸
 
+private:
+	static constexpr float SHAKE_DISTANCE = 1300.0f;
+
 	D3DXVECTOR3 m_posV;			// 視点
 	D3DXVECTOR3 m_posVDest;		// 目的の視点
 	D3DXVECTOR3 m_posR;			// 注視点

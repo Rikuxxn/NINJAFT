@@ -487,7 +487,7 @@ void CCamera::CameraShake(void)
 
 		float dist = D3DXVec3Length(&targetpos);
 
-		float maxDist = 1300.0f;// U“®‚·‚é‹——£
+		float maxDist = SHAKE_DISTANCE;// U“®‚·‚é‹——£
 		float ambientIntensity = 1.0f - (dist / maxDist);
 		ambientIntensity = max(0.0f, min(1.0f, ambientIntensity));
 

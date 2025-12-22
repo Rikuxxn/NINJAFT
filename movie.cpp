@@ -13,6 +13,7 @@
 #include "meshdome.h"
 #include "time.h"
 #include "particle.h"
+#include "ui.h"
 
 
 //*****************************************************************************
@@ -74,6 +75,18 @@ HRESULT CMovie::Init(void)
 		D3DXVECTOR3(0.07f, -2.60f, 0.0f),
 		0.0f);
 
+	// スキップUI生成
+	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+
+	// スキップUI登録
+	CUIManager::GetInstance()->AddUI("Skip_XInput", skip_xinput);
+	CUIManager::GetInstance()->AddUI("Skip_Keyboard", skip_keyboard);
+
+	// UI初期設定
+	skip_xinput->Show();
+	skip_keyboard->Hide();
+
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
 
@@ -128,16 +141,45 @@ void CMovie::Update(void)
 		CParticle::Create<CBlossomParticle>(INIT_VEC3, camPosR, D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
 	}
 
+	// 入力処理の取得
 	CFade* pFade = CManager::GetFade();
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	// UIの取得
+	auto skip_xinput = CUIManager::GetInstance()->GetUI("Skip_XInput");
+	auto skip_keyboard = CUIManager::GetInstance()->GetUI("Skip_Keyboard");
+
+	// 入力デバイスに応じてUIを切り替える
+	if (pJoypad->GetAnyTrigger() || pJoypad->GetStick())
+	{
+		// キーボード表示をOFFにしてXInput表示
+		skip_keyboard->Hide();
+
+		skip_xinput->Show();
+	}
+	else if (pKeyboard->GetAnyKeyTrigger())
+	{
+		// XInput表示をOFFにしてキーボード表示
+		skip_xinput->Hide();
+
+		skip_keyboard->Show();
+	}
 
 	// ライトの更新処理
 	UpdateLight();
 
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
+
+	// スキップ
+	if (pFade->GetFade() == CFade::FADE_NONE && 
+		(pKeyboard->GetTrigger(DIK_TAB) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START)))
+	{
+		// ゲーム画面に移行
+		pFade->SetFade(MODE_GAME);
+	}
 
 	// カウントダウン
 	m_timer--;

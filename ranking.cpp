@@ -71,7 +71,6 @@ void CRanking::Update(void)
 {
 	// 入力受付のためにインプット処理を取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
 	// 画面遷移のためにフェードを取得
@@ -88,7 +87,7 @@ void CRanking::Update(void)
 #else
 	// 画面遷移
 	if (pFade->GetFade() == CFade::FADE_NONE && 
-		(pMouse->GetTrigger(0) || pJoypad->GetTrigger(pJoypad->JOYKEY_A)))
+		((pKeyboard->GetAnyKeyTrigger()) || pJoypad->GetTrigger(pJoypad->JOYKEY_A)))
 	{
 		// タイトル画面に移行
 		CManager::GetFade()->SetFade(CScene::MODE_TITLE);

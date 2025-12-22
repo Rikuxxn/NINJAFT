@@ -803,9 +803,9 @@ void CGateBlock::GameGateUpdate(void)
 		step = std::clamp(step, 0, MAX_STEP - 1);
 	}
 
-	// =========================
+	// =================================
 	// 予兆揺れ判定
-	// =========================
+	// =================================
 	float shakeX = 0.0f;
 
 	float nextBorder = (float)(step + 1) / MAX_STEP;
@@ -818,7 +818,7 @@ void CGateBlock::GameGateUpdate(void)
 
 		// 少し下げた位置に生成
 		D3DXVECTOR3 spawnBase = GetPos();
-		spawnBase.y -= 50.0f;
+		spawnBase.y -= 60.0f;
 
 		// 中心
 		D3DXVECTOR3 spawnCenter = spawnBase;
@@ -841,9 +841,9 @@ void CGateBlock::GameGateUpdate(void)
 			D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.3f), 90, 1);
 	}
 
-	// =========================
+	// =================================
 	// 閉じ開始トリガー
-	// =========================
+	// =================================
 	if (step != m_prevStep)
 	{
 		m_bClosing = true;
@@ -853,9 +853,9 @@ void CGateBlock::GameGateUpdate(void)
 		m_toX = step * MOVE_UNIT;
 	}
 
-	// =========================
-	// 閉じアニメ（イージング）
-	// =========================
+	// =================================
+	// 閉じアニメーション（イージング）
+	// =================================
 	float moveX = step * MOVE_UNIT;
 
 	if (m_bClosing)
@@ -912,7 +912,7 @@ void CGateBlock::MovieGateUpdate(void)
 
 			// 少し下げた位置に生成
 			D3DXVECTOR3 spawnBase = GetPos();
-			spawnBase.y -= 50.0f;
+			spawnBase.y -= 60.0f;
 
 			D3DXVECTOR3 spawnCenter = spawnBase;
 

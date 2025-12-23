@@ -100,7 +100,7 @@ HRESULT CPlayer::Init(void)
 	CreatePhysics(CAPSULE_RADIUS, CAPSULE_HEIGHT, 2.0f);
 
 	// ステンシルシャドウの生成
-	m_pShadowS = CShadowS::Create("data/MODELS/stencilshadow.x",GetPos());
+	m_pShadowS = CShadowS::Create("data/MODELS/stencilshadow.x", D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	m_pShadowS->SetStencilRef(1);// 個別のステンシルバッファの参照値を設定
 
 	// インスタンスのポインタを渡す

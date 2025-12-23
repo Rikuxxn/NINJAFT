@@ -389,6 +389,25 @@ XINPUT_STATE* CInputJoypad::GetStickAngle(void)
 {
 	return &m_joyKeyState;
 }
+//=============================================================================
+// ÉWÉáÉCÉpÉbÉhêUìÆ
+//=============================================================================
+void CInputJoypad::SetVibration(WORD left, WORD right)
+{
+	XINPUT_VIBRATION vibration = {};
+	vibration.wLeftMotorSpeed = left;   // 0Å`65535
+	vibration.wRightMotorSpeed = right;  // 0Å`65535
+
+	XInputSetState(0, &vibration);
+}
+
+//=============================================================================
+// êUìÆí‚é~
+//=============================================================================
+void CInputJoypad::StopVibration(void)
+{
+	SetVibration(0, 0);
+}
 
 
 //=============================================================================

@@ -16,8 +16,8 @@
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-int CResultSoundCount::m_nSoundCount = 0;
-int CResultSoundCount::m_nDig[MAX_DIGITS] = {};
+//int CResultSoundCount::m_nSoundCount = 0;
+//int CResultSoundCount::m_nDig[MAX_DIGITS] = {};
 
 //=============================================================================
 // コンストラクタ
@@ -45,7 +45,7 @@ CResultSoundCount::~CResultSoundCount()
 //=============================================================================
 // 生成処理
 //=============================================================================
-CResultSoundCount* CResultSoundCount::Create(float baseX, float baseY, float digitWidth, float digitHeight)
+CResultSoundCount* CResultSoundCount::Create(float baseX, float baseY, float digitWidth, float digitHeight, int count)
 {
 	CResultSoundCount* resultSoundCount = nullptr;
 
@@ -54,6 +54,7 @@ CResultSoundCount* CResultSoundCount::Create(float baseX, float baseY, float dig
 	resultSoundCount->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
 	resultSoundCount->m_digitWidth = digitWidth;
 	resultSoundCount->m_digitHeight = digitHeight;
+	resultSoundCount->m_nSoundCount = count;
 
 	// 初期化処理
 	resultSoundCount->Init();

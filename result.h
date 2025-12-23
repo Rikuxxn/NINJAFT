@@ -28,14 +28,16 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	static void SetClearTime(int min, int sec) { m_nClearMinutes = min; m_nClearSeconds = sec; }
 	static void SetClearRank(int idx) { m_clearRankIndex = idx; }
 	static void SetSoundCount(int nCount) { m_soundCount = nCount; }
+	static void SetInsightCount(int nCount) { m_insightCount = nCount; }
 	static void SetTreasureCount(int nCount) { m_treasureCount = nCount; }
 
-	static int GetClearMinutes(void) { return m_nClearMinutes; }
-	static int GetClearSeconds(void) { return m_nClearSeconds; }
 	static int GetClearRank(void) { return m_clearRankIndex; }
+	static int GetTreasureCount(void) { return m_treasureCount; }
+	static int GetSoundCount(void) { return m_soundCount; }
+	static int GetInsightCount(void) { return m_insightCount; }
+
 
 	static void ResetLight(void);
 	void OnDeviceReset(void) override;
@@ -43,14 +45,15 @@ public:
 	void ResetThumbnail(void) override;
 
 private:
-	static CResultTime* m_pTime;			// タイムへのポインタ
-	static int m_nClearMinutes;				// クリアタイム(分)
-	static int m_nClearSeconds;				// クリアタイム(秒)
-	static int m_clearRankIndex;			// クリア時のランクインデックス
-	static int m_soundCount;				// 音の発生数
-	static int m_treasureCount;				// 宝の数
-	CLight* m_pLight;						// ライトへのポインタ
-	CBlockManager* m_pBlockManager;			// ブロックマネージャーへのポインタ
+	static constexpr int DELAY_TIME = 120;	// 表示遅延時間
+
+	static int			m_clearRankIndex;	// クリア時のランクインデックス
+	static int			m_soundCount;		// 音の発生数
+	static int			m_insightCount;		// 見つかった回数
+	static int			m_treasureCount;	// 宝の数
+	CLight*				m_pLight;			// ライトへのポインタ
+	CBlockManager*		m_pBlockManager;	// ブロックマネージャーへのポインタ
+	int					m_timer;			// 表示タイマー
 };
 
 #endif

@@ -560,7 +560,7 @@ void CSmokeParticle::Update(void)
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.01f;
+		desc.fGravity = 0.0f;
 
 		// 半径の減衰量の設定
 		desc.fDecRadius = 0.63f;

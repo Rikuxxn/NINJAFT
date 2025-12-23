@@ -28,7 +28,8 @@ public:
 	enum DUMMY_MOTION
 	{
 		NEUTRAL = 0,		// 待機
-		DUSH,
+		DUSH,				// ダッシュ
+		APPEARANCE,			// 出現
 		MAX
 	};
 
@@ -44,19 +45,33 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	void SetMotionType(int type) { m_motionType = type; }
+	void SetVisibleFlag(bool flag) { m_isVisible = flag; }
+	void SetMove(D3DXVECTOR3 move) { m_move = move; }
+
+	//*****************************************************************************
+	// getter関数
+	//*****************************************************************************
+	D3DXVECTOR3 GetPos(void) { return m_pos; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXVECTOR3 GetMove(void) { return m_move; }
+	D3DXVECTOR3 GetForward(void);
+	CMotion* GetMotion(void) { return m_pMotion; }
+	bool IsVisible(void) { return m_isVisible; }
 
 private:
-	static constexpr int MAX_PARTS = 32;		// 最大パーツ数
+	static constexpr int MAX_PARTS = 32;// 最大パーツ数
 
 	D3DXVECTOR3 m_pos;					// 位置
 	D3DXVECTOR3 m_rot;					// 向き
 	D3DXVECTOR3 m_size;					// サイズ
-	D3DXMATRIX m_mtxWorld;				// ワールドマトリックス
-	CModel* m_apModel[MAX_PARTS];		// モデル(パーツ)へのポインタ
-	CShadowS* m_pShadowS;				// ステンシルシャドウへのポインタ
-	CMotion* m_pMotion;					// モーションへのポインタ
-	int m_nNumModel;					// モデル(パーツ)の総数
-	int m_motionType;					// モーションのタイプ
+	D3DXVECTOR3 m_move;					// 移動量
+	D3DXMATRIX	m_mtxWorld;				// ワールドマトリックス
+	CModel*		m_apModel[MAX_PARTS];	// モデル(パーツ)へのポインタ
+	CShadowS*	m_pShadowS;				// ステンシルシャドウへのポインタ
+	CMotion*	m_pMotion;				// モーションへのポインタ
+	int			m_nNumModel;			// モデル(パーツ)の総数
+	int			m_motionType;			// モーションのタイプ
+	bool		m_isVisible;			// 可視フラグ
 
 };
 

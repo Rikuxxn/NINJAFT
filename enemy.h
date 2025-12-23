@@ -227,6 +227,7 @@ public:
 	void SetAI(std::unique_ptr<IEnemyAI> ai) { m_pAI = std::move(ai); }
 	void SetControlFlag(bool flag) { m_canControl = flag; }
 	void SetSoundCount(int nCount) { m_makeSoundCount = nCount; }
+	void SetInsightCount(int nCount) { m_insightCount = nCount; }
 
 	//*****************************************************************************
 	// getter関数
@@ -244,6 +245,7 @@ public:
 	IEnemyAI* GetAI(void) { return m_pAI.get(); }
 	bool GetControlFlag(void) { return m_canControl; }
 	int GetSoundCount(void) { return m_makeSoundCount; }
+	int GetInsightCount(void) { return m_insightCount; }
 
 private:
 	static constexpr int MAX_PARTS = 32;	// 最大パーツ数
@@ -267,6 +269,7 @@ private:
 	bool m_returnToPatrol;					// 最寄りの巡回ポイントに戻るフラグ
 	bool m_canControl;						// 操作フラグ
 	int m_makeSoundCount;					// 音発生数
+	int m_insightCount;						// 発見された回数
 	std::unique_ptr<IEnemyAI> m_pAI;
 };
 

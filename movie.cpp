@@ -14,7 +14,7 @@
 #include "time.h"
 #include "particle.h"
 #include "ui.h"
-
+#include "dummyPlayer.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -28,9 +28,13 @@ CMovie::CMovie() : CScene(CScene::MODE_MOVIE)
 {
 	// 値のクリア
 	m_pBlockManager = nullptr;
-	m_pLight = nullptr;
-	m_timer = 0;
+	m_pLight		= nullptr;
+	m_timer			= 0;
 	m_particleTimer = 0;
+	m_pDummyPlayer	= nullptr;
+	m_smokeTimer	= 0;
+	m_smokeActive	= false;
+	m_delayTime		= 0;
 }
 //=============================================================================
 // デストラクタ
@@ -61,7 +65,15 @@ HRESULT CMovie::Init(void)
 
 	// タイムの生成
 	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, false);
-	//m_pTime->SetActiveFlag(true);
+
+	//// ダミープレイヤーの生成
+	//m_pDummyPlayer = CDummyPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 700.0f),
+	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::APPEARANCE);
+	//m_pDummyPlayer->SetVisibleFlag(false);
+
+	//m_smokeTimer = 15;
+	//m_delayTime = 120;
+	//m_smokeActive = true;
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
@@ -144,7 +156,6 @@ void CMovie::Update(void)
 	// 入力処理の取得
 	CFade* pFade = CManager::GetFade();
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
 	// UIの取得
@@ -180,6 +191,47 @@ void CMovie::Update(void)
 		// ゲーム画面に移行
 		pFade->SetFade(MODE_GAME);
 	}
+
+	//m_delayTime--;
+
+	//if (m_smokeActive && m_delayTime <= 0)
+	//{
+	//	m_delayTime = 0;
+
+	//	for (int i = 0; i < 3; i++)
+	//	{
+	//		//D3DXVECTOR3 pos = m_pDummyPlayer->GetPos();
+	//		D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 700.0f);
+	//		pos.y += i * 30.0f;
+
+	//		CParticle::Create<CSmokeParticle>(
+	//			INIT_VEC3, pos,
+	//			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+	//			120, 8
+	//			);
+	//	}
+
+	//	if (--m_smokeTimer <= 0)
+	//	{
+	//		// ダミープレイヤー可視フラグをONにする
+	//		m_pDummyPlayer->SetVisibleFlag(true);
+
+	//		// 出現モーションにする
+	//		m_pDummyPlayer->GetMotion()->StartBlendMotion(CDummyPlayer::APPEARANCE, 10);
+
+	//		m_smokeActive = false;
+	//	}
+	//}
+
+	//// 出現モーションが終わったらダッシュモーションにする
+	//if (m_pDummyPlayer->GetMotion()->IsCurrentMotionEnd(CDummyPlayer::APPEARANCE))
+	//{
+	//	// 移動量の設定
+	//	m_pDummyPlayer->SetMove(D3DXVECTOR3(0.0f, 0.0f, -4.0f));
+
+	//	// ダッシュモーションにする
+	//	m_pDummyPlayer->GetMotion()->StartBlendMotion(CDummyPlayer::DUSH, 10);
+	//}
 
 	// カウントダウン
 	m_timer--;

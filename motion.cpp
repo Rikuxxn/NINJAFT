@@ -459,8 +459,15 @@ inline D3DXVECTOR3 CMotion::LerpRot(const KEY& a, const KEY& b, float t)
 	auto delta = [](float from, float to)
 	{
 		float d = to - from;
-		if (d > D3DX_PI) d -= D3DX_PI * 2.0f;
-		else if (d < -D3DX_PI) d += D3DX_PI * 2.0f;
+		if (d > D3DX_PI)
+		{
+			d -= D3DX_PI * 2.0f;
+		}
+		else if (d < -D3DX_PI)
+		{
+			d += D3DX_PI * 2.0f;
+		}
+
 		return d;
 	};
 

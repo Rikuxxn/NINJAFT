@@ -113,7 +113,10 @@ public:
     virtual void Update(void) override;
     virtual void Draw(void) override;
 
+    void SetUVDirtyUse(bool flag) { m_isUVDirty = flag; }
+
 private:
+    bool m_isUVDirty;
 };
 
 //*****************************************************************************

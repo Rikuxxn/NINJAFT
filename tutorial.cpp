@@ -187,7 +187,6 @@ void CTutorial::Update(void)
 
 	CFade* pFade = CManager::GetFade();
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-	CInputMouse* pMouse = CManager::GetInputMouse();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
 	// UI�̎擾
@@ -390,8 +389,6 @@ void CTutorial::UpdateLight(void)
 //=============================================================================
 void CTutorial::UIUpdate(void)
 {
-	CFade* pFade = CManager::GetFade();
-
 	// UI�̎擾
 	auto tutorial = CUIManager::GetInstance()->GetUI("Tutorial");
 

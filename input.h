@@ -105,6 +105,9 @@ public:
 	bool GetStick(void);
 	XINPUT_STATE* GetStickAngle(void);
 	XINPUT_STATE GetState(void) { return m_joyKeyState; }
+	void SetVibration(WORD left, WORD right);
+	void StopVibration(void);
+
 private:
 	XINPUT_STATE m_joyKeyState;			// ジョイパッドのプレス情報
 	XINPUT_STATE m_joyKeyStateTrigger;			// ジョイパッドのトリガー情報

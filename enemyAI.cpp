@@ -219,6 +219,9 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
         {
             // 視界カウントを加算
             m_log.insightCount++;
+
+            // 発見された回数のカウント
+            pEnemy->SetInsightCount(m_log.insightCount);
         }
 
         m_prevInSight = n;

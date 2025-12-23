@@ -88,7 +88,7 @@ HRESULT CGame::Init(void)
 	auto& charaMgr = CCharacterManager::GetInstance();
 
 	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -300.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 30.0f, -320.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f));
 	charaMgr.AddCharacter(m_pPlayer);
 
 	// リーダー敵の生成
@@ -126,7 +126,7 @@ HRESULT CGame::Init(void)
 	}
 
 	// タイムの生成
-	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, true);
+	m_pTime = CTime::Create(3, 0, 760.0f, 10.0f, 42.0f, 58.0f, false);
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
@@ -192,6 +192,12 @@ void CGame::Uninit(void)
 	//マップジェネレーターのリストのクリア
 	CGenerateMap::GetInstance()->Uninit();
 
+	// ジョイパッドの取得
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	// 振動停止
+	pJoypad->StopVibration();
+
 	// ブロックマネージャーの破棄
 	if (m_pBlockManager != nullptr)
 	{
@@ -254,6 +260,9 @@ void CGame::Update(void)
 		// ポーズ状態に応じて音を制御
 		if (m_isPaused && !wasPaused)
 		{
+			// 振動停止
+			pJoypad->StopVibration();
+
 			// 一時停止する
 			CManager::GetSound()->PauseAll();
 		}
@@ -293,16 +302,22 @@ void CGame::Update(void)
 
 			// リザルトにセット
 			CResult::SetClearRank(rankIndex);// アニメーション用に順位のインデックスを渡す
-			CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+			//CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
 
 			// 音発生数の取得
 			int count = m_pEnemy->GetSoundCount();
+
+			// 発見数の取得
+			int insightCount = m_pEnemy->GetInsightCount();
 
 			// 宝の獲得数の設定
 			CResult::SetTreasureCount(treasureCount);
 
 			// 音発生数の設定
 			CResult::SetSoundCount(count);
+
+			// 発見数の設定
+			CResult::SetInsightCount(insightCount);
 
 			// リザルト画面に移行
 			pFade->SetFade(MODE_RESULT);
@@ -351,16 +366,22 @@ void CGame::Update(void)
 
 		// リザルトにセット
 		CResult::SetClearRank(rankIndex);// アニメーション用に順位のインデックスを渡す
-		CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
+		//CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
 
 		// 音発生数の取得
 		int count = m_pEnemy->GetSoundCount();
+
+		// 発見数の取得
+		int insightCount = m_pEnemy->GetInsightCount();
 
 		// 宝の獲得数の設定
 		CResult::SetTreasureCount(treasureCount);
 
 		// 音発生数の設定
 		CResult::SetSoundCount(count);
+
+		// 発見数の設定
+		CResult::SetInsightCount(insightCount);
 
 		// リザルト画面に移行
 		pFade->SetFade(MODE_RESULT);

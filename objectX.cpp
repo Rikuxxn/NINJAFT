@@ -27,7 +27,7 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 	m_pos			= INIT_VEC3;			// 位置
 	m_rot			= INIT_VEC3;			// 向き
 	m_move			= INIT_VEC3;			// 移動量
-	m_size			= D3DXVECTOR3(1.0f, 1.0f, 1.0f);// サイズ : 初期は1.0にしておく
+	m_size			= INIT_VEC3;			// サイズ : 初期は1.0にしておく
 	m_pMesh			= nullptr;				// メッシュへのポインタ
 	m_pBuffMat		= nullptr;				// マテリアルへのポインタ
 	m_dwNumMat		= NULL;					// マテリアル数

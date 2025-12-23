@@ -792,6 +792,7 @@ void CGateBlock::GameGateUpdate(void)
 
 	// ŽžŠÔ‚ÌŠ„‡‚É‰ž‚¶‚Ä’iŠK‚Å–å‚ð•Â‚¶‚é
 	int step = 0;
+	bool bShaking = false;
 
 	if (progress >= 0.99f)
 	{
@@ -813,6 +814,8 @@ void CGateBlock::GameGateUpdate(void)
 	if (!m_bClosing && progress < 0.99f &&
 		progress >= nextBorder - PRE_SHAKE_RANGE)
 	{
+		bShaking = true;
+
 		// —\’›—h‚ê
 		shakeX = sinf(progress * 500.0f * SHAKE_SPEED) * SHAKE_POWER;
 
@@ -875,6 +878,23 @@ void CGateBlock::GameGateUpdate(void)
 
 	m_prevStep = step;
 
+	// ƒWƒ‡ƒCƒpƒbƒh‚ÌŽæ“¾
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	// =================================
+	// U“®§Œä
+	// =================================
+	if (bShaking && pJoypad)
+	{
+		// U“®‚³‚¹‚é
+		pJoypad->SetVibration(20000, 20000);
+	}
+	else
+	{
+		// U“®’âŽ~
+		pJoypad->StopVibration();
+	}
+
 	// ˆÊ’u‚ðŽæ“¾‚µ‚Ä”½‰f‚·‚é
 	D3DXVECTOR3 pos = GetPos();
 
@@ -897,6 +917,7 @@ void CGateBlock::GameGateUpdate(void)
 void CGateBlock::MovieGateUpdate(void)
 {
 	float shakeX = 0.0f;
+	bool bShaking = false;
 
 	// ƒJƒEƒ“ƒgƒ_ƒEƒ“
 	m_movieTime--;
@@ -908,6 +929,8 @@ void CGateBlock::MovieGateUpdate(void)
 		// —h‚ê‚Ä‚¢‚éŠÔ‚¾‚¯
 		if (t <= SHAKE_DURATION)
 		{
+			bShaking = true;
+
 			shakeX = sinf(t * SHAKE_SPEED) * SHAKE_POWER;
 
 			// ­‚µ‰º‚°‚½ˆÊ’u‚É¶¬
@@ -936,6 +959,23 @@ void CGateBlock::MovieGateUpdate(void)
 		{
 			shakeX = 0.0f; // Š®‘S’âŽ~
 		}
+	}
+
+	// ƒWƒ‡ƒCƒpƒbƒh‚ÌŽæ“¾
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+	// =========================
+	// U“®§Œä
+	// =========================
+	if (bShaking && pJoypad)
+	{
+		// U“®‚³‚¹‚é
+		pJoypad->SetVibration(20000, 20000);
+	}
+	else
+	{
+		// U“®’âŽ~
+		pJoypad->StopVibration();
 	}
 
 	// ˆÊ’u‚ðŽæ“¾‚µ‚Ä”½‰f‚·‚é

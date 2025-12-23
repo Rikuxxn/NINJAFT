@@ -19,13 +19,15 @@ CDummyPlayer::CDummyPlayer(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
 	memset(m_apModel, 0, sizeof(m_apModel));	// モデル(パーツ)へのポインタ
-	m_pos = INIT_VEC3;							// 位置
-	m_rot = INIT_VEC3;							// 向き
-	m_size = D3DXVECTOR3(1.2f, 1.2f, 1.2f);		// サイズ
-	m_mtxWorld = {};							// ワールドマトリックス
+	m_pos		= INIT_VEC3;					// 位置
+	m_rot		= INIT_VEC3;					// 向き
+	m_size		= D3DXVECTOR3(1.2f, 1.2f, 1.2f);// サイズ
+	m_move		= INIT_VEC3;					// 移動量
+	m_mtxWorld	= {};							// ワールドマトリックス
 	m_nNumModel = 0;							// モデル(パーツ)の総数
-	m_pShadowS = nullptr;						// ステンシルシャドウへのポインタ
-	m_pMotion = nullptr;						// モーションへのポインタ
+	m_pShadowS	= nullptr;						// ステンシルシャドウへのポインタ
+	m_pMotion	= nullptr;						// モーションへのポインタ
+	m_isVisible = true;							// 可視フラグ(デフォルトはtrue)
 }
 //=============================================================================
 // デストラクタ
@@ -73,11 +75,8 @@ HRESULT CDummyPlayer::Init(void)
 	// パーツ数を代入
 	m_nNumModel = nNumModels;
 
-	// 最初の向き
-	SetRot(D3DXVECTOR3(0.0f, -D3DX_PI, 0.0f));
-
 	// ステンシルシャドウの生成
-	m_pShadowS = CShadowS::Create("data/MODELS/stencilshadow.x", m_pos);
+	m_pShadowS = CShadowS::Create("data/MODELS/stencilshadow.x", D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	m_pShadowS->SetStencilRef(1);// 個別のステンシルバッファの参照値を設定
 
 	// モーションを設定
@@ -114,11 +113,24 @@ void CDummyPlayer::Uninit(void)
 //=============================================================================
 void CDummyPlayer::Update(void)
 {
+	// 可視フラグがOFFの時は影のサイズを0にして見えなくする
+	if (!m_isVisible)
+	{
+		m_pShadowS->SetSize(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	else
+	{
+		m_pShadowS->SetSize(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	}
+
 	if (m_pShadowS != nullptr)
 	{
 		// ステンシルシャドウの位置設定
 		m_pShadowS->SetPosition(m_pos);
 	}
+
+	// 移動量の更新
+	m_pos += m_move;
 
 	// モーションの更新処理
 	m_pMotion->Update(m_apModel, m_nNumModel);
@@ -152,6 +164,12 @@ void CDummyPlayer::Draw(void)
 	// ワールドマトリックスを設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
+	// 可視フラグがfalseの時は描画しない
+	if (!m_isVisible)
+	{
+		return;
+	}
+
 	for (int nCntMat = 0; nCntMat < m_nNumModel; nCntMat++)
 	{
 		// モデル(パーツ)の描画
@@ -160,4 +178,16 @@ void CDummyPlayer::Draw(void)
 			m_apModel[nCntMat]->Draw();
 		}
 	}
+}
+//=============================================================================
+// 前方ベクトル取得
+//=============================================================================
+D3DXVECTOR3 CDummyPlayer::GetForward(void)
+{
+	D3DXVECTOR3 forward(-m_mtxWorld._31, m_mtxWorld._32, -m_mtxWorld._33);
+
+	// 正規化する
+	D3DXVec3Normalize(&forward, &forward);
+
+	return forward;
 }

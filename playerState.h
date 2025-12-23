@@ -147,7 +147,14 @@ public:
 				CParticle::Create<CDushParticle>(INIT_VEC3, spawnPos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 90, 3);
 			}
 
+			// ダッシュ時はスピードレートを上げる
 			speedRate = 1.5f;
+			
+			// 埋蔵金を取るたびにレートを落とす
+			float NewSpeedRate = speedRate - treasureCount * 0.08f;// 8%ずつ低下
+			NewSpeedRate = max(NewSpeedRate, 0.5f); // 最大50%
+
+			speedRate = NewSpeedRate;
 		}
 		else
 		{

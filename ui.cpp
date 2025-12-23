@@ -10,7 +10,7 @@
 //*****************************************************************************
 #include "ui.h"
 #include "manager.h"
-
+#include "result.h"
 
 //=============================================================================
 // UIマネージャーのインスタンス生成
@@ -311,6 +311,7 @@ bool CUIBase::IsMouseOver(void)
 CUITexture::CUITexture()
 {
     // 値のクリア
+    m_isUVDirty = false;
 }
 //=============================================================================
 // UIテクスチャのデストラクタ
@@ -361,6 +362,68 @@ void CUITexture::Update(void)
 {
     // UIベースの更新
     CUIBase::Update();
+
+    if (!m_isUVDirty)
+    {
+        return;
+    }
+
+    float uvLeft = 0.0f;
+    int treasureCount = CResult::GetTreasureCount();
+    int soundCount = CResult::GetSoundCount();
+
+    // 次に音発生数に応じてレートを落とす
+    float EvaluationRate = 1.0f - soundCount * 0.01f;// 1%ずつ低下
+    EvaluationRate = std::max(EvaluationRate, 0.0f); // 最大0%まで下がる
+
+    // 埋蔵金の個数で評価した後に音発生数でレートを下げて、最終決定する
+    if (treasureCount >= 8)// Sランク
+    {// 埋蔵金8個以上
+        uvLeft = 0.0f;   // S
+
+        if (EvaluationRate < 0.9f && EvaluationRate >= 0.8f)
+        {// レートが90%より小さい かつ 80%以上
+            uvLeft = 0.25f;  // A
+        }
+        else if (EvaluationRate < 0.8f && EvaluationRate >= 0.6f)
+        {// レートが80%より小さい かつ 60%以上
+            uvLeft = 0.5f;   // B
+        }
+        else if(EvaluationRate <= 0.6f)
+        {// レートが50%以下
+            uvLeft = 0.75f;  // C
+        }
+    }
+    else if (treasureCount >= 5 && treasureCount <= 7)// Aランク
+    {// 埋蔵金5個以上7個以下
+        uvLeft = 0.25f;  // A
+
+        if (EvaluationRate < 0.8f && EvaluationRate >= 0.6f)
+        {// レートが80%より小さい かつ 60%以上
+            uvLeft = 0.5f;   // B
+        }
+        else if(EvaluationRate <= 0.6f)
+        {// レートが60%以下
+            uvLeft = 0.75f;  // C
+        }
+    }
+    else if (treasureCount >= 3 && treasureCount <= 4)// Bランク
+    {// 埋蔵金3個以上4個以下
+        uvLeft = 0.5f;   // B
+
+        if (EvaluationRate <= 0.8f)
+        {// レートが80%以下
+            uvLeft = 0.75f;  // C
+        }
+    }
+    else
+    {// それ以外
+        uvLeft = 0.75f;  // C
+    }
+
+    // テクスチャUV移動処理
+    CObject2D::MoveTexUV(uvLeft, 0.0f, 0.25f, 1.0f);
+
 }
 //=============================================================================
 // UIテクスチャ描画処理

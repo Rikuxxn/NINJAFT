@@ -16,6 +16,7 @@
 // 前方宣言
 class CTime;
 class CLight;
+class CDummyPlayer;
 
 //*****************************************************************************
 // ムービークラス
@@ -38,14 +39,17 @@ public:
 	static CTime* GetTime(void) { return m_pTime; }
 
 private:
-	static constexpr int FADE_TIME = 480;			// 画面遷移までの時間
+	static constexpr int FADE_TIME = 480;	// 画面遷移までの時間
 
-	CBlockManager* m_pBlockManager;		// ブロックマネージャーへのポインタ
-	CLight* m_pLight;					// ライトへのポインタ
-	static CTime* m_pTime;				// タイムへのポインタ
-
-	int m_timer;						// 画面遷移タイマー
-	int m_particleTimer;				// パーティクル生成タイマー
+	CBlockManager*	m_pBlockManager;		// ブロックマネージャーへのポインタ
+	CLight*			m_pLight;				// ライトへのポインタ
+	static CTime*	m_pTime;				// タイムへのポインタ
+	int				m_timer;				// 画面遷移タイマー
+	int				m_particleTimer;		// パーティクル生成タイマー
+	CDummyPlayer*	m_pDummyPlayer;			// ダミープレイヤー
+	int				m_smokeTimer;			// 煙発生時間
+	int				m_delayTime;			// 煙発生までの遅延時間
+	bool			m_smokeActive;			// 煙発生フラグ
 };
 
 #endif

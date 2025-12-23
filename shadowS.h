@@ -21,7 +21,7 @@ public:
 	CShadowS(int nPriority = 4);
 	~CShadowS();
 
-	static CShadowS* Create(const char* pFilepath,D3DXVECTOR3 pos);
+	static CShadowS* Create(const char* pFilepath, D3DXVECTOR3 size);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);

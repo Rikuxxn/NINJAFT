@@ -166,7 +166,7 @@ private:
 	static constexpr int	SPAWN_TIME				= 180;		// 生成までの時間
 	static constexpr int	GET_THRESHOLD			= 3;		// 取得数閾値
 	static constexpr float	GUAGE_RATE				= 100.0f;	// ゲージの最大量
-	static constexpr float	GUAGE_DECREASE_SPEED	= 0.19f;	// ゲージの減る量
+	static constexpr float	GUAGE_DECREASE_SPEED	= 0.89f;	// ゲージの減る量
 
 	int			m_effectTimer;									// エフェクト生成タイマー
 	C3DGuage*	m_pFrame;										// 枠
@@ -314,7 +314,7 @@ private:
 	static constexpr float SHAKE_POWER			= 1.5f;		// 揺れ幅
 	static constexpr float SHAKE_SPEED			= 20.0f;	// 揺れの細かさ
 	static constexpr float SHAKE_DURATION		= 120.0f;	// 揺れる時間
-	static constexpr float PRE_SHAKE_RANGE		= 0.03f;	// 予兆揺れ境界(～%手前から揺らす)
+	static constexpr float PRE_SHAKE_RANGE		= 0.02f;	// 予兆揺れ境界(～%手前から揺らす)
 	static constexpr float SIDE_OFFSET			= 30.0f;	// 埃パーティクル生成位置オフセット
 	static constexpr float CLOSE_DURATION		= 20.0f;	// 閉じるフレーム数
 

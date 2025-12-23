@@ -40,6 +40,7 @@ CEnemy::CEnemy()
 	m_returnToPatrol	= false;						// 最寄りの巡回ポイントに戻るフラグ
 	m_canControl		= false;						// 操作フラグ
 	m_makeSoundCount	= 0;							// 音発生数
+	m_insightCount		= 0;							// 発見された回数
 }
 //=============================================================================
 // デストラクタ
@@ -353,7 +354,7 @@ HRESULT CEnemyLeader::Init(void)
 	CreatePhysics(CAPSULE_RADIUS, CAPSULE_HEIGHT, 5.0f);
 
 	// ステンシルシャドウの生成
-	m_pShadowS = CShadowS::Create("data/MODELS/stencilshadow.x", GetPos());
+	m_pShadowS = CShadowS::Create("data/MODELS/stencilshadow.x", D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	m_pShadowS->SetStencilRef(2);// 個別のステンシルバッファの参照値を設定
 
 	// インスタンスのポインタを渡す

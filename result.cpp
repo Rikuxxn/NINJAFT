@@ -21,11 +21,9 @@
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-CResultTime* CResult::m_pTime = nullptr;	// タイムへのポインタ
-int CResult::m_nClearMinutes = 0;			// クリアタイム(分)
-int CResult::m_nClearSeconds = 0;			// クリアタイム(秒)
 int CResult::m_clearRankIndex = 0;			// クリア時のランクインデックス
 int CResult::m_soundCount = 0;				// 音の発生数
+int CResult::m_insightCount = 0;			// 発見された回数
 int CResult::m_treasureCount = 0;			// 宝の数
 
 //=============================================================================
@@ -34,8 +32,9 @@ int CResult::m_treasureCount = 0;			// 宝の数
 CResult::CResult() : CScene(CScene::MODE_RESULT)
 {
 	// 値のクリア
-	m_pBlockManager = nullptr;
-	m_pLight = nullptr;
+	m_pBlockManager = nullptr;	// ブロックマネージャーへのポインタ
+	m_pLight		= nullptr;	// ライトへのポインタ
+	m_timer			= 0;		// 表示タイマー
 }
 //=============================================================================
 // デストラクタ
@@ -74,50 +73,38 @@ HRESULT CResult::Init(void)
 	CBackground::Create(D3DXVECTOR3(360.0f, 540.0f, 0.0f), 360.0f, 540.0f, "data/TEXTURE/.png");
 
 	// ダミープレイヤーの生成
-	CDummyPlayer::Create(D3DXVECTOR3(0.0f, 110.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::DUSH);
+	CDummyPlayer::Create(D3DXVECTOR3(0.0f, 110.0f, 0.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f), CDummyPlayer::DUSH);
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), 2800);
 
-	// 合計秒で扱う
-	int totalLimit = 3 * 60 + 0;
-	int totalRemain = m_nClearMinutes * 60 + m_nClearSeconds;
-
-	// クリアタイム（経過時間）を計算
-	int totalClear = totalLimit - totalRemain;
-	if (totalClear < 0)
-	{
-		totalClear = 0; // 念のため
-	}
-
-	// 分と秒に戻す
-	int clearMinutes = totalClear / 60;
-	int clearSeconds = totalClear % 60;
-
-	// タイムの生成
-	m_pTime = CResultTime::Create(clearMinutes, clearSeconds, 300.0f, 825.0f, 72.0f, 88.0f); 
 
 	// 宝獲得数の表示
-	CResultTreasureCount::Create(250.0f, 225.0f, 80.0f, 95.0f);
+	CResultTreasureCount::Create(220.0f, 130.0f, 80.0f, 95.0f);
 
 	// 音発生数の表示
-	CResultSoundCount::Create(250.0f, 525.0f, 80.0f, 95.0f);
+	CResultSoundCount::Create(220.0f, 380.0f, 80.0f, 95.0f, m_soundCount);
 
-	// 音発生数の設定
-	CResultSoundCount::SetSoundCount(m_soundCount);
+	// 発見された回数の表示
+	CResultSoundCount::Create(220.0f, 620.0f, 80.0f, 95.0f, m_insightCount);
 
 	// 宝獲得数の設定
 	CResultTreasureCount::SetTreasureCount(m_treasureCount);
 
 	// 「埋蔵金の数」UI生成
-	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 280.0f, 120.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 250.0f, 50.0f);
+	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 220.0f, 80.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f, 45.0f);
 
 	// 「音の発生数」UI生成
-	auto soundCount = CUITexture::Create("data/TEXTURE/ui_soundcount.png", 280.0f, 420.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 250.0f, 50.0f);
+	auto soundCount = CUITexture::Create("data/TEXTURE/ui_soundcount.png", 220.0f, 310.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f, 45.0f);
 
-	// 「クリアタイム」UI生成
-	auto clearTime = CUITexture::Create("data/TEXTURE/ui_cleartime.png", 280.0f, 720.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 250.0f, 50.0f);
+	// 「発見された回数」UI生成
+	auto insight = CUITexture::Create("data/TEXTURE/ui_insightcount.png", 260.0f, 560.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 230.0f, 45.0f);
 
+	// ランクUI生成
+	auto rank = CUITexture::Create("data/TEXTURE/ui_resultRank.png", 530.0f, 830.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100.0f, 100.0f);
+
+	// 「評価」UI生成
+	auto evaluation = CUITexture::Create("data/TEXTURE/ui_evaluation.png", 430.0f, 890.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f,45.0f);
 
 	// 「埋蔵金の数」UI登録
 	CUIManager::GetInstance()->AddUI("TreasureCount", treasureCount);
@@ -125,8 +112,21 @@ HRESULT CResult::Init(void)
 	// 「音の発生数」UI登録
 	CUIManager::GetInstance()->AddUI("SoundCount", soundCount);
 
-	// 「クリアタイム」UI登録
-	CUIManager::GetInstance()->AddUI("ClearTime", clearTime);
+	// 「発見された回数」UI登録
+	CUIManager::GetInstance()->AddUI("Insight", insight);
+
+	// ランクUI登録
+	CUIManager::GetInstance()->AddUI("Rank", rank);
+
+	// 「評価」UI登録
+	CUIManager::GetInstance()->AddUI("Evaluation", evaluation);
+
+	// UIの初期設定
+	rank->Hide();
+	rank->SetUVDirtyUse(true);
+
+	// UI表示遅延時間の設定
+	m_timer = DELAY_TIME;
 
 	// カメラの取得
 	CCamera* pCamera = CManager::GetCamera();
@@ -174,6 +174,19 @@ void CResult::Uninit(void)
 //=============================================================================
 void CResult::Update(void)
 {
+	m_timer--;
+
+	// ランクUIの取得
+	auto rank = CUIManager::GetInstance()->GetUI("Rank");
+
+	if (m_timer <= 0)
+	{
+		m_timer = 0;
+
+		// ランクUIを表示する
+		rank->Show();
+	}
+
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
 

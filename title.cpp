@@ -76,7 +76,7 @@ HRESULT CTitle::Init(void)
 	m_pBlockManager->LoadFromJson("data/title_blockinfo.json");
 
 	// ダミープレイヤーの生成
-	CDummyPlayer::Create(D3DXVECTOR3(300.0f, 110.0f, -10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CDummyPlayer::NEUTRAL);
+	CDummyPlayer::Create(D3DXVECTOR3(300.0f, 110.0f, -10.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f), CDummyPlayer::NEUTRAL);
 
 	// メッシュドームの生成
 	CMeshDome::Create(D3DXVECTOR3(0.0f, -50.0f, 0.0f), 2800);

@@ -101,14 +101,13 @@ void CSEPopupEffect::SetupParameter(void)
 	float radius = sqrtf(r) * radiusMax;
 
 	float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-	//float height = (rand() % 10) - 10.0f;// ê›íËÇµÇΩà íuÇ©ÇÁçÇÇ≥10Å`-10ÇÃîÕàÕ
-	float speed = (rand() % 80) / 30.0f + 0.2f;
+	float speed = (rand() % 80) / 60.0f + 0.2f;
 
 	// à íu
 	D3DXVECTOR3 offPos = GetPos();
 	desc.pos.x = offPos.x + cosf(angle) * radius;
 	desc.pos.z = offPos.z + sinf(angle) * radius;
-	desc.pos.y = offPos.y/* + height*/;
+	desc.pos.y = offPos.y;
 
 	desc.move.x = cosf(angle) * speed;
 	desc.move.z = sinf(angle) * speed;

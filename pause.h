@@ -39,7 +39,15 @@ public:
 	bool IsMouseOver(void);
 	virtual void Execute(void) {};
 
-	void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
+	void SetPath(const char* path)
+	{ 
+		if (path == nullptr)
+		{
+			path = " ";
+		}
+
+		strcpy_s(m_szPath, MAX_PATH, path);
+	}
 
 	// ‘I‘ğó‘Ôİ’èEæ“¾
 	void SetSelected(bool selected) { m_isSelected = selected; }

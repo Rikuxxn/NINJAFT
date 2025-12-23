@@ -27,7 +27,15 @@ public:
 	void Update(void);
 	void SetupParameter(void);
 
-	void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
+	void SetPath(const char* path)
+	{ 
+		if (path == nullptr)
+		{
+			path = " ";
+		}
+
+		strcpy_s(m_szPath, MAX_PATH, path); 
+	}
 	void SetLife(int nLife) { m_nLife = nLife; }
 
 	int GetLife(void) { return m_nLife; }

@@ -60,6 +60,13 @@ public:
         FadeOut
     };
 
+    enum class SlideMode
+    {
+        None,
+        SlideIn,
+        SlideOut
+    };
+
     static CUIBase* Create(float x, float y, D3DXCOLOR col, float width, float height);
 
     virtual HRESULT Init(void);
@@ -67,7 +74,15 @@ public:
     virtual void Update(void);
     virtual void Draw(void);
 
-    void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
+    void SetPath(const char* path)
+    {
+        if (path == nullptr)
+        {
+            path = " ";
+        }
+
+        strcpy_s(m_szPath, MAX_PATH, path); 
+    }
 
     // 表示・非表示(即時)
     void Show(void);
@@ -78,6 +93,10 @@ public:
     void FadeIn(float duration);
     void FadeOut(float duration);
 
+    // スライドイン・アウト処理
+    void SlideIn(const D3DXVECTOR3& from, const D3DXVECTOR3& to, float duration);
+    void SlideOut(const D3DXVECTOR3& to, float duration);
+
     bool IsMouseOver(void);
 
     // 親子 UI
@@ -87,14 +106,19 @@ protected:
     void ApplyAlpha(void); // alphaをSetColへ反映
 
 private:
-    int m_nIdxTexture;		            // テクスチャインデックス
-    char m_szPath[MAX_PATH];            // ファイルパス
-    bool m_bVisible;
-    CUIBase* m_parent;
-    std::vector<CUIBase*> m_children;
-    float m_alpha;                      // 現在の透明度
-    float m_fadeSpeed;                  // 更新で加算する値
-    FadeMode m_fadeMode;
+    int         m_nIdxTexture;		    // テクスチャインデックス
+    char        m_szPath[MAX_PATH];     // ファイルパス
+    bool        m_bVisible;             // 表示フラグ
+    CUIBase*    m_parent;               // 親UI
+    std::vector<CUIBase*> m_children;   // 子UI
+    float       m_alpha;                // 現在の透明度
+    float       m_fadeSpeed;            // 更新で加算する値
+    FadeMode    m_fadeMode;             // フェードモード
+    D3DXVECTOR3 m_slideStartPos;        // スライド開始位置
+    D3DXVECTOR3 m_slideEndPos;          // スライド終了位置
+    float       m_slideT;               // 0.0f ～ 1.0f
+    float       m_slideSpeed;           // スライドスピード
+    SlideMode   m_slideMode;            // スライドモード
 };
 
 //*****************************************************************************

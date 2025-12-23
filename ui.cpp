@@ -11,6 +11,7 @@
 #include "ui.h"
 #include "manager.h"
 #include "result.h"
+#include "easing.h"
 
 //=============================================================================
 // UIマネージャーのインスタンス生成
@@ -112,12 +113,15 @@ CUIBase::CUIBase(int nPriority) : CObject2D(nPriority)
 {
 	// 値のクリア
     memset(m_szPath, 0, sizeof(m_szPath));
-    m_nIdxTexture = 0;
-    m_bVisible = true;
-    m_parent = nullptr;
-    m_alpha = 0.0f;
-    m_fadeSpeed = 0.0f;
-    m_fadeMode = FadeMode::None;
+    m_nIdxTexture   = 0;
+    m_bVisible      = true;
+    m_parent        = nullptr;
+    m_alpha         = 0.0f;
+    m_fadeSpeed     = 0.0f;
+    m_fadeMode      = FadeMode::None;
+    m_slideMode     = SlideMode::None;
+    m_slideT        = 0.0f;
+    m_slideSpeed    = 0.0f;
 }
 //=============================================================================
 // デストラクタ
@@ -200,6 +204,32 @@ void CUIBase::Update(void)
         ApplyAlpha();
     }
 
+    if (m_slideMode != SlideMode::None)
+    {
+        m_slideT += m_slideSpeed;
+
+        if (m_slideT >= 1.0f)
+        {
+            m_slideT = 1.0f;
+            m_slideMode = SlideMode::None;
+
+            if (!m_bVisible)
+            {
+                // SlideOut完了後に非表示にする場合
+                // m_bVisible = false;
+            }
+        }
+
+        // イージング
+        float t = CEasing::Ease(0.0f, 1.0f, m_slideT, CEasing::EaseOutQuint);
+
+        D3DXVECTOR3 pos =
+            m_slideStartPos + (m_slideEndPos - m_slideStartPos) * t;
+
+        // 位置を設定
+        SetPos(pos);
+    }
+
     // 2Dオブジェクトの更新処理
     CObject2D::Update();
 
@@ -273,6 +303,29 @@ void CUIBase::FadeOut(float duration)
 
     m_fadeMode = FadeMode::FadeOut;
     m_fadeSpeed = 1.0f / duration;
+}
+//=============================================================================
+// スライドイン・アウト処理
+//=============================================================================
+void CUIBase::SlideIn(const D3DXVECTOR3& from, const D3DXVECTOR3& to, float duration)
+{
+    m_bVisible = true;
+
+    m_slideStartPos = from;
+    m_slideEndPos = to;
+    m_slideT = 0.0f;
+    m_slideSpeed = 1.0f / duration;
+    m_slideMode = SlideMode::SlideIn;
+
+    SetPos(from);
+}
+void CUIBase::SlideOut(const D3DXVECTOR3& to, float duration)
+{
+    m_slideStartPos = GetPos();
+    m_slideEndPos = to;
+    m_slideT = 0.0f;
+    m_slideSpeed = 1.0f / duration;
+    m_slideMode = SlideMode::SlideOut;
 }
 //=============================================================================
 // マウスカーソル判定

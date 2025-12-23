@@ -82,14 +82,22 @@ HRESULT CMovie::Init(void)
 	CCamera* pCamera = CManager::GetCamera();
 
 	// カメラの初期位置を設定しておく
-	pCamera->SetCamParameter(D3DXVECTOR3(-311.9f, 145.2f, 216.5f),
+	pCamera->SetCamParameter(D3DXVECTOR3(-311.9f, 105.2f, 216.5f),
 		D3DXVECTOR3(121.2f, -37.2f, 864.0f),
 		D3DXVECTOR3(0.23f, -2.55f, 0.0f),
 		0.0f);
 
+	// レターボックスUI生成
+	auto topBar = CUITexture::Create(nullptr, 850.0f, -80.0f, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 855.0f, 75.0f);
+	auto bottomBar = CUITexture::Create(nullptr, 850.0f, 1040.0f, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 855.0f, 75.0f);
+
 	// スキップUI生成
-	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 890.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 890.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+
+	// レターボックスUI登録
+	CUIManager::GetInstance()->AddUI("MovieTopBar", topBar);
+	CUIManager::GetInstance()->AddUI("MovieBottomBar", bottomBar);
 
 	// スキップUI登録
 	CUIManager::GetInstance()->AddUI("Skip_XInput", skip_xinput);
@@ -98,6 +106,10 @@ HRESULT CMovie::Init(void)
 	// UI初期設定
 	skip_xinput->Show();
 	skip_keyboard->Hide();
+
+	// レターボックスをスライドインさせる
+	topBar->SlideIn(D3DXVECTOR3(850.0f, -80.0f, 0.0f), D3DXVECTOR3(850.0f, 70.0f, 0.0f), 60.0f);
+	bottomBar->SlideIn(D3DXVECTOR3(850.0f, 1040.0f, 0.0f), D3DXVECTOR3(850.0f, 890.0f, 0.0f), 60.0f);
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -365,7 +377,7 @@ void CMovie::Draw(void)
 	if (!pCamera->GetMode() == CCamera::MODE_EDIT)
 	{
 		// カメラの設定
-		pCamera->SetCamParameter(D3DXVECTOR3(-311.9f, 145.2f, 216.5f),
+		pCamera->SetCamParameter(D3DXVECTOR3(-311.9f, 105.2f, 216.5f),
 			D3DXVECTOR3(121.2f, -37.2f, 864.0f),
 			D3DXVECTOR3(0.23f, -2.55f, 0.0f),
 			0.0f);

@@ -64,7 +64,15 @@ public:
 	void SetCol(D3DXCOLOR col) { m_col = col; }
 	void SetSize(float fRadius) { m_fSize = fRadius; }
 	void SetSize(float fWidth, float fHeight) { m_fWidth = fWidth; m_fHeight = fHeight; }
-	void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
+	void SetPath(const char* path)
+	{ 
+		if (path == nullptr)
+		{
+			path = " ";
+		}
+
+		strcpy_s(m_szPath, MAX_PATH, path); 
+	}
 
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }

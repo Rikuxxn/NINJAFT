@@ -27,7 +27,15 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetPath(const char* path) { strcpy_s(m_szPath, MAX_PATH, path); }
+	void SetPath(const char* path)
+	{ 
+		if (path == nullptr)
+		{
+			path = " ";
+		}
+
+		strcpy_s(m_szPath, MAX_PATH, path); 
+	}
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }

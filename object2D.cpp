@@ -18,22 +18,22 @@
 CObject2D::CObject2D(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	m_pVtxBuff	   = nullptr;
-	m_pos		   = INIT_VEC3;
-	m_rot		   = INIT_VEC3;
-	m_move		   = INIT_VEC3;
-	m_col		   = D3DCOLOR_ARGB(255, 0, 0, 0);
-	m_fLength	   = 0.0f;
-	m_fAngle	   = 0.0f;
-	m_fWidth	   = 0.0f;
-	m_fHeight	   = 0.0f;
-	m_nCounterAnim = 0;
-	m_nPatternAnim = 0;
-	m_fUSpeed	   = 0.0f;
-	m_fVSpeed	   = 0.0f;
-	m_aPosTexU     = 0.0f;
-	m_fTexU		   = 0.0f;
-	m_fTexV		   = 0.0f;
+	m_pVtxBuff	   = nullptr;						// 頂点バッファ
+	m_pos		   = INIT_VEC3;						// 位置
+	m_rot		   = INIT_VEC3;						// 向き
+	m_move		   = INIT_VEC3;						// 移動量
+	m_col		   = D3DCOLOR_ARGB(255, 0, 0, 0);	// 色
+	m_fLength	   = 0.0f;							// 長さ
+	m_fAngle	   = 0.0f;							// 角度
+	m_fWidth	   = 0.0f;							// 幅
+	m_fHeight	   = 0.0f;							// 高さ
+	m_nCounterAnim = 0;								// アニメーションカウンター
+	m_nPatternAnim = 0;								// アニメーションパターンNo.
+	m_fUSpeed	   = 0.0f;							// 横のスクロールスピード
+	m_fVSpeed	   = 0.0f;							// 縦のスクロールスピード
+	m_aPosTexU	   = 0.0f;							// 横のスクロール用変数
+	m_fTexU		   = 0.0f;							// テクスチャUV
+	m_fTexV		   = 0.0f;							// テクスチャUV
 }
 //=============================================================================
 // デストラクタ

@@ -96,8 +96,8 @@ public:
 	}
 
 private:
-	GUAGETYPE m_type;			// ゲージの種類
-	bool m_bVisible;
+	GUAGETYPE	m_type;			// ゲージの種類
+	bool		m_bVisible;		// 表示フラグ
 
 };
 

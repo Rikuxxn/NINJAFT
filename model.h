@@ -54,24 +54,24 @@ public:
 	CModel* GetParent(void) { return m_pParent; }
 
 private:
-	int* m_nIdxTexture;
-	D3DXVECTOR3 m_pos;						// 位置
-	D3DXVECTOR3 m_rot;						// 向き
-	D3DXCOLOR m_col;						// 色
-	D3DXVECTOR3 m_move;						// 移動量
-	LPD3DXMESH m_pMesh;						// メッシュへのポインタ
-	LPD3DXBUFFER m_pBuffMat;				// マテリアルへのポインタ
-	DWORD m_dwNumMat;						// マテリアル数
-	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
-	CModel* m_pParent;						// 親モデルへのポインタ
-	char m_Path[MAX_PATH];					// ファイルパス
-	D3DXVECTOR3 m_OffsetPos;				// オフセット
-	D3DXVECTOR3 m_OffsetRot;				// オフセット
-	LPDIRECT3DVERTEXSHADER9 m_pOutlineVS;
-	LPDIRECT3DPIXELSHADER9  m_pOutlinePS;
-	LPD3DXCONSTANTTABLE     m_pVSConsts;
-	LPD3DXCONSTANTTABLE     m_pPSConsts;
-	D3DXVECTOR4 m_outlineColor;
+	int*					m_nIdxTexture;			// テクスチャインデックス
+	D3DXVECTOR3				m_pos;					// 位置
+	D3DXVECTOR3				m_rot;					// 向き
+	D3DXCOLOR				m_col;					// 色
+	D3DXVECTOR3				m_move;					// 移動量
+	LPD3DXMESH				m_pMesh;				// メッシュへのポインタ
+	LPD3DXBUFFER			m_pBuffMat;				// マテリアルへのポインタ
+	DWORD					m_dwNumMat;				// マテリアル数
+	D3DXMATRIX				m_mtxWorld;				// ワールドマトリックス
+	CModel*					m_pParent;				// 親モデルへのポインタ
+	char					m_Path[MAX_PATH];		// ファイルパス
+	D3DXVECTOR3				m_OffsetPos;			// オフセット
+	D3DXVECTOR3				m_OffsetRot;			// オフセット
+	LPDIRECT3DVERTEXSHADER9 m_pOutlineVS;			// 頂点シェーダ
+	LPDIRECT3DPIXELSHADER9  m_pOutlinePS;			// ピクセルシェーダ
+	LPD3DXCONSTANTTABLE     m_pVSConsts;			// 頂点シェーダコンスタントテーブル
+	LPD3DXCONSTANTTABLE     m_pPSConsts;			// ピクセルシェーダコンスタントテーブル
+	D3DXVECTOR4				m_outlineColor;			// アウトラインカラー
 };
 
 #endif

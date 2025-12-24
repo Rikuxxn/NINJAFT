@@ -63,7 +63,7 @@ void CWeaponCollider::CheckHit(CCharacter* pCharacter, float fDamage)
     D3DXVECTOR3 bottom = pCharacter->GetPos() - D3DXVECTOR3(0, pCharacter->GetHeight() * 0.5f, 0);
     float radius = pCharacter->GetRadius();
 
-    float weaponRadius = 25.0f; // “–‚½‚è”»’è‚Ì”¼Œa
+    float weaponRadius = 30.0f; // “–‚½‚è”»’è‚Ì”¼Œa
 
     if (CCollision::IntersectSegmentCapsule(m_prevBase, m_currBase, bottom, top, radius + weaponRadius) ||
         CCollision::IntersectSegmentCapsule(m_prevTip, m_currTip, bottom, top, radius + weaponRadius) ||

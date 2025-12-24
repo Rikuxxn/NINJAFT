@@ -273,13 +273,7 @@
     <ClCompile Include="charactermanager.cpp">
       <Filter>ソース ファイル\Character</Filter>
     </ClCompile>
-    <ClCompile Include="resultsoundcount.cpp">
-      <Filter>ソース ファイル\ResultUI</Filter>
-    </ClCompile>
     <ClCompile Include="resulttime.cpp">
-      <Filter>ソース ファイル\ResultUI</Filter>
-    </ClCompile>
-    <ClCompile Include="resulttreasurecount.cpp">
       <Filter>ソース ファイル\ResultUI</Filter>
     </ClCompile>
     <ClCompile Include="rankitem.cpp">
@@ -296,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="generateMap.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="resultcount.cpp">
+      <Filter>ソース ファイル\ResultUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,13 +512,7 @@
     <ClInclude Include="charactermanager.h">
       <Filter>ヘッダー ファイル\Character</Filter>
     </ClInclude>
-    <ClInclude Include="resultsoundcount.h">
-      <Filter>ヘッダー ファイル\ResultUI</Filter>
-    </ClInclude>
     <ClInclude Include="resulttime.h">
-      <Filter>ヘッダー ファイル\ResultUI</Filter>
-    </ClInclude>
-    <ClInclude Include="resulttreasurecount.h">
       <Filter>ヘッダー ファイル\ResultUI</Filter>
     </ClInclude>
     <ClInclude Include="grass.h">
@@ -544,6 +535,9 @@
     </ClInclude>
     <ClInclude Include="generateMap.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resultcount.h">
+      <Filter>ヘッダー ファイル\ResultUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

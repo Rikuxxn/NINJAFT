@@ -49,17 +49,15 @@ public:
 	static CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
 
 private:
-	CPlayer* m_pPlayer;					// プレイヤーへのポインタ
-	static CTime* m_pTime;						// タイムへのポインタ
-	static CBlock* m_pBlock;					// ブロックへのポインタ
-	static CBlockManager* m_pBlockManager;		// ブロックマネージャーへのポインタ
-
-
-	CLight* m_pLight;
-	int m_timer;								// パーティクル生成タイマー
-	StartState m_startState;
-	float m_stateTimer;							// UI遅延タイマー
-	bool m_canControl;
+	CPlayer*				m_pPlayer;			// プレイヤーへのポインタ
+	static CTime*			m_pTime;			// タイムへのポインタ
+	static CBlock*			m_pBlock;			// ブロックへのポインタ
+	static CBlockManager*	m_pBlockManager;	// ブロックマネージャーへのポインタ
+	CLight*					m_pLight;			// ライトへのポインタ
+	int						m_timer;			// パーティクル生成タイマー
+	StartState				m_startState;		// UIの状態
+	float					m_stateTimer;		// UI遅延タイマー
+	bool					m_canControl;		// 操作可能フラグ
 };
 
 #endif

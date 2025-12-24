@@ -54,9 +54,9 @@ public:
 	bool IsSelected(void) const { return m_isSelected; }
 
 private:
-	int m_nIdxTexture;						// テクスチャインデックス
-	char m_szPath[MAX_PATH];				// ファイルパス
-	bool m_isSelected;						// 選んだか
+	int		m_nIdxTexture;				// テクスチャインデックス
+	char	m_szPath[MAX_PATH];			// ファイルパス
+	bool	m_isSelected;				// 選んだか
 };
 
 //*****************************************************************************

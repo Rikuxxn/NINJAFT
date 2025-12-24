@@ -41,12 +41,12 @@ public:
     void CheckHit(CCharacter* pCharacter, float fDamage);
 
 private:
-    D3DXVECTOR3 m_prevBase;
-    D3DXVECTOR3 m_prevTip;
-    D3DXVECTOR3 m_currBase;
-    D3DXVECTOR3 m_currTip;
-    bool m_bActive;
-    bool m_bHasHit;
+    D3DXVECTOR3 m_prevBase; // 前回の根元の判定の位置
+    D3DXVECTOR3 m_prevTip;  // 前回の先端の判定の位置
+    D3DXVECTOR3 m_currBase; // 現在の根元の判定の位置
+    D3DXVECTOR3 m_currTip;  // 現在の先端の判定の位置
+    bool        m_bActive;  // コライダーONフラグ
+    bool        m_bHasHit;  // 当たったかどうか
 };
 
 #endif

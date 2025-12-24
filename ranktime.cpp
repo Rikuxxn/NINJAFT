@@ -20,14 +20,14 @@
 CRankTime::CRankTime(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	memset(m_apNumber, 0, sizeof(m_apNumber));	// 各桁の数字表示用
+	memset(m_apNumber, 0, sizeof(m_apNumber));		// 各桁の数字表示用
 	memset(m_apRankClon, 0, sizeof(m_apRankClon));	// コロンへのポインタ
-	m_nMinutes = 0;								// 分
-	m_nSeconds = 0;								// 秒
-	m_digitWidth = 0.0f;						// 数字1桁あたりの幅
-	m_digitHeight = 0.0f;						// 数字1桁あたりの高さ
-	m_basePos = INIT_VEC3;						// 表示の開始位置
-	m_nIdxTexture = 0;							// テクスチャインデックス
+	m_nMinutes		= 0;							// 分
+	m_nSeconds		= 0;							// 秒
+	m_digitWidth	= 0.0f;							// 数字1桁あたりの幅
+	m_digitHeight	= 0.0f;							// 数字1桁あたりの高さ
+	m_basePos		= INIT_VEC3;					// 表示の開始位置
+	m_nIdxTexture	= 0;							// テクスチャインデックス
 }
 //=============================================================================
 // デストラクタ

@@ -79,16 +79,16 @@ public:
 	D3DXCOLOR GetCol(void) { return m_col; }
 
 private:
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファへのポインタ
-	D3DXVECTOR3 m_pos;						// 位置
-	D3DXVECTOR3 m_rot;						// 向き
-	D3DXCOLOR m_col;						// 色
-	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
-	float m_fSize;							// サイズ(エフェクト半径)
-	float m_fWidth;							// サイズ
-	float m_fHeight;						// サイズ(ビルボード)
-	int m_nIdxTexture;						// テクスチャインデックス
-	char m_szPath[MAX_PATH];				// ファイルパス
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;			// 頂点バッファへのポインタ
+	D3DXVECTOR3				m_pos;				// 位置
+	D3DXVECTOR3				m_rot;				// 向き
+	D3DXCOLOR				m_col;				// 色
+	D3DXMATRIX				m_mtxWorld;			// ワールドマトリックス
+	float					m_fSize;			// サイズ(エフェクト半径)
+	float					m_fWidth;			// サイズ
+	float					m_fHeight;			// サイズ(ビルボード)
+	int						m_nIdxTexture;		// テクスチャインデックス
+	char					m_szPath[MAX_PATH];	// ファイルパス
 };
 
 #endif

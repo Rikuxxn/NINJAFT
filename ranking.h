@@ -33,9 +33,9 @@ public:
 	void ItemRanking(CRankingManager* pRankingManager);
 
 private:
-	CRankTime* m_pRankTime;				// クリアタイムランキング表示用
-	CRankItem* m_pRankItem;				// アイテムランキング表示用
-	CRankingManager* m_pRankingManager;	// ランキングへのポインタ
+	CRankTime*			m_pRankTime;		// クリアタイムランキング表示用
+	CRankItem*			m_pRankItem;		// アイテムランキング表示用
+	CRankingManager*	m_pRankingManager;	// ランキングへのポインタ
 };
 
 

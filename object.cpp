@@ -126,12 +126,6 @@ void CObject::UpdateAll(void)
 //=============================================================================
 void CObject::DrawAll(void)
 {
-	//// カメラの取得
-	//CCamera* pCamera = CManager::GetCamera();
-
-	//// カメラの設定
-	//pCamera->SetCamera();
-
 	// ブロックの当たり判定の描画
 	CGame::GetBlockManager()->Draw();
 

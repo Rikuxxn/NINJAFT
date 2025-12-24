@@ -36,16 +36,17 @@ public:
 	int GetnSeconds(void) { return m_nSeconds; }
 
 private:
-	static constexpr int DIGITS = 4;
-	CNumber* m_apNumber[DIGITS];
-	int m_nMinutes;							// 分
-	int m_nSeconds;							// 秒
-	int m_nFrameCount;						// フレームカウント
-	float m_digitWidth;						// 数字1桁あたりの幅
-	float m_digitHeight;					// 数字1桁あたりの高さ
-	D3DXVECTOR3 m_basePos;					// 表示の開始位置
-	CColon* m_pColon;						// コロンへのポインタ
-	int m_nIdxTexture;						// テクスチャインデックス
+	static constexpr int DIGITS = 4;// 桁数(分2,秒2)
+
+	CNumber*	m_apNumber[DIGITS];
+	int			m_nMinutes;			// 分
+	int			m_nSeconds;			// 秒
+	int			m_nFrameCount;		// フレームカウント
+	float		m_digitWidth;		// 数字1桁あたりの幅
+	float		m_digitHeight;		// 数字1桁あたりの高さ
+	D3DXVECTOR3 m_basePos;			// 表示の開始位置
+	CColon*		m_pColon;			// コロンへのポインタ
+	int			m_nIdxTexture;		// テクスチャインデックス
 
 };
 

@@ -39,16 +39,17 @@ public:
 	D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(); }
 
 private:
-	static constexpr int MaxRanking = 5;	// 表示数
-	static constexpr int DIGITS = 4;
-	CNumber* m_apNumber[MaxRanking][DIGITS];// ナンバーへのポインタ
-	int m_nMinutes;							// 分
-	int m_nSeconds;							// 秒
-	float m_digitWidth;						// 数字1桁あたりの幅
-	float m_digitHeight;					// 数字1桁あたりの高さ
-	D3DXVECTOR3 m_basePos;					// 表示の開始位置
-	CRankColon* m_apRankClon[MaxRanking];	// コロンへのポインタ
-	int m_nIdxTexture;						// テクスチャインデックス
+	static constexpr int MaxRanking = 5;		// 表示数
+	static constexpr int DIGITS		= 4;		// 桁数(分2、秒2)
+
+	CNumber*	m_apNumber[MaxRanking][DIGITS];	// ナンバーへのポインタ
+	int			m_nMinutes;						// 分
+	int			m_nSeconds;						// 秒
+	float		m_digitWidth;					// 数字1桁あたりの幅
+	float		m_digitHeight;					// 数字1桁あたりの高さ
+	D3DXVECTOR3 m_basePos;						// 表示の開始位置
+	CRankColon* m_apRankClon[MaxRanking];		// コロンへのポインタ
+	int			m_nIdxTexture;					// テクスチャインデックス
 
 };
 
@@ -66,13 +67,15 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
 	D3DXVECTOR3 GetPos(void);
 
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファ
-	D3DXVECTOR3 m_pos;						// 位置
-	float m_fWidth, m_fHeight;				// サイズ（幅・高さ）
-	int m_nIdxTexture;						// テクスチャインデックス
+	D3DXVECTOR3				m_pos;			// 位置
+	float					m_fWidth;		// 幅
+	float					m_fHeight;		// 高さ
+	int						m_nIdxTexture;	// テクスチャインデックス
 };
 
 #endif

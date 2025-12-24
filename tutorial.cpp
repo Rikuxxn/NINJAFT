@@ -32,8 +32,8 @@ CBlockManager* CTutorial::m_pBlockManager = nullptr;	// ブロックマネージャーへの
 CTutorial::CTutorial() : CScene(CScene::MODE_TUTORIAL)
 {
 	// 値のクリア
-	m_pLight = nullptr;
-	m_timer = 0;
+	m_pLight	= nullptr;	// ライトへのポインタ
+	m_timer		= 0;		// タイマー
 }
 //=============================================================================
 // デストラクタ

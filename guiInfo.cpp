@@ -11,7 +11,6 @@
 #include "guiInfo.h"
 #include "imguimaneger.h"
 #include "player.h"
-#include "game.h"
 #include "enemy.h"
 #include "manager.h"
 

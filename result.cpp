@@ -12,19 +12,18 @@
 #include "input.h"
 #include "manager.h"
 #include "dummyPlayer.h"
-#include "resultsoundcount.h"
+#include "resultcount.h"
 #include "ui.h"
 #include "background.h"
-#include "resulttreasurecount.h"
 #include "meshdome.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
 //*****************************************************************************
-int CResult::m_clearRankIndex = 0;			// クリア時のランクインデックス
-int CResult::m_soundCount = 0;				// 音の発生数
-int CResult::m_insightCount = 0;			// 発見された回数
-int CResult::m_treasureCount = 0;			// 宝の数
+int CResult::m_clearRankIndex	= 0;			// クリア時のランクインデックス
+int CResult::m_soundCount		= 0;			// 音の発生数
+int CResult::m_insightCount		= 0;			// 発見された回数
+int CResult::m_treasureCount	= 0;			// 宝の数
 
 //=============================================================================
 // コンストラクタ
@@ -80,16 +79,13 @@ HRESULT CResult::Init(void)
 
 
 	// 宝獲得数の表示
-	CResultTreasureCount::Create(220.0f, 130.0f, 80.0f, 95.0f);
+	CCount::Create(220.0f, 130.0f, 80.0f, 95.0f, m_treasureCount);
 
 	// 音発生数の表示
-	CResultSoundCount::Create(220.0f, 380.0f, 80.0f, 95.0f, m_soundCount);
+	CCount::Create(220.0f, 380.0f, 80.0f, 95.0f, m_soundCount);
 
 	// 発見された回数の表示
-	CResultSoundCount::Create(220.0f, 620.0f, 80.0f, 95.0f, m_insightCount);
-
-	// 宝獲得数の設定
-	CResultTreasureCount::SetTreasureCount(m_treasureCount);
+	CCount::Create(220.0f, 620.0f, 80.0f, 95.0f, m_insightCount);
 
 	// 「埋蔵金の数」UI生成
 	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 220.0f, 80.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f, 45.0f);

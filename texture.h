@@ -27,10 +27,11 @@ public:
 	LPDIRECT3DTEXTURE9 GetAddress(int nIdx);
 
 private:
-	static constexpr int MAX_TEXTURE = 128;// テクスチャの最大数
-	std::string TEXTURE[MAX_TEXTURE];
-	LPDIRECT3DTEXTURE9 m_apTexture[MAX_TEXTURE];
-	static int m_nNumAll;
+	static constexpr int MAX_TEXTURE = 128;			// テクスチャの最大数
+
+	std::string			TEXTURE[MAX_TEXTURE];		// テクスチャパス格納
+	LPDIRECT3DTEXTURE9	m_apTexture[MAX_TEXTURE];	// テクスチャ配列
+	static int			m_nNumAll;					// 総数
 };
 
 #endif

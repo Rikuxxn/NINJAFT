@@ -1,11 +1,11 @@
 //=============================================================================
 //
-// 宝獲得数表示処理 [resulttreasurecount.h]
+// 回数表示処理 [resultcount.h]
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
-#ifndef _RESULTTREASURECOUNT_H_
-#define _RESULTTREASURECOUNT_H_
+#ifndef _RESULTCOUNT_H_
+#define _RESULTCOUNT_H_
 
 //*****************************************************************************
 // インクルードファイル
@@ -14,34 +14,34 @@
 #include "number.h"
 
 //*****************************************************************************
-// 宝獲得数表示クラス
+// 回数表示クラス
 //*****************************************************************************
-class CResultTreasureCount : public CObject
+class CCount : public CObject
 {
 public:
-	CResultTreasureCount(int nPriority = 6);
-	~CResultTreasureCount();
+	CCount(int nPriority = 6);
+	~CCount();
 
-	static CResultTreasureCount* Create(float baseX, float baseY, float digitWidth, float digitHeight);
+	static CCount* Create(float baseX, float baseY, float digitWidth, float digitHeight, int count);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+	int DigitNum(int nCount);
 
 	D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(); }
-	static void SetTreasureCount(int nCount) { m_nTreasureCount = nCount; }
 
 private:
 	static const int MAX_DIGITS = 3;		// 桁数
+
 	CNumber* m_apNumber[MAX_DIGITS];		// 各桁の数字表示用
-	static int m_nTreasureCount;			// 宝獲得数
-	static int m_nDig[MAX_DIGITS];			// 桁表示
-	float m_digitWidth;						// 数字1桁あたりの幅
-	float m_digitHeight;					// 数字1桁あたりの高さ
+	int			m_nCount;					// 数
+	int			m_nDig[MAX_DIGITS];			// 桁表示
+	float		m_digitWidth;				// 数字1桁あたりの幅
+	float		m_digitHeight;				// 数字1桁あたりの高さ
 	D3DXVECTOR3 m_basePos;					// 表示の開始位置
-	int m_nIdxTexture;						// テクスチャインデックス
+	int			m_nIdxTexture;				// テクスチャインデックス
 };
 
 
 #endif
-

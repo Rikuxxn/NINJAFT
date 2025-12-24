@@ -123,9 +123,9 @@ public:
 	//*****************************************************************************
 	// flagment関数
 	//*****************************************************************************
-	bool IsSelected(void) const { return m_bSelected; }									// ブロックが選択中のフラグを返す
-	bool IsEditMode(void) const { return m_isEditMode; }								// エディット中かどうか
-	virtual bool IsDynamicBlock(void) const { return false; }							// 動的ブロックの判別
+	bool IsSelected(void) const { return m_bSelected; }										// ブロックが選択中のフラグを返す
+	bool IsEditMode(void) const { return m_isEditMode; }									// エディット中かどうか
+	virtual bool IsDynamicBlock(void) const { return false; }								// 動的ブロックの判別
 	virtual bool IsEnd(void) { return false; }
 	virtual bool IsGet(void) { return false; }
 	virtual bool IsSwitchOn(void) { return false; }
@@ -133,11 +133,11 @@ public:
 	//*****************************************************************************
 	// setter関数
 	//*****************************************************************************
-	void SetType(TYPE type) { m_Type = type; }											// タイプの設定
-	void SetSelected(bool flag) { m_bSelected = flag; }									// 選択中のフラグを返す
-	void SetColliderSize(const D3DXVECTOR3& size) { m_colliderSize = size; }			// コライダーサイズの設定
-	void SetColliderManual(const D3DXVECTOR3& newSize);									// コライダーサイズの手動設定用
-	void SetColliderOffset(const D3DXVECTOR3& offset) { m_colliderOffset = offset; }	// コライダーのオフセットの設定
+	void SetType(TYPE type) { m_Type = type; }												// タイプの設定
+	void SetSelected(bool flag) { m_bSelected = flag; }										// 選択中のフラグを返す
+	void SetColliderSize(const D3DXVECTOR3& size) { m_colliderSize = size; }				// コライダーサイズの設定
+	void SetColliderManual(const D3DXVECTOR3& newSize);										// コライダーサイズの手動設定用
+	void SetColliderOffset(const D3DXVECTOR3& offset) { m_colliderOffset = offset; }		// コライダーのオフセットの設定
 	void SetEditMode(bool enable);
 
 	//*****************************************************************************

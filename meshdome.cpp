@@ -112,7 +112,7 @@ HRESULT CMeshDome::Init(void)
 			// テクスチャ座標を設定
 			pVtx[nCntV * (MESHDOME_X + 1) + nCntH].tex = D3DXVECTOR2(
 				(float)nCntH / MESHDOME_X,						// U座標（円周方向）
-				1.0f - (float)nCntV / MESHDOME_Z				    // V座標（高さ方向）
+				1.0f - (float)nCntV / MESHDOME_Z				// V座標（高さ方向）
 			);
 		}
 	}

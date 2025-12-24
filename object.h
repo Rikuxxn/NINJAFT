@@ -43,14 +43,15 @@ protected:
 
 private:
 	static constexpr int MAX_OBJ_PRIORITY = 8;	// 優先順位
+
 	static CObject* m_apTop[MAX_OBJ_PRIORITY];	// 先頭のオブジェクトへのポインタ
 	static CObject* m_apCur[MAX_OBJ_PRIORITY];	// 最後尾のオブジェクトへのポインタ
-	CObject* m_pPrev;							// 前のオブジェクトへのポインタ
-	CObject* m_pNext;							// 次のオブジェクトへのポインタ
-	static int m_nNumAll;						// オブジェクトの総数
-	TYPE m_type;								// 種類
-	int m_nPriority;							// 優先順位の位置
-	bool m_bDeath;								// 死亡フラグ
+	CObject*		m_pPrev;					// 前のオブジェクトへのポインタ
+	CObject*		m_pNext;					// 次のオブジェクトへのポインタ
+	static int		m_nNumAll;					// オブジェクトの総数
+	TYPE			m_type;						// 種類
+	int				m_nPriority;				// 優先順位の位置
+	bool			m_bDeath;					// 死亡フラグ
 };
 
 #endif

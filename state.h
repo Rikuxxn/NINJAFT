@@ -137,7 +137,7 @@ public:
 
 
 	// 状態の更新
-	void Update()
+	void Update(void)
 	{
 		// ステートの変更命令があれば処理する
 		m_fnChangeState(); // ステートが更新する前にステートの変更命令があれば実行		

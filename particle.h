@@ -67,9 +67,9 @@ public:
 	D3DXVECTOR3 GetDir(void) { return m_Dir; }
 
 private:
-	D3DXVECTOR3 m_Dir;	// •ûŒü
-	int m_nLife;		// õ–½
-	int m_nMaxParticle;	// —±q‚Ì”
+	D3DXVECTOR3 m_Dir;			// •ûŒü
+	int			m_nLife;		// õ–½
+	int			m_nMaxParticle;	// —±q‚Ì”
 };
 
 //*****************************************************************************

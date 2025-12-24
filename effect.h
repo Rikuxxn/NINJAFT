@@ -57,15 +57,15 @@ public:
 	float GetGravity(void) { return m_fGravity; }
 
 private:
-	D3DXVECTOR3 m_move;		// 移動量
-	float m_fRadius;		// 半径
-	int m_nLife;			// 寿命
-	int m_nIdxTexture;		// テクスチャインデックス
-	float m_fGravity;		// 重力
-	float m_fDecRadius;		// 半径の減衰量
-	bool m_bBlend;			// アルファブレンドするかどうが
-	bool m_bTurn;			// 回転するか
-	float m_turnSpeed;		// 回転スピード
+	D3DXVECTOR3 m_move;			// 移動量
+	float		m_fRadius;		// 半径
+	int			m_nLife;		// 寿命
+	int			m_nIdxTexture;	// テクスチャインデックス
+	float		m_fGravity;		// 重力
+	float		m_fDecRadius;	// 半径の減衰量
+	bool		m_bBlend;		// アルファブレンドするかどうが
+	bool		m_bTurn;		// 回転するか
+	float		m_turnSpeed;	// 回転スピード
 };
 
 //*****************************************************************************
@@ -89,9 +89,9 @@ public:
 	void SetLife(int nLife) { m_nLife = nLife; }
 
 private:
-	int m_nLife;			// 寿命
-	float m_fGravity;		// 重力加速度
-	float m_scaleDec;		// サイズ減衰率
+	int			m_nLife;	// 寿命
+	float		m_fGravity;	// 重力加速度
+	float		m_scaleDec;	// サイズ減衰率
 	D3DXVECTOR3 m_velocity; // 速度
 };
 

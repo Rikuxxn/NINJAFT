@@ -27,8 +27,8 @@ public:
 	static void Draw(D3DXCOLOR col,int posX,int posY);
 
 private:
-	static LPD3DXFONT m_pFont;	// フォントへのポインタ
-	static char m_aStr[1024];	// 文字列を格納するバッファ
+	static LPD3DXFONT	m_pFont;		// フォントへのポインタ
+	static char			m_aStr[1024];	// 文字列を格納するバッファ
 
 };
 #endif

@@ -41,9 +41,8 @@ CBlockManager::CBlockManager()
 	// 値のクリア
 	m_selectedBlock				= nullptr;	// 選択中のブロック
 	m_prevSelectedIdx			= -1;		// 前回の選択中のインデックス
-	m_hasConsumedPayload		= false;
 	m_pDebug3D					= nullptr;	// 3Dデバッグ表示へのポインタ
-	m_autoUpdateColliderSize	= true;
+	m_autoUpdateColliderSize	= true;		// コライダー自動更新フラグ
 	m_isDragging				= false;	// ドラッグ中かどうか
 }
 //=============================================================================

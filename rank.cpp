@@ -18,11 +18,11 @@
 CRank::CRank(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	m_pVtxBuff = nullptr;					// 頂点バッファ
-	m_pos = D3DXVECTOR3(0.0f,0.0f,0.0f);	// 位置
-	m_fWidth = 0.0f;						// 幅
-	m_fHeight = 0.0f;						// 高さ
-	m_nIdxTexture = 0;
+	m_pVtxBuff		= nullptr;		// 頂点バッファ
+	m_pos			= INIT_VEC3;	// 位置
+	m_fWidth		= 0.0f;			// 幅
+	m_fHeight		= 0.0f;			// 高さ
+	m_nIdxTexture	= 0;			// テクスチャインデックス
 }
 //=============================================================================
 // デストラクタ

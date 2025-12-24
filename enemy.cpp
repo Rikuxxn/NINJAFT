@@ -15,9 +15,9 @@
 #include "ui.h"
 #include "shadowS.h"
 #include "game.h"
-#include "input.h"
 #include "manager.h"
 #include "generateMap.h"
+#include "motion.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -95,23 +95,6 @@ void CEnemy::Uninit(void)
 //=============================================================================
 void CEnemy::Update(void)
 {
-
-#ifdef _DEBUG
-	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
-
-	if (pKeyboard->GetTrigger(DIK_3))
-	{
-		// ダメージ処理
-		Damage(50.0f);
-	}
-	else if (pKeyboard->GetTrigger(DIK_4))
-	{
-		// 回復処理
-		Heal(1.0);
-	}
-
-#endif
-
 	// 一番近い埋蔵金の場所を設定
 	SetNearestTreasurePosition();
 
@@ -323,6 +306,7 @@ CEnemyLeader::~CEnemyLeader()
 //=============================================================================
 HRESULT CEnemyLeader::Init(void)
 {
+	// 敵の初期化処理
 	CEnemy::Init();
 
 	CModel* pModels[MAX_PARTS];
@@ -376,6 +360,7 @@ void CEnemyLeader::Uninit(void)
 		m_pMotion = nullptr;
 	}
 
+	// 敵の終了処理
 	CEnemy::Uninit();
 }
 //=============================================================================

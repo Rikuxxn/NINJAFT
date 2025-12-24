@@ -23,8 +23,8 @@ using namespace std;
 CRanking::CRanking() : CScene(CScene::MODE_RANKING)
 {
 	// 値のクリア
-	m_pRankingManager = nullptr;
-	m_pRankItem = nullptr;
+	m_pRankingManager	= nullptr;
+	m_pRankItem			= nullptr;
 }
 //=============================================================================
 // デストラクタ

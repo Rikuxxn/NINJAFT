@@ -48,23 +48,23 @@ public:
 	// プレイヤーの行動記録構造体
 	struct PlayerBehaviorLog
 	{
-		int makeSoundCount = 0;	// 音を立てた回数
-		int insightCount = 0;	// 見つかった回数
+		int makeSoundCount	= 0;	// 音を立てた回数
+		int insightCount	= 0;	// 見つかった回数
 	};
 
 	void Update(CEnemy* pEnemy, CPlayer* pPlayer) override;
 	void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) override;
 
 private:
-	static constexpr float PROBABILITY_THRESHOLD = 0.75f;	// 音の閾値
-	static constexpr float TRIGGER_DISTANCE = 50.0f;
-	static constexpr int LOG_TIME = 25;
+	static constexpr float	PROBABILITY_THRESHOLD	= 0.75f;	// 音の閾値
+	static constexpr float	TRIGGER_DISTANCE		= 50.0f;	// 通常の距離
+	static constexpr int	LOG_TIME				= 25;		// 記録時間
 
-	PlayerBehaviorLog m_log;
-	int m_logTimer;				// 記録タイマー
-	bool m_prevInSight;			// 直前に視界に入ったか
-	int m_soundTimer;			// 波紋生成タイマー
-	int m_soundCount;			// 音発生数z
+	PlayerBehaviorLog	m_log;									// プレイヤー行動構造体変数
+	int					m_logTimer;								// 記録タイマー
+	bool				m_prevInSight;							// 直前に視界に入ったか
+	int					m_soundTimer;							// 波紋生成タイマー
+	int					m_soundCount;							// 音発生数z
 };
 
 //*****************************************************************************
@@ -79,21 +79,21 @@ public:
 	// プレイヤーの行動記録構造体
 	struct PlayerBehaviorLog
 	{
-		int makeSoundCount = 0;	// 音を立てた回数
-		int insightCount = 0;	// 見つかった回数
+		int makeSoundCount	= 0;	// 音を立てた回数
+		int insightCount	= 0;	// 見つかった回数
 	};
 
 	void Update(CEnemy* pEnemy, CPlayer* pPlayer) override;
 	void RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer) override;
 
 private:
-	static constexpr float PROBABILITY_THRESHOLD = 0.75f;	// 音の閾値
-	static constexpr float DISTANCE_NORMAL = 50.0f;
-	static constexpr int LOG_TIME = 25;
+	static constexpr float	PROBABILITY_THRESHOLD	= 0.75f;	// 音の閾値
+	static constexpr float	DISTANCE_NORMAL			= 50.0f;	// 通常の距離
+	static constexpr int	LOG_TIME				= 25;		// 記録時間
 
-	PlayerBehaviorLog m_log;
-	int m_logTimer;				// 記録タイマー
-	bool m_prevInSight;			// 直前に視界に入ったか
+	PlayerBehaviorLog	m_log;									// プレイヤー行動構造体変数
+	int					m_logTimer;								// 記録タイマー
+	bool				m_prevInSight;							// 直前に視界に入ったか
 };
 
 #endif

@@ -20,10 +20,10 @@ class CLight
 private:
     typedef struct
     {
-        D3DLIGHT9 light;
+        D3DLIGHT9   light;
         D3DXVECTOR3 direction;
         D3DXVECTOR3 position;
-        bool enabled;
+        bool        enabled;
     }LightInfo;
 
 public:
@@ -40,11 +40,11 @@ public:
     static int GetLightNum(void) { return m_lightCount; }
 
 private:
-    static constexpr int MAX_LIGHTS = 32; // ライトの最大数
+    static constexpr int MAX_LIGHTS = 32;       // ライトの最大数
 
-    static LightInfo m_lights[MAX_LIGHTS];
-    static int m_lightCount;        // ライトカウント
-    static CObjectX* m_pObjectX;             // Xファイルオブジェクトへのポインタ
+    static LightInfo    m_lights[MAX_LIGHTS];   // ライト情報
+    static int          m_lightCount;           // ライトカウント
+    static CObjectX*    m_pObjectX;             // Xファイルオブジェクトへのポインタ
 };
 
 #endif

@@ -29,10 +29,9 @@ public:
 	void Draw(void);
 
 private:
-	static constexpr float DEC_ALPHA = 0.002f;
+	static constexpr float DEC_ALPHA = 0.004f;	// アルファ値減少量
 
-	int m_nIdxTexture;		// テクスチャインデックス
-	float m_decAlpha;		// アルファ値の減少量
+	int		m_nIdxTexture;						// テクスチャインデックス
 };
 
 #endif

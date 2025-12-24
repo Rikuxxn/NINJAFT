@@ -22,14 +22,14 @@ CResultTime::CResultTime(int nPriority) : CObject(nPriority)
 	{
 		m_apNumber[nCnt] = {};					// 各桁の数字表示用
 	}
-	m_nMinutes = 0;								// 分
-	m_nSeconds = 0;								// 秒
-	m_nFrameCount = 0;							// フレームカウント
-	m_digitWidth = 0.0f;						// 数字1桁あたりの幅
-	m_digitHeight = 0.0f;						// 数字1桁あたりの高さ
-	m_basePos = INIT_VEC3;						// 表示の開始位置
-	m_pColon = NULL;							// コロン
-	m_nIdxTexture = NULL;						// テクスチャインデックス
+	m_nMinutes		= 0;						// 分
+	m_nSeconds		= 0;						// 秒
+	m_nFrameCount	= 0;						// フレームカウント
+	m_digitWidth	= 0.0f;						// 数字1桁あたりの幅
+	m_digitHeight	= 0.0f;						// 数字1桁あたりの高さ
+	m_basePos		= INIT_VEC3;				// 表示の開始位置
+	m_pColon		= NULL;						// コロン
+	m_nIdxTexture	= NULL;						// テクスチャインデックス
 }
 //=============================================================================
 // デストラクタ

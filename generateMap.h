@@ -78,9 +78,9 @@ private:
     static constexpr int MAX_TREASURE   = 8;        // 埋蔵金の設置数
 
     // マップ生成パラメータ
-    static constexpr int GRID_X         = 10;       // Xサイズ
-    static constexpr int GRID_Z         = 10;       // Zサイズ
-    static constexpr float AREA_SIZE    = 80.0f;    // 1エリアの広さ
+    static constexpr int    GRID_X         = 10;    // Xサイズ
+    static constexpr int    GRID_Z         = 10;    // Zサイズ
+    static constexpr float  AREA_SIZE      = 80.0f; // 1エリアの広さ
 
     std::vector<D3DXVECTOR3> m_patrolPoints;        // 巡回ポイント
     std::vector<D3DXVECTOR3> m_treasurePositions;   // 埋蔵金の設置ポイント

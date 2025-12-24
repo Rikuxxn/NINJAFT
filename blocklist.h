@@ -166,7 +166,7 @@ private:
 	static constexpr int	SPAWN_TIME				= 180;		// 生成までの時間
 	static constexpr int	GET_THRESHOLD			= 3;		// 取得数閾値
 	static constexpr float	GUAGE_RATE				= 100.0f;	// ゲージの最大量
-	static constexpr float	GUAGE_DECREASE_SPEED	= 0.21f;	// ゲージの減る量
+	static constexpr float	GUAGE_DECREASE_SPEED	= 0.19f;	// ゲージの減る量
 
 	int			m_effectTimer;									// エフェクト生成タイマー
 	C3DGuage*	m_pFrame;										// 枠

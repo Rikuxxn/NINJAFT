@@ -30,10 +30,12 @@ public:
     static int GetSelectedItem(void) { return m_SelectedIndex; }
 
 private:
-    std::vector<CItem*> m_Item;     // 項目
-    static int m_SelectedIndex;     // 選択したインデックス
-    bool m_inputLock;
     int GetMouseOverIndex(void) const;
+
+private:
+    std::vector<CItem*> m_Item;             // 項目
+    static int          m_SelectedIndex;    // 選択したインデックス
+    bool                m_inputLock;        // 入力制限フラグ
 
 };
 

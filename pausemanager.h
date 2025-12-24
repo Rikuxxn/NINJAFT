@@ -27,12 +27,14 @@ public:
     void Draw(void);                    // 描画
   
 private:
-    LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 背景用頂点バッファへのポインタ
-    std::vector<CPause*> m_Items;       // ポーズ項目
-    int m_SelectedIndex;                // 選択したインデックス
-    bool m_inputLock;
-
     int GetMouseOverIndex(void) const;
+
+private:
+    LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff; 	// 背景用頂点バッファへのポインタ
+    std::vector<CPause*>    m_Items;        // ポーズ項目
+    int                     m_SelectedIndex;// 選択したインデックス
+    bool                    m_inputLock;    // 入力制限フラグ
+
 };
 
 #endif

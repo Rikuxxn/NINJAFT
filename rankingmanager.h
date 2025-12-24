@@ -29,12 +29,12 @@ private:
         int items = 0;
     };
 
-    static const int MAX_RANK = 5;
+    static constexpr int MAX_RANK = 5;
+
     std::vector<RankData> m_rankList;
-
     static CRankingManager* m_Instance;
-
     int m_rankIdx;// 順位のインデックス
+
 public:
 	CRankingManager();
 	~CRankingManager();
@@ -190,7 +190,7 @@ private:
                     }
                 }
 
-                // 同点時の保険（安定ソート用）
+                // 同点時の保険
                 return a.items > b.items;
             });
     }

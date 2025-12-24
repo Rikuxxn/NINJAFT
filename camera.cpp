@@ -37,9 +37,9 @@ CCamera::CCamera()
 	m_eventShakePower		= 0.0f;     // イベントシェイクの最大強さ
 	m_eventShakeDuration	= 0.0f;		// シェイクの減衰
 	m_fDistance				= 0.0f;		// 視点から注視点の距離
-	m_nDirectionCamTimer	= 0;
-	m_nTimer				= 0;
-	m_isDirection			= false;
+	m_nDirectionCamTimer	= 0;		// 演出カメラ時間
+	m_nTimer				= 0;		// タイマー
+	m_isDirection			= false;	// 演出カメラかどうか
 	m_isCameraShakeOn		= false;	// カメラシェイクのON/OFF
 #ifdef _DEBUG
 	m_Mode = MODE_EDIT;					// カメラのモード

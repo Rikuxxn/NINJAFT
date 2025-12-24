@@ -69,27 +69,27 @@ private:
 	void NormalizeRotY(void);// 角度の正規化 Y軸
 
 private:
-	static constexpr float SHAKE_DISTANCE = 1300.0f;
+	static constexpr float SHAKE_DISTANCE = 1300.0f;// 振動する距離
 
-	D3DXVECTOR3 m_posV;			// 視点
-	D3DXVECTOR3 m_posVDest;		// 目的の視点
-	D3DXVECTOR3 m_posR;			// 注視点
-	D3DXVECTOR3 m_posRDest;		// 目的の注視点
-	D3DXVECTOR3 m_vecU;			// 上方向ベクトル
-	D3DXMATRIX m_mtxProjection;	// プロジェクションマトリックス
-	D3DXMATRIX m_mtxView;		// ビューマトリックス
-	D3DXVECTOR3 m_rot;			// 向き
-	D3DXVECTOR3 m_targetPos;	// 対象の位置(カメラ振動用)
-	D3DXVECTOR3 m_shakeOffset;  // 最終的に加えるオフセット
-	float m_eventShakeTime;     // 残りのイベントシェイク時間
-	float m_eventShakePower;    // イベントシェイクの最大強さ
-	float m_eventShakeDuration;	// シェイクの減衰
-	float m_fDistance;			// 視点から注視点の距離
-	MODE m_Mode;				// カメラのモード
-	int m_nDirectionCamTimer;	// 演出カメラへの移行時間
-	int m_nTimer;				// タイマー
-	bool m_isDirection;			// 演出カメラかどうか
-	bool m_isCameraShakeOn;		// カメラシェイクのON/OFF
+	D3DXVECTOR3 m_posV;					// 視点
+	D3DXVECTOR3 m_posVDest;				// 目的の視点
+	D3DXVECTOR3 m_posR;					// 注視点
+	D3DXVECTOR3 m_posRDest;				// 目的の注視点
+	D3DXVECTOR3 m_vecU;					// 上方向ベクトル
+	D3DXMATRIX	m_mtxProjection;		// プロジェクションマトリックス
+	D3DXMATRIX	m_mtxView;				// ビューマトリックス
+	D3DXVECTOR3 m_rot;					// 向き
+	D3DXVECTOR3 m_targetPos;			// 対象の位置(カメラ振動用)
+	D3DXVECTOR3 m_shakeOffset;			// 最終的に加えるオフセット
+	float		m_eventShakeTime;		// 残りのイベントシェイク時間
+	float		m_eventShakePower;		// イベントシェイクの最大強さ
+	float		m_eventShakeDuration;	// シェイクの減衰
+	float		m_fDistance;			// 視点から注視点の距離
+	MODE		m_Mode;					// カメラのモード
+	int			m_nDirectionCamTimer;	// 演出カメラへの移行時間
+	int			m_nTimer;				// タイマー
+	bool		m_isDirection;			// 演出カメラかどうか
+	bool		m_isCameraShakeOn;		// カメラシェイクのON/OFF
 };
 
 #endif

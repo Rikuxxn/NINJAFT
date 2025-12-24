@@ -15,6 +15,7 @@
 #include "SEpopupeffect.h"
 #include "sound.h"
 #include "manager.h"
+#include "motion.h"
 
 // ‘O•ûéŒ¾
 class CEnemyLeader_StandState;

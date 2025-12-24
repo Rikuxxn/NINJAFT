@@ -26,7 +26,7 @@ public:
 	HRESULT Init(void);
 	void Update(void);
 	void SetupParameter(void);
-
+	void SetLife(int nLife) { m_nLife = nLife; }
 	void SetPath(const char* path)
 	{ 
 		if (path == nullptr)
@@ -36,13 +36,12 @@ public:
 
 		strcpy_s(m_szPath, MAX_PATH, path); 
 	}
-	void SetLife(int nLife) { m_nLife = nLife; }
 
 	int GetLife(void) { return m_nLife; }
 
 private:
-	char m_szPath[MAX_PATH];	// ファイルパス
-	int m_nLife;				// 寿命
+	char	m_szPath[MAX_PATH];	// ファイルパス
+	int		m_nLife;			// 寿命
 
 };
 

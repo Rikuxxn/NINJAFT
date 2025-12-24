@@ -21,11 +21,11 @@ public:
 	CObject2D(int nPriority = 5);
 	~CObject2D();
 
+	static CObject2D* Create(D3DXVECTOR3 pos, D3DXCOLOR col, float fWidth, float fHeight);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	static CObject2D* Create(D3DXVECTOR3 pos, D3DXCOLOR col, float fWidth, float fHeight);
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
@@ -44,26 +44,26 @@ public:
 	void MoveTexUV(float fLeft, float fTop, float fWidth, float fHeight);
 	void TextureAnim(int nTexPosX, int nTexPosY, int nAnimSpeed);
 	void ScrollTexture(void);
-	void UpdateGuageVtx(float fRate);// HPゲージで使う頂点座標更新
-	void UpdateFrame(void);				// HPゲージのフレームの頂点座標更新
+	void UpdateGuageVtx(float fRate);		// HPゲージで使う頂点座標更新
+	void UpdateFrame(void);					// HPゲージのフレームの頂点座標更新
 
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファへのポインタ
-	D3DXVECTOR3 m_pos;						// 位置
-	D3DXVECTOR3 m_rot;						// 向き
-	D3DXVECTOR3 m_move;						// 移動量
-	D3DCOLOR m_col;							// 色
-	float m_fTexU;							// テクスチャUV
-	float m_fTexV;							// テクスチャUV
-	int m_nCounterAnim;						// アニメーションカウンター
-	int m_nPatternAnim;						// アニメーションパターンNo.
-	float m_fWidth;							// 幅
-	float m_fHeight;						// 高さ
-	float m_fLength;						// 長さ
-	float m_fAngle;							// 角度
-	float m_fUSpeed;						// 横のスクロールスピード
-	float m_fVSpeed;						// 縦のスクロールスピード
-	float m_aPosTexU;						// 横のスクロール用変数
+	D3DXVECTOR3				m_pos;			// 位置
+	D3DXVECTOR3				m_rot;			// 向き
+	D3DXVECTOR3				m_move;			// 移動量
+	D3DCOLOR				m_col;			// 色
+	float					m_fTexU;		// テクスチャUV
+	float					m_fTexV;		// テクスチャUV
+	int						m_nCounterAnim;	// アニメーションカウンター
+	int						m_nPatternAnim;	// アニメーションパターンNo.
+	float					m_fWidth;		// 幅
+	float					m_fHeight;		// 高さ
+	float					m_fLength;		// 長さ
+	float					m_fAngle;		// 角度
+	float					m_fUSpeed;		// 横のスクロールスピード
+	float					m_fVSpeed;		// 縦のスクロールスピード
+	float					m_aPosTexU;		// 横のスクロール用変数
 };
 
 #endif

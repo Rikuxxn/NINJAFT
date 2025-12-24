@@ -107,22 +107,19 @@ public:
 private:
     static std::unordered_map<CBlock::TYPE, std::vector<CBlock*>> m_blocksByType;
     static std::unordered_map<CBlock::TYPE, std::string> s_FilePathMap;
-    static std::vector<CBlock*> m_blocks;   // ブロック情報
-    static CBlock* m_draggingBlock;                                     // ドラッグ中のブロック情報
-    static int m_selectedIdx;                                           // 選択中のインデックス
-    int m_prevSelectedIdx;                                              // 前回の選択中のインデックス
-    bool m_hasConsumedPayload ;                                         // ペイロード生成済みフラグ
-    CDebugProc3D* m_pDebug3D;			                                // 3Dデバッグ表示へのポインタ
-    bool m_autoUpdateColliderSize;
-    static CBlock* m_selectedBlock;                                     // 選択中のブロック
-    bool m_isDragging;                                                  // ドラッグ中かどうか
+    static std::vector<CBlock*> m_blocks;                                           // ブロック情報
+    static CBlock*              m_draggingBlock;                                    // ドラッグ中のブロック情報
+    static int                  m_selectedIdx;                                      // 選択中のインデックス
+    int                         m_prevSelectedIdx;                                  // 前回の選択中のインデックス
+    CDebugProc3D*               m_pDebug3D;			                                // 3Dデバッグ表示へのポインタ
+    bool                        m_autoUpdateColliderSize;                           // コライダー自動更新フラグ
+    static CBlock*              m_selectedBlock;                                    // 選択中のブロック
+    bool                        m_isDragging;                                       // ドラッグ中かどうか
 
-    LPDIRECT3DTEXTURE9 m_pThumbnailRT;
-    LPDIRECT3DSURFACE9  m_pThumbnailZ;
-
+    LPDIRECT3DTEXTURE9          m_pThumbnailRT;
+    LPDIRECT3DSURFACE9          m_pThumbnailZ;
     std::vector<IDirect3DTexture9*> m_thumbnailTextures;
     bool m_thumbnailsGenerated = false;                 // 一度だけ作るフラグ
-
     float m_thumbWidth = 100.0f;
     float m_thumbHeight = 100.0f;
 };

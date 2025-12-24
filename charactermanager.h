@@ -118,22 +118,22 @@ public:
     virtual int GetCollisionFlags(void) const { return 0; }// デフォルトはフラグなし
 
 private:
-	float m_fHp;                // HP
-	float m_fMaxHp;             // HP最大量
-    bool m_isDead;              // 死んだかどうか
-	CGuage* m_pHpGuage;			// 緑ゲージ
-	CGuage* m_pBackGuage;		// 赤ゲージ（遅れて追従）
-	CGuage* m_pFrame;			// 枠
-    D3DXVECTOR3 m_pos;			// 位置
-    D3DXVECTOR3 m_rot;			// 向き
-    D3DXVECTOR3 m_rotDest;		// 向き
-    D3DXVECTOR3 m_size;			// サイズ
-    D3DXVECTOR3 m_move;			// 移動量
-    btRigidBody* m_pRigidBody;	// 剛体へのポインタ
-    btCollisionShape* m_pShape;	// 当たり判定の形へのポインタ
-    btScalar m_radius;			// カプセルコライダーの半径
-    btScalar m_height;			// カプセルコライダーの高さ
-    D3DXVECTOR3 m_colliderPos;	// カプセルコライダーの位置
+	float               m_fHp;          // HP
+	float               m_fMaxHp;       // HP最大量
+    bool                m_isDead;       // 死んだかどうか
+	CGuage*             m_pHpGuage;		// 緑ゲージ
+	CGuage*             m_pBackGuage;	// 赤ゲージ（遅れて追従）
+	CGuage*             m_pFrame;		// 枠
+    D3DXVECTOR3         m_pos;			// 位置
+    D3DXVECTOR3         m_rot;			// 向き
+    D3DXVECTOR3         m_rotDest;		// 向き
+    D3DXVECTOR3         m_size;			// サイズ
+    D3DXVECTOR3         m_move;			// 移動量
+    btRigidBody*        m_pRigidBody;	// 剛体へのポインタ
+    btCollisionShape*   m_pShape;	    // 当たり判定の形へのポインタ
+    btScalar            m_radius;		// カプセルコライダーの半径
+    btScalar            m_height;		// カプセルコライダーの高さ
+    D3DXVECTOR3         m_colliderPos;	// カプセルコライダーの位置
 
 };
 

@@ -40,12 +40,12 @@ public:
 
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファへのポインタ
-	D3DXVECTOR3 m_pos;						// 位置
-	D3DXVECTOR3 m_rot;						// 向き
-	D3DXCOLOR m_col;						// 色
-	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
-	float m_fWidth;							// 幅
-	float m_fHeight;						// 高さ
+	D3DXVECTOR3				m_pos;			// 位置
+	D3DXVECTOR3				m_rot;			// 向き
+	D3DXCOLOR				m_col;			// 色
+	D3DXMATRIX				m_mtxWorld;		// ワールドマトリックス
+	float					m_fWidth;		// 幅
+	float					m_fHeight;		// 高さ
 };
 
 #endif

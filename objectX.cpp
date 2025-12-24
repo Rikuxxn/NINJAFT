@@ -11,7 +11,6 @@
 #include "objectX.h"
 #include "renderer.h"
 #include "manager.h"
-#include "player.h"
 
 // –¼‘O‹óŠÔstd‚ÌŽg—p
 using namespace std;

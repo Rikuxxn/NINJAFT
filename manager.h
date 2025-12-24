@@ -53,23 +53,21 @@ public:
 	static void ResetThumbnail(void);
 
 private:
-	static CRenderer* m_pRenderer;				// レンダラーへのポインタ
-	static CInputKeyboard* m_pInputKeyboard;	// キーボードへのポインタ
-	static CInputJoypad* m_pInputJoypad;		// ジョイパッドへのポインタ
-	static CInputMouse* m_pInputMouse;			// マウスへのポインタ
-	static CSound* m_pSound;					// サウンドへのポインタ
-	static CTexture* m_pTexture;				// テクスチャへのポインタ
-	static CCamera* m_pCamera;					// カメラへのポインタ
-	int m_fps;									// FPS値
-
-	std::unique_ptr<btBroadphaseInterface> m_pBroadphase;						// 衝突判定のクラスへのポインタ
-	std::unique_ptr<btDefaultCollisionConfiguration> m_pCollisionConfiguration;// 衝突検出の設定を管理するクラスへのポインタ
-	std::unique_ptr<btCollisionDispatcher> m_pDispatcher;						// 実際に衝突判定処理を実行するクラスへのポインタ
-	std::unique_ptr<btSequentialImpulseConstraintSolver> m_pSolver;				// 物理シミュレーションの制約ソルバーへのポインタ
-	static std::unique_ptr<btDiscreteDynamicsWorld> m_pDynamicsWorld;			// 物理世界を管理するクラスへのポインタ
-
-	static CFade* m_pFade;
-	static CScene* m_pScene;
+	int													 m_fps;						// FPS値
+	static CRenderer*									 m_pRenderer;				// レンダラーへのポインタ
+	static CInputKeyboard*								 m_pInputKeyboard;			// キーボードへのポインタ
+	static CInputJoypad*								 m_pInputJoypad;			// ジョイパッドへのポインタ
+	static CInputMouse*									 m_pInputMouse;				// マウスへのポインタ
+	static CSound*										 m_pSound;					// サウンドへのポインタ
+	static CTexture*									 m_pTexture;				// テクスチャへのポインタ
+	static CCamera*										 m_pCamera;					// カメラへのポインタ
+	static CFade*										 m_pFade;					// フェードへのポインタ
+	static CScene*										 m_pScene;					// シーンへのポインタ
+	std::unique_ptr<btBroadphaseInterface>				 m_pBroadphase;				// 衝突判定のクラスへのポインタ
+	std::unique_ptr<btDefaultCollisionConfiguration>	 m_pCollisionConfiguration;	// 衝突検出の設定を管理するクラスへのポインタ
+	std::unique_ptr<btCollisionDispatcher>				 m_pDispatcher;				// 実際に衝突判定処理を実行するクラスへのポインタ
+	std::unique_ptr<btSequentialImpulseConstraintSolver> m_pSolver;					// 物理シミュレーションの制約ソルバーへのポインタ
+	static std::unique_ptr<btDiscreteDynamicsWorld>		 m_pDynamicsWorld;			// 物理世界を管理するクラスへのポインタ
 };
 
 #endif

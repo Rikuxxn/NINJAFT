@@ -82,31 +82,30 @@ private:
 	//*************************************************************************
 	typedef struct
 	{
-		bool bLoop;								// ループするかどうか
-		int nNumKey;							// キーの総数
+		bool	 bLoop;							// ループするかどうか
+		int		 nNumKey;						// キーの総数
 		KEY_INFO aKeyInfo[MAX_KEY];				// キー情報
-		int startKey, startFrame;
+		int		 startKey, startFrame;			// キーの開始・終了フレーム
 	}MOTION_INFO;
 
 	MOTION_INFO m_aMotionInfo[MAX_MOTION];		// モーション情報
-	int  m_motionType;							// モーションの種類
-	int m_nNumMotion;							// モーション総数
-	bool m_bLoopMotion;							// ループするかどうか
-	int m_nNumKey;								// キーの総数
-	int m_nKey;									// 現在のキーNo.
-	int m_nCounterMotion;						// モーションのカウンター
-
-	bool m_bFinishMotion;						// 現在のモーションが終了しているかどうか
-	bool m_bBlendMotion;						// ブレンドモーションがあるかどうか
-	int  m_motionTypeBlend;						// ブレンドモーションがあるかどうか
-	bool m_bLoopMotionBlend;					// ブレンドモーションがループするかどうか
-	int m_nNumKeyBlend;							// ブレンドモーションのキー数
-	int m_nKeyBlend;							// ブレンドモーションの現在のキーNo.
-	int m_nCounterMotionBlend;					// ブレンドモーションのカウンター
-	int m_nFrameBlend;							// ブレンドのフレーム数(何フレームかけてブレンドするか)
-	int m_nCounterBlend;						// ブレンドカウンター
-	float m_motionSpeedRate;					// モーションスピード
-	float m_motionCounterAcc;					// 小数進行用
+	int			m_motionType;					// モーションの種類
+	int			m_nNumMotion;					// モーション総数
+	bool		m_bLoopMotion;					// ループするかどうか
+	int			m_nNumKey;						// キーの総数
+	int			m_nKey;							// 現在のキーNo.
+	int			m_nCounterMotion;				// モーションのカウンター
+	bool		m_bFinishMotion;				// 現在のモーションが終了しているかどうか
+	bool		m_bBlendMotion;					// ブレンドモーションがあるかどうか
+	int			m_motionTypeBlend;				// ブレンドモーションがあるかどうか
+	bool		m_bLoopMotionBlend;				// ブレンドモーションがループするかどうか
+	int			m_nNumKeyBlend;					// ブレンドモーションのキー数
+	int			m_nKeyBlend;					// ブレンドモーションの現在のキーNo.
+	int			m_nCounterMotionBlend;			// ブレンドモーションのカウンター
+	int			m_nFrameBlend;					// ブレンドのフレーム数(何フレームかけてブレンドするか)
+	int			m_nCounterBlend;				// ブレンドカウンター
+	float		m_motionSpeedRate;				// モーションスピード
+	float		m_motionCounterAcc;				// 小数進行用
 };
 
 #endif

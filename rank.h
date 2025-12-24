@@ -39,10 +39,11 @@ public:
 
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファ
-	D3DXVECTOR3 m_pos;						// 位置
-	float m_fWidth, m_fHeight;				// サイズ（幅・高さ）
-	float m_fRank;							// 順位
-	int m_nIdxTexture;						// テクスチャインデックス
+	D3DXVECTOR3				m_pos;			// 位置
+	float					m_fWidth;		// 幅
+	float					m_fHeight;		// 高さ
+	float					m_fRank;		// 順位
+	int						m_nIdxTexture;	// テクスチャインデックス
 };
 
 #endif

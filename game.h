@@ -58,21 +58,20 @@ public:
 	static int GetSeed(void) { return m_nSeed; }
 
 private:
-	CPlayer* m_pPlayer;					// プレイヤーへのポインタ
-	CEnemy* m_pEnemy;					// 敵へのポインタ
-	static CTime* m_pTime;						// タイムへのポインタ
-	static CBlockManager* m_pBlockManager;		// ブロックマネージャーへのポインタ
-	static CPauseManager* m_pPauseManager;		// ポーズマネージャーへのポインタ
-	std::unique_ptr<CGrid> m_pGrid;				// グリッドへのポインタ
-	static bool m_isPaused;						// trueならポーズ中
-	static int m_nSeed;							// マップのシード値
-	std::unique_ptr<CRankingManager> m_pRankingManager;			// ランキングへのポインタ
-
-	CLight* m_pLight;
-	int m_timer;								// パーティクル生成タイマー
-	StartState m_startState;					
-	float m_stateTimer;							// UI遅延タイマー
-	bool m_canControl;
+	std::unique_ptr<CRankingManager> m_pRankingManager;		// ランキングへのポインタ
+	CPlayer*						 m_pPlayer;				// プレイヤーへのポインタ
+	CEnemy*							 m_pEnemy;				// 敵へのポインタ
+	static CTime*					 m_pTime;				// タイムへのポインタ
+	static CBlockManager*			 m_pBlockManager;		// ブロックマネージャーへのポインタ
+	static CPauseManager*			 m_pPauseManager;		// ポーズマネージャーへのポインタ
+	std::unique_ptr<CGrid>			 m_pGrid;				// グリッドへのポインタ
+	static bool						 m_isPaused;			// ポーズ中フラグ
+	static int						 m_nSeed;				// マップのシード値
+	CLight*							 m_pLight;				// ライトへのポインタ
+	int								 m_timer;				// パーティクル生成タイマー
+	StartState						 m_startState;			// UIの状態
+	float							 m_stateTimer;			// UI遅延タイマー
+	bool							 m_canControl;			// 操作可能フラグ
 };
 
 #endif

@@ -11,7 +11,6 @@
 #include "grass.h"
 #include "manager.h"
 #include "game.h"
-#include "easing.h"
 #include "player.h"
 #include "enemy.h"
 

@@ -18,7 +18,7 @@
 #include "ui.h"
 #include "meshdome.h"
 #include "blocklist.h"
-#include "resultsoundcount.h"
+#include "resultcount.h"
 #include "grid.h"
 #include "generateMap.h"
 
@@ -37,12 +37,12 @@ int CGame::m_nSeed = 0;								// マップのシード値
 CGame::CGame() : CScene(CScene::MODE_GAME)
 {
 	// 値のクリア
-	m_pRankingManager = nullptr;
-	m_pLight = nullptr;
-	m_timer = 0;// パーティクル生成タイマー
-	m_startState = StartState::WaitStart;
-	m_stateTimer = 0.0f;// UI遅延タイマー
-	m_canControl = false;
+	m_pRankingManager	= nullptr;					// ランキングマネージャーへのポインタ
+	m_pLight			= nullptr;					// ライトへのポインタ
+	m_timer				= 0;						// パーティクル生成タイマー
+	m_startState		= StartState::WaitStart;	// UIの状態
+	m_stateTimer		= 0.0f;						// UI遅延タイマー
+	m_canControl		= false;					// 操作可能フラグ
 }
 //=============================================================================
 // デストラクタ

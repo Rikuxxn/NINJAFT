@@ -29,13 +29,10 @@ using namespace std;
 CTitle::CTitle() : CScene(CScene::MODE_TITLE)
 {
 	// 値のクリア
-	m_pVtxBuff = nullptr;		// 頂点バッファへのポインタ
-	m_nIdxTextureTitle = 0;
-	m_alphaPress = 0.0f;          // 現在のα値（0.0f ～ 1.0f）
-	m_isAlphaDown = false;         // 点滅用フラグ（上げる/下げる）
-	m_isEnterPressed = false;      // エンターキー押された
-	m_pLight = nullptr;
-	m_timer = 0;
+	m_pVtxBuff			= nullptr;		// 頂点バッファへのポインタ
+	m_nIdxTextureTitle	= 0;			// テクスチャインデックス
+	m_pLight			= nullptr;		// ライトへのポインタ
+	m_timer				= 0;			// タイマー
 
 	for (int nCnt = 0; nCnt < TYPE_MAX; nCnt++)
 	{

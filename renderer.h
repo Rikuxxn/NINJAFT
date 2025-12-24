@@ -66,14 +66,14 @@ public:
 	D3DXCOLOR GetBgCol(void) { return m_bgCol; }
 
 private:
-	LPDIRECT3D9 m_pD3D;						// DirectX3Dオブジェクトへのポインタ
-	LPDIRECT3DDEVICE9 m_pD3DDevice;			// デバイスへのポインタ
-	static CDebugProc* m_pDebug;			// デバッグフォントへのポインタ
-	static CDebugProc3D* m_pDebug3D;		// 3Dデバッグ表示へのポインタ
-	D3DXCOLOR m_bgCol;						// 画面背景の色
-	UINT m_ResizeWidth;						// 再設定用の画面の幅
-	UINT m_ResizeHeight;					// 再設定用の画面の高さ
-	D3DPRESENT_PARAMETERS m_d3dpp;			// 再設定用のパラメーター
-	static int m_nFPS;						// FPS値の代入用
+	LPDIRECT3D9				m_pD3D;				// DirectX3Dオブジェクトへのポインタ
+	LPDIRECT3DDEVICE9		m_pD3DDevice;		// デバイスへのポインタ
+	static CDebugProc*		m_pDebug;			// デバッグフォントへのポインタ
+	static CDebugProc3D*	m_pDebug3D;			// 3Dデバッグ表示へのポインタ
+	D3DXCOLOR				m_bgCol;			// 画面背景の色
+	UINT					m_ResizeWidth;		// 再設定用の画面の幅
+	UINT					m_ResizeHeight;		// 再設定用の画面の高さ
+	D3DPRESENT_PARAMETERS	m_d3dpp;			// 再設定用のパラメーター
+	static int				m_nFPS;				// FPS値の代入用
 };
 #endif

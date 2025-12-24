@@ -312,20 +312,20 @@ void CUIBase::SlideIn(const D3DXVECTOR3& from, const D3DXVECTOR3& to, float dura
     m_bVisible = true;
 
     m_slideStartPos = from;
-    m_slideEndPos = to;
-    m_slideT = 0.0f;
-    m_slideSpeed = 1.0f / duration;
-    m_slideMode = SlideMode::SlideIn;
+    m_slideEndPos   = to;
+    m_slideT        = 0.0f;
+    m_slideSpeed    = 1.0f / duration;
+    m_slideMode     = SlideMode::SlideIn;
 
     SetPos(from);
 }
 void CUIBase::SlideOut(const D3DXVECTOR3& to, float duration)
 {
     m_slideStartPos = GetPos();
-    m_slideEndPos = to;
-    m_slideT = 0.0f;
-    m_slideSpeed = 1.0f / duration;
-    m_slideMode = SlideMode::SlideOut;
+    m_slideEndPos   = to;
+    m_slideT        = 0.0f;
+    m_slideSpeed    = 1.0f / duration;
+    m_slideMode     = SlideMode::SlideOut;
 }
 //=============================================================================
 // マウスカーソル判定

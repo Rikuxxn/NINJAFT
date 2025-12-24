@@ -33,15 +33,15 @@ private:
 	static constexpr float MAX_SCALE = 1.3f;// 最大拡大率
 
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファへのポインタ
-	D3DXVECTOR3 m_pos;						// 位置
-	D3DCOLOR m_col;							// 色
-	int m_digit;							// 桁
-	float m_fWidth;							// 幅
-	float m_fHeight;						// 高さ
-	float m_scale;							// 拡大率
-	float m_easeTime;						// タイマー
-	float m_easeSpeed;						// tの進むスピード
-	bool m_isExpanding;						// true : 拡大, false : 縮小
+	D3DXVECTOR3				m_pos;			// 位置
+	D3DCOLOR				m_col;			// 色
+	int						m_digit;		// 桁
+	float					m_fWidth;		// 幅
+	float					m_fHeight;		// 高さ
+	float					m_scale;		// 拡大率
+	float					m_easeTime;		// タイマー
+	float					m_easeSpeed;	// tの進むスピード
+	bool					m_isExpanding;	// true : 拡大, false : 縮小
 };
 
 #endif

@@ -62,15 +62,12 @@ private:
 	// タイプごとに頂点範囲を設定
 	VertexRange m_vertexRanges[TYPE_MAX];
 
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファへのポインタ
-	int m_nIdxTextureTitle;					// テクスチャインデックス
-	float m_alphaPress;						// 現在のアルファ値
-	bool  m_isAlphaDown;					// 点滅用フラグ（上げる/下げる）
-	bool  m_isEnterPressed;					// エンターキー押された
-	static CBlockManager* m_pBlockManager;	// ブロックマネージャーへのポインタ
-	CLight* m_pLight;						// ライトへのポインタ
-	int m_timer;							// パーティクル生成タイマー
-	std::unique_ptr<CItemSelect> m_pItemSelect;// 項目選択へのポインタ
+	LPDIRECT3DVERTEXBUFFER9		 m_pVtxBuff;		// 頂点バッファへのポインタ
+	int							 m_nIdxTextureTitle;// テクスチャインデックス
+	static CBlockManager*		 m_pBlockManager;	// ブロックマネージャーへのポインタ
+	CLight*						 m_pLight;			// ライトへのポインタ
+	int							 m_timer;			// パーティクル生成タイマー
+	std::unique_ptr<CItemSelect> m_pItemSelect;		// 項目選択へのポインタ
 
 };
 

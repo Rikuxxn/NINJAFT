@@ -37,8 +37,8 @@ public:
 	}
 
 private:
-	int m_nIdxTexture;		// テクスチャインデックス
-	char m_szPath[MAX_PATH];// ファイルパス
+	int		m_nIdxTexture;		// テクスチャインデックス
+	char	m_szPath[MAX_PATH];	// ファイルパス
 
 };
 

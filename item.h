@@ -54,9 +54,9 @@ public:
 	ITEM GetItemId(void) const;
 
 private:
-	int m_nIdxTexture;						// テクスチャインデックス
-	char m_szPath[MAX_PATH];				// ファイルパス
-	bool m_isSelected;						// 選択したか
+	int		m_nIdxTexture;				// テクスチャインデックス
+	char	m_szPath[MAX_PATH];			// ファイルパス
+	bool	m_isSelected;				// 選択したか
 
 };
 

@@ -12,7 +12,6 @@
 #include "random"
 #include "block.h"
 #include "blockmanager.h"
-#include "game.h"
 
 //=============================================================================
 // マップジェネレーターのインスタンス生成
@@ -647,6 +646,7 @@ void CGenerateMap::GeneratePatrolPoints(
 	float safeDistance,          // 障害物からの最小距離
 	std::vector<D3DXVECTOR3>& outPatrolPoints)
 {
+	// リストのクリア
 	outPatrolPoints.clear();
 
 	float offsets[3] = { -gap, 0.0f, gap };

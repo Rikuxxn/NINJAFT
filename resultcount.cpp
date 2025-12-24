@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// 音発生回数表示処理 [resultsoundcount.cpp]
+// 回数表示処理 [resultcount.cpp]
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
@@ -8,63 +8,57 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include "resultsoundcount.h"
+#include "resultcount.h"
 #include "texture.h"
 #include "manager.h"
 
 
-//*****************************************************************************
-// 静的メンバ変数宣言
-//*****************************************************************************
-//int CResultSoundCount::m_nSoundCount = 0;
-//int CResultSoundCount::m_nDig[MAX_DIGITS] = {};
-
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CResultSoundCount::CResultSoundCount(int nPriority) : CObject(nPriority)
+CCount::CCount(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
 	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
 		m_apNumber[nCnt] = {};
 	}
-	m_nSoundCount = 0;			// 音発生数
-	m_digitWidth = 0.0f;		// 数字1桁あたりの幅
-	m_digitHeight = 0.0f;		// 数字1桁あたりの高さ
-	m_basePos = INIT_VEC3;		// 表示の開始位置
-	m_nIdxTexture = 0;			// テクスチャインデックス
+	m_nCount		= 0;			// 数
+	m_digitWidth	= 0.0f;			// 数字1桁あたりの幅
+	m_digitHeight	= 0.0f;			// 数字1桁あたりの高さ
+	m_basePos		= INIT_VEC3;	// 表示の開始位置
+	m_nIdxTexture	= 0;			// テクスチャインデックス
 }
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CResultSoundCount::~CResultSoundCount()
+CCount::~CCount()
 {
 	// なし
 }
 //=============================================================================
 // 生成処理
 //=============================================================================
-CResultSoundCount* CResultSoundCount::Create(float baseX, float baseY, float digitWidth, float digitHeight, int count)
+CCount* CCount::Create(float baseX, float baseY, float digitWidth, float digitHeight, int count)
 {
-	CResultSoundCount* resultSoundCount = nullptr;
+	CCount* pCount = nullptr;
 
-	resultSoundCount = new CResultSoundCount;
+	pCount = new CCount;
 
-	resultSoundCount->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
-	resultSoundCount->m_digitWidth = digitWidth;
-	resultSoundCount->m_digitHeight = digitHeight;
-	resultSoundCount->m_nSoundCount = count;
+	pCount->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
+	pCount->m_digitWidth = digitWidth;
+	pCount->m_digitHeight = digitHeight;
+	pCount->m_nCount = count;
 
 	// 初期化処理
-	resultSoundCount->Init();
+	pCount->Init();
 
-	return resultSoundCount;
+	return pCount;
 }
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CResultSoundCount::Init(void)
+HRESULT CCount::Init(void)
 {
 	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
@@ -88,7 +82,7 @@ HRESULT CResultSoundCount::Init(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CResultSoundCount::Uninit(void)
+void CCount::Uninit(void)
 {
 	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
@@ -107,7 +101,7 @@ void CResultSoundCount::Uninit(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CResultSoundCount::Update(void)
+void CCount::Update(void)
 {
 	// 各桁の数字を抽出
 	for (int nCount = 0; nCount < MAX_DIGITS; nCount++)
@@ -115,7 +109,7 @@ void CResultSoundCount::Update(void)
 		m_nDig[nCount] = NULL;
 	}
 
-	int nSoundCount = m_nSoundCount;
+	int nSoundCount = m_nCount;
 	for (int nCount = 0; nCount < MAX_DIGITS; nCount++)
 	{
 		int Idx = MAX_DIGITS - 1 - nCount;
@@ -141,7 +135,7 @@ void CResultSoundCount::Update(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CResultSoundCount::Draw(void)
+void CCount::Draw(void)
 {
 	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
@@ -173,7 +167,7 @@ void CResultSoundCount::Draw(void)
 //=============================================================================
 // 桁分割処理
 //=============================================================================
-int CResultSoundCount::DigitNum(int nCount)
+int CCount::DigitNum(int nCount)
 {
 	if (nCount == 0)
 	{

@@ -22,19 +22,19 @@ public:
     void AddLine(const D3DXVECTOR3& p1, const D3DXVECTOR3& p2, D3DCOLOR col);
 
 private:
-    static constexpr int SIZE       = 5;   // 半径
-    static constexpr float SPACING  = 80.0f;// マス間隔
+    static constexpr int    SIZE        = 5;    // 半径
+    static constexpr float  SPACING     = 80.0f;// マス間隔
 
     struct CUSTOMVERTEX
     {
         D3DXVECTOR3 position;
-        D3DCOLOR color;
+        D3DCOLOR    color;
     };
 
-    D3DXMATRIX m_mtxWorld;                  // ワールドマトリックス
-    std::vector<CUSTOMVERTEX> m_vertices;   // 頂点
-    int m_size;                             // 半径
-    float m_spacing;                        // マス間隔
+    std::vector<CUSTOMVERTEX>   m_vertices;   // 頂点
+    D3DXMATRIX                  m_mtxWorld;   // ワールドマトリックス
+    int                         m_size;       // 半径
+    float                       m_spacing;    // マス間隔
 };
 
 #endif

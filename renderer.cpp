@@ -10,12 +10,9 @@
 //*****************************************************************************
 #include "renderer.h"
 #include "object.h"
-#include "object2D.h"
 #include "manager.h"
-#include "game.h"
 #include "imguimaneger.h"
 #include "guiInfo.h"
-#include "title.h"
 #include "ui.h"
 #include "debugproc.h"
 #include "debugproc3D.h"

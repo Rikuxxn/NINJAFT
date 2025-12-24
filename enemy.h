@@ -15,7 +15,6 @@
 #include "state.h"
 #include "debugproc3D.h"
 #include "charactermanager.h"
-#include "weaponcollider.h"
 #include "game.h"
 #include "enemyAI.h"
 #include "player.h"
@@ -23,6 +22,7 @@
 // ‘O•ûéŒ¾
 class CEnemyLeader;
 class CEnemySub;
+class CWeaponCollider;
 
 //*****************************************************************************
 // “GƒNƒ‰ƒX

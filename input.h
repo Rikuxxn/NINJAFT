@@ -32,8 +32,8 @@ public:
 	virtual void Update(void) = 0;
 	LPDIRECTINPUTDEVICE8 GetDevice(void) { return m_pDevice; }
 protected:
-	static LPDIRECTINPUT8 m_pInput;		// DirectInputオブジェクトへのポインタ
-	LPDIRECTINPUTDEVICE8 m_pDevice;		// 入力デバイスへのポインタ
+	static LPDIRECTINPUT8	m_pInput;		// DirectInputオブジェクトへのポインタ
+	LPDIRECTINPUTDEVICE8	m_pDevice;		// 入力デバイスへのポインタ
 
 private:
 };
@@ -109,11 +109,11 @@ public:
 	void StopVibration(void);
 
 private:
-	XINPUT_STATE m_joyKeyState;			// ジョイパッドのプレス情報
+	XINPUT_STATE m_joyKeyState;					// ジョイパッドのプレス情報
 	XINPUT_STATE m_joyKeyStateTrigger;			// ジョイパッドのトリガー情報
 	XINPUT_STATE m_joyKeyStateRelease;			// ジョイパッドのリリース情報
 	XINPUT_STATE m_aOldJoyKeyState;				// ジョイパッドの前回の情報
-	bool m_joyKeyFlag[JOYKEY_MAX];
+	bool		 m_joyKeyFlag[JOYKEY_MAX];		// ジョイパッドのフラグ
 };
 
 //*****************************************************************************

@@ -27,19 +27,19 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
+	void SetGhostObject(bool flag) { m_isGhostObject = flag; }
 	void SetPath(const char* path)
-	{ 
+	{
 		if (path == nullptr)
 		{
 			path = " ";
 		}
 
-		strcpy_s(m_szPath, MAX_PATH, path); 
+		strcpy_s(m_szPath, MAX_PATH, path);
 	}
-	void SetSize(D3DXVECTOR3 size) { m_size = size; }
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
-	void SetGhostObject(bool flag) { m_isGhostObject = flag; }
 
 	const char* GetPath(void) { return m_szPath; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
@@ -51,18 +51,18 @@ public:
 	bool IsGhostObject(void) const { return m_isGhostObject; }
 
 private:
-	int* m_nIdxTexture;
-	D3DXVECTOR3 m_pos;					// 位置
-	D3DXVECTOR3 m_rot;					// 向き
-	D3DXVECTOR3 m_move;					// 移動量
-	D3DXVECTOR3 m_size;					// サイズ
-	LPD3DXMESH m_pMesh;					// メッシュへのポインタ
-	LPD3DXBUFFER m_pBuffMat;			// マテリアルへのポインタ
-	DWORD m_dwNumMat;					// マテリアル数
-	D3DXMATRIX m_mtxWorld;				// ワールドマトリックス
-	char m_szPath[MAX_PATH];			// ファイルパス
-	D3DXVECTOR3 m_modelSize;			// モデルの元サイズ（全体の幅・高さ・奥行き）
-	bool m_isGhostObject;				// ゴーストオブジェクト(透明)かどうか
+	int*			m_nIdxTexture;
+	D3DXVECTOR3		m_pos;				// 位置
+	D3DXVECTOR3		m_rot;				// 向き
+	D3DXVECTOR3		m_move;				// 移動量
+	D3DXVECTOR3		m_size;				// サイズ
+	LPD3DXMESH		m_pMesh;			// メッシュへのポインタ
+	LPD3DXBUFFER	m_pBuffMat;			// マテリアルへのポインタ
+	DWORD			m_dwNumMat;			// マテリアル数
+	D3DXMATRIX		m_mtxWorld;			// ワールドマトリックス
+	char			m_szPath[MAX_PATH];	// ファイルパス
+	D3DXVECTOR3		m_modelSize;		// モデルの元サイズ（全体の幅・高さ・奥行き）
+	bool			m_isGhostObject;	// ゴーストオブジェクト(透明)かどうか
 };
 
 #endif

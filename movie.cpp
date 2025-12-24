@@ -255,6 +255,9 @@ void CMovie::Update(void)
 
 		if (pFade->GetFade() == CFade::FADE_NONE)
 		{
+			// U“®’âŽ~
+			pJoypad->StopVibration();
+
 			// ƒQ[ƒ€‰æ–Ê‚ÉˆÚs
 			pFade->SetFade(MODE_GAME);
 		}

@@ -54,7 +54,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
 
     // 時間の割合を取得
     float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
-    bool isNight = (progress < 0.30f || progress >= 0.90f);
+    bool isNight = (progress >= 0.30f && progress < 0.90f);
 
     // プレイヤーとの距離を算出
     D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
@@ -108,24 +108,6 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     {
         m_soundTimer++;
 
-        //// 音の取得
-        //CSound* pSound = CManager::GetSound();
-
-        //if (pSound && playerInGrass)
-        //{
-        //    // 草SEの再生
-        //    if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9) ||
-        //        pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
-        //    {
-        //        pSound->Play(CSound::SOUND_LABEL_GRASS);
-        //    }
-        //    else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
-        //        pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
-        //    {
-        //        pSound->Play(CSound::SOUND_LABEL_GRASS);
-        //    }
-        //}
-
         // プレイヤーの位置を取得
         D3DXVECTOR3 pos = pPlayer->GetPos();
         pos.y += 40.0f;// 少し上げる
@@ -142,7 +124,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         pEnemy->SetSoundCount(m_soundCount);
 
         // 波紋の生成
-        CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.008f);
+        CMeshCylinder::Create(pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 12.0f, 8.0f, 0.8f, 120, 0.01f);
 
         // 効果音ポップアップエフェクトの生成
         CSEPopupEffect::Create(path, pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 40);

@@ -74,7 +74,7 @@ public:
 
 private:
     static constexpr int MAX_ATTEMPTS   = 50;       // 試行回数
-    static constexpr int MAX_TORCH      = 3;        // 灯籠の設置数
+    static constexpr int MAX_TORCH      = 2;        // 灯籠の設置数
     static constexpr int MAX_TREASURE   = 8;        // 埋蔵金の設置数
 
     // マップ生成パラメータ

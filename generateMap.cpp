@@ -201,8 +201,8 @@ void CGenerateMap::EnsureTorchCount(int gridX, int gridZ, float areaSize,
 		return ((rand() / (float)RAND_MAX) - 0.5f) * 2.0f * variation;
 	};
 
-	// 4辺からランダムに3つ選ぶ
-	std::vector<int> sides = { 0, 1, 2, 3 }; // 0 = 下,1 = 上,2 = 左,3 = 右
+	// 3辺からランダムに2つ選ぶ
+	std::vector<int> sides = { 0, 1, 2 }; // 0 = 下,1 = 左,2 = 右
 	std::shuffle(sides.begin(), sides.end(), std::mt19937{ std::random_device{}() });
 	sides.resize(MAX_TORCH);
 
@@ -213,15 +213,15 @@ void CGenerateMap::EnsureTorchCount(int gridX, int gridZ, float areaSize,
 		switch (side)
 		{
 		case 0: // 下
-			pos = { (startX + endX) * 0.8f + randVar(), 0.0f, startZ + INWARD_OFFSET };
+			pos = { (startX + endX) * 3.0f + randVar(), 0.0f, startZ + INWARD_OFFSET };
 			break;
-		case 1: // 上
-			pos = { (startX + endX) * 0.8f + randVar(), 0.0f, endZ - INWARD_OFFSET };
-			break;
-		case 2: // 左
+		//case 1: // 上
+		//	pos = { (startX + endX) * 0.8f + randVar(), 0.0f, endZ - INWARD_OFFSET };
+		//	break;
+		case 1: // 左
 			pos = { startX + INWARD_OFFSET, 0.0f, (startZ + endZ) * 0.8f + randVar() };
 			break;
-		case 3: // 右
+		case 2: // 右
 			pos = { endX - INWARD_OFFSET, 0.0f, (startZ + endZ) * 0.8f + randVar() };
 			break;
 		}

@@ -193,7 +193,7 @@ void CManager::Uninit(void)
 	// サウンドの破棄
 	if (m_pSound != nullptr)
 	{
-		// マウスの終了処理
+		// サウンドの終了処理
 		m_pSound->Uninit();
 
 		delete m_pSound;

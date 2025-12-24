@@ -89,6 +89,7 @@ HRESULT CTutorial::Init(void)
 	// ƒ‹[ƒ‹UI¶¬
 	auto rule_1 = CUITexture::Create("data/TEXTURE/ui_rule1.png", 220.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
 	auto rule_2 = CUITexture::Create("data/TEXTURE/ui_rule2.png", 220.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
+	auto rule_3 = CUITexture::Create("data/TEXTURE/ui_rule3.png", 220.0f, 460.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
 
 	// ‘€ìUI¶¬
 	auto dush_xinput = CUITexture::Create("data/TEXTURE/ui_operation_dush_xinput.png", 1510.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 210.0f, 35.0f);
@@ -110,6 +111,7 @@ HRESULT CTutorial::Init(void)
 	// ƒ‹[ƒ‹UI“o˜^
 	CUIManager::GetInstance()->AddUI("Rule_1", rule_1);
 	CUIManager::GetInstance()->AddUI("Rule_2", rule_2);
+	CUIManager::GetInstance()->AddUI("Rule_3", rule_3);
 
 	// ‘€ìUI“o˜^
 	CUIManager::GetInstance()->AddUI("Dush_xinput", dush_xinput);
@@ -123,8 +125,6 @@ HRESULT CTutorial::Init(void)
 	skip_keyboard->Hide();
 	start_xinput->Hide();
 	start_keyboard->Hide();
-	rule_1->Show();
-	rule_2->Show();
 	dush_xinput->Show();
 	stealth_xinput->Show();
 	dush_keyboard->Hide();

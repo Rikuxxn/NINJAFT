@@ -36,17 +36,24 @@ CRank::~CRank()
 //=============================================================================
 CRank* CRank::Create(D3DXVECTOR3 pos, float fWidth, float fHeight, float fRank)
 {
-	CRank* pRank;
+	CRank* pRank = new CRank;
 
-	pRank = new CRank;
+	// nullptr‚¾‚Á‚½‚ç
+	if (pRank == nullptr)
+	{
+		return nullptr;
+	}
 
 	pRank->m_pos = pos;
 	pRank->m_fWidth = fWidth;
 	pRank->m_fHeight = fHeight;
 	pRank->m_fRank = fRank;
 
-	// ‰Šú‰»ˆ—
-	pRank->Init();
+	// ‰Šú‰»¸”s
+	if (FAILED(pRank->Init()))
+	{
+		return nullptr;
+	}
 
 	return pRank;
 }

@@ -294,6 +294,9 @@
     <ClCompile Include="resultcount.cpp">
       <Filter>ソース ファイル\ResultUI</Filter>
     </ClCompile>
+    <ClCompile Include="meshfield.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -538,6 +541,9 @@
     </ClInclude>
     <ClInclude Include="resultcount.h">
       <Filter>ヘッダー ファイル\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="meshfield.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

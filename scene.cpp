@@ -74,8 +74,11 @@ CScene* CScene::Create(MODE mode)
 		break;
 	}
 
-	// ‰Šú‰»ˆ—
-	pScene->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pScene->Init()))
+	{
+		return nullptr;
+	}
 
 	return pScene;
 }

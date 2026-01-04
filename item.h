@@ -25,7 +25,6 @@ public:
 	typedef enum
 	{
 		ITEM_ID_PLAY = 0,
-		ITEM_ID_TUTORIAL,
 		ITEM_ID_EXIT,
 		ITEM_MAX
 	}ITEM;
@@ -68,21 +67,6 @@ class CPlay : public CItem
 public:
 	CPlay();
 	~CPlay();
-
-	void Execute(void) override;
-
-private:
-
-};
-
-//*****************************************************************************
-// チュートリアル項目クラス
-//*****************************************************************************
-class  CTutorialItem : public CItem
-{
-public:
-	CTutorialItem();
-	~CTutorialItem();
 
 	void Execute(void) override;
 

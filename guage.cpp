@@ -40,6 +40,12 @@ CGuage* CGuage::Create(GUAGETYPE type, D3DXVECTOR3 pos, float fWidth, float fHei
 {
 	CGuage* pGuage = new CGuage;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pGuage == nullptr)
+	{
+		return nullptr;
+	}
+
 	// ‰Šú‰»ˆ—
 	pGuage->SetPos(pos);
 	pGuage->SetSize(fWidth, fHeight);
@@ -62,8 +68,11 @@ CGuage* CGuage::Create(GUAGETYPE type, D3DXVECTOR3 pos, float fWidth, float fHei
 	pGuage->m_currentRate = 1.0f;
 	pGuage->m_speed = 0.005f; // ’Ç]‘¬“x
 
-	// ‰Šú‰»ˆ—
-	pGuage->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pGuage->Init()))
+	{
+		return nullptr;
+	}
 
 	return pGuage;
 }

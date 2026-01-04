@@ -37,12 +37,19 @@ CFade::~CFade()
 //=============================================================================
 CFade* CFade::Create(CScene::MODE mode)
 {
-	CFade* pFade = nullptr;
+	CFade* pFade = new CFade;
 
-	pFade = new CFade;
+	// nullptr‚¾‚Á‚½‚ç
+	if (pFade == nullptr)
+	{
+		return nullptr;
+	}
 
-	// ‰Šú‰»ˆ—
-	pFade->Init(mode);
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pFade->Init(mode)))
+	{
+		return nullptr;
+	}
 
 	return pFade;
 }

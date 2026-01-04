@@ -113,8 +113,6 @@ private:
 	bool m_isInGrass;					// 草の範囲内か
 	bool m_isInTorch;					// 灯籠の範囲内か
 	bool m_isStealth;					// ステルス状態か
-	bool m_prevIn;						// 直前に入ったか
-	bool m_prevMoving;					// 直前に動いていたか
 	int m_deleyTime;					// 移動までの遅延時間(演出等で使用)
 	bool m_canControl;					// 操作フラグ
 	bool m_smokeActive;					// 煙フラグ

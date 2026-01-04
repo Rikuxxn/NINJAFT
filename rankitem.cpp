@@ -38,16 +38,23 @@ CRankItem::~CRankItem()
 //=============================================================================
 CRankItem* CRankItem::Create(float baseX, float baseY, float digitWidth, float digitHeight)
 {
-	CRankItem* rankItem = nullptr;
+	CRankItem* rankItem = new CRankItem;
 
-	rankItem = new CRankItem;
+	// nullptr‚¾‚Á‚½‚ç
+	if (rankItem == nullptr)
+	{
+		return nullptr;
+	}
 
 	rankItem->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
 	rankItem->m_digitWidth = digitWidth;
 	rankItem->m_digitHeight = digitHeight;
 
-	// ‰Šú‰»ˆ—
-	rankItem->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(rankItem->Init()))
+	{
+		return nullptr;
+	}
 
 	return rankItem;
 }

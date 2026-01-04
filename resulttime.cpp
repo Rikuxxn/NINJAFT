@@ -43,9 +43,13 @@ CResultTime::~CResultTime()
 //=============================================================================
 CResultTime* CResultTime::Create(int minutes, int seconds, float baseX, float baseY, float digitWidth, float digitHeight)
 {
-	CResultTime* pTime;
+	CResultTime* pTime = new CResultTime;
 
-	pTime = new CResultTime;
+	// nullptr‚¾‚Á‚½‚ç
+	if (pTime == nullptr)
+	{
+		return nullptr;
+	}
 
 	pTime->m_nMinutes = minutes;
 	pTime->m_nSeconds = seconds;
@@ -54,8 +58,11 @@ CResultTime* CResultTime::Create(int minutes, int seconds, float baseX, float ba
 	pTime->m_digitWidth = digitWidth;
 	pTime->m_digitHeight = digitHeight;
 
-	// ‰Šú‰»ˆ—
-	pTime->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pTime->Init()))
+	{
+		return nullptr;
+	}
 
 	return pTime;
 }

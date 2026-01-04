@@ -47,17 +47,24 @@ CObject2D::~CObject2D()
 //=============================================================================
 CObject2D* CObject2D::Create(D3DXVECTOR3 pos, D3DXCOLOR col, float fWidth, float fHeight)
 {
-	CObject2D* pObject2D;
-
 	// オブジェクトの生成
-	pObject2D = new CObject2D;
+	CObject2D* pObject2D = new CObject2D;
+
+	// nullptrだったら
+	if (pObject2D == nullptr)
+	{
+		return nullptr;
+	}
 
 	pObject2D->SetPos(pos);
 	pObject2D->SetSize(fWidth, fHeight);
 	pObject2D->SetCol(col);
 
-	// 初期化処理
-	pObject2D->Init();
+	// 初期化失敗時
+	if (FAILED(pObject2D->Init()))
+	{
+		return nullptr;
+	}
 
 	return pObject2D;
 }

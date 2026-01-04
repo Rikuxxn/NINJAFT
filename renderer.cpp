@@ -16,6 +16,7 @@
 #include "ui.h"
 #include "debugproc.h"
 #include "debugproc3D.h"
+#include "game.h"
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾

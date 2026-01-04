@@ -45,8 +45,17 @@ CNumber* CNumber::Create(float fposX, float fposY, float fWidth, float fHeight)
 	// オブジェクトの生成
 	CNumber* pNumber = new CNumber;
 
-	// 初期化処理
-	pNumber->Init(fposX, fposY, fWidth, fHeight);
+	// nullptrだったら
+	if (pNumber == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 初期化失敗時
+	if (FAILED(pNumber->Init(fposX, fposY, fWidth, fHeight)))
+	{
+		return nullptr;
+	}
 
 	return pNumber;
 }

@@ -43,12 +43,21 @@ CDummyPlayer* CDummyPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int motionT
 {
 	CDummyPlayer* pDummyPlayer = new CDummyPlayer;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pDummyPlayer == nullptr)
+	{
+		return nullptr;
+	}
+
 	pDummyPlayer->SetPos(pos);
 	pDummyPlayer->SetRot(D3DXToRadian(rot));
 	pDummyPlayer->SetMotionType(motionType);
 
-	// ‰Šú‰»ˆ—
-	pDummyPlayer->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pDummyPlayer->Init()))
+	{
+		return nullptr;
+	}
 
 	return pDummyPlayer;
 }

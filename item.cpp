@@ -44,10 +44,6 @@ CItem* CItem::Create(ITEM type, D3DXVECTOR3 pos, float fWidth, float fHeight)
 		pItem = new CPlay;
 		pItem->SetPath("data/TEXTURE/ui_start.png");
 		break;
-	case ITEM_ID_TUTORIAL:
-		pItem = new CTutorialItem;
-		pItem->SetPath("data/TEXTURE/ui_tutorial.png");
-		break;
 	case ITEM_ID_EXIT:
 		pItem = new CExit;
 		pItem->SetPath("data/TEXTURE/ui_exit.png");
@@ -57,12 +53,21 @@ CItem* CItem::Create(ITEM type, D3DXVECTOR3 pos, float fWidth, float fHeight)
 		break;
 	}
 
+	// nullptrだったら
+	if (pItem == nullptr)
+	{
+		return nullptr;
+	}
+
 	pItem->SetPos(pos);
 	pItem->SetSize(fWidth, fHeight);
 	pItem->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	// 初期化処理
-	pItem->Init();
+	// 初期化失敗時
+	if (FAILED(pItem->Init()))
+	{
+		return nullptr;
+	}
 
 	return pItem;
 }
@@ -155,7 +160,6 @@ bool CItem::IsMouseOver(void)
 CItem::ITEM CItem::GetItemId(void) const
 {
 	if (dynamic_cast<const CPlay*>(this)) return ITEM_ID_PLAY;
-	if (dynamic_cast<const CTutorialItem*>(this)) return ITEM_ID_TUTORIAL;
 	if (dynamic_cast<const CExit*>(this)) return ITEM_ID_EXIT;
 
 	return ITEM_MAX; // 想定外
@@ -183,31 +187,6 @@ CPlay::~CPlay()
 void CPlay::Execute(void)
 {
 	// ゲーム画面に移行
-	CManager::GetFade()->SetFade(CScene::MODE_MOVIE);
-}
-
-
-//=============================================================================
-// チュートリアル項目のコンストラクタ
-//=============================================================================
-CTutorialItem::CTutorialItem()
-{
-	// 値のクリア
-
-}
-//=============================================================================
-// チュートリアル項目のデストラクタ
-//=============================================================================
-CTutorialItem::~CTutorialItem()
-{
-	// なし
-}
-//=============================================================================
-// 選択時の処理
-//=============================================================================
-void CTutorialItem::Execute(void)
-{
-	// チュートリアル画面に移行
 	CManager::GetFade()->SetFade(CScene::MODE_TUTORIAL);
 }
 

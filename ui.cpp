@@ -137,11 +137,21 @@ CUIBase* CUIBase::Create(float x, float y, D3DXCOLOR col, float width, float hei
 {
     CUIBase* pUi = new CUIBase;
 
+    // nullptr‚¾‚Á‚½‚ç
+    if (pUi == nullptr)
+    {
+        return nullptr;
+    }
+
     pUi->SetPos(D3DXVECTOR3(x, y, 0.0f));
     pUi->SetCol(col);
     pUi->SetSize(width, height);
 
-    pUi->Init();
+    // ‰Šú‰»Ž¸”sŽž
+    if (FAILED(pUi->Init()))
+    {
+        return nullptr;
+    }
 
     return pUi;
 }

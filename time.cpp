@@ -48,9 +48,13 @@ CTime::~CTime()
 //=============================================================================
 CTime* CTime::Create(int minutes, int seconds,float baseX,float baseY,float digitWidth,float digitHeight, bool visibleFlag)
 {
-	CTime* pTime;
+	CTime* pTime = new CTime;
 
-	pTime = new CTime;
+	// nullptr‚¾‚Á‚½‚ç
+	if (pTime == nullptr)
+	{
+		return nullptr;
+	}
 
 	pTime->m_nMinutes = minutes;
 	pTime->m_nSeconds = seconds;
@@ -64,8 +68,11 @@ CTime* CTime::Create(int minutes, int seconds,float baseX,float baseY,float digi
 	pTime->m_nStartMinutes = pTime->m_nMinutes;
 	pTime->m_nStartSeconds = pTime->m_nSeconds;
 
-	// ‰Šú‰»ˆ—
-	pTime->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pTime->Init()))
+	{
+		return nullptr;
+	}
 
 	return pTime;
 }

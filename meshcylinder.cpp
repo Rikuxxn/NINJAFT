@@ -44,6 +44,12 @@ CMeshCylinder* CMeshCylinder::Create(D3DXVECTOR3 pos, D3DXCOLOR col, float fRad,
 {
 	CMeshCylinder* pCylinder = new CMeshCylinder;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pCylinder == nullptr)
+	{
+		return nullptr;
+	}
+
 	pCylinder->SetPos(pos);
 	pCylinder->SetCol(col);
 	pCylinder->SetRadius(fRad);
@@ -52,8 +58,11 @@ CMeshCylinder* CMeshCylinder::Create(D3DXVECTOR3 pos, D3DXCOLOR col, float fRad,
 	pCylinder->SetLife(nLife);
 	pCylinder->SetDecAlpha(decAlpha);
 
-	// ‰Šú‰»ˆ—
-	pCylinder->Init();
+	// ‰Šú‰»¸”s
+	if (FAILED(pCylinder->Init()))
+	{
+		return nullptr;
+	}
 
 	return pCylinder;
 }

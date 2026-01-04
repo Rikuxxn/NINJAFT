@@ -45,7 +45,6 @@ void CItemSelect::Init(void)
     {
         D3DXVECTOR3(420.0f, 510.0f, 0.0f),
         D3DXVECTOR3(420.0f, 650.0f, 0.0f),
-        D3DXVECTOR3(420.0f, 790.0f, 0.0f)
     };
 
     for (int i = 0; i < (int)Positions.size(); i++)
@@ -60,9 +59,6 @@ void CItemSelect::Init(void)
             item = CItem::Create(CItem::ITEM_ID_PLAY, Pos, 150.0f, 60.0f);
             break;
         case 1:
-            item = CItem::Create(CItem::ITEM_ID_TUTORIAL, Pos, 150.0f, 60.0f);
-            break;
-        case 2:
             item = CItem::Create(CItem::ITEM_ID_EXIT, Pos, 150.0f, 60.0f);
             break;
         }

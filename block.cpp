@@ -74,7 +74,13 @@ CBlock* CBlock::Create(const char* pFilepath, D3DXVECTOR3 pos, D3DXVECTOR3 rot, 
 	pBlock->SetType(type);
 	pBlock->SetPath(pFilepath);
 
-	pBlock->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pBlock->Init()))
+	{
+		return nullptr;
+	}
+
+	// “–‚½‚è”»’è‚Ì¶¬
 	pBlock->CreatePhysicsFromScale(size);
 
 	return pBlock;

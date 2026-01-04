@@ -35,14 +35,23 @@ CBlood* CBlood::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col, float wi
 {
 	CBlood* pBlood = new CBlood;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pBlood == nullptr)
+	{
+		return nullptr;
+	}
+
 	pBlood->SetPos(pos);
 	pBlood->SetRot(D3DXToRadian(rot));
 	pBlood->SetCol(col);
 	pBlood->SetWidth(width);
 	pBlood->SetHeight(height);
 
-	// ‰Šú‰»ˆ—
-	pBlood->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pBlood->Init()))
+	{
+		return nullptr;
+	}
 
 	return pBlood;
 }

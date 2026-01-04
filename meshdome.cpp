@@ -35,11 +35,20 @@ CMeshDome* CMeshDome::Create(D3DXVECTOR3 pos, int nRadius)
 	// インスタンス生成
 	CMeshDome* pDome = new CMeshDome;
 
+	// nullptrだったら
+	if (pDome == nullptr)
+	{
+		return nullptr;
+	}
+
 	pDome->m_pos = pos;
 	pDome->m_nRadius = nRadius;
 
-	// 初期化処理
-	pDome->Init();
+	// 初期化失敗時
+	if (FAILED(pDome->Init()))
+	{
+		return nullptr;
+	}
 
 	return nullptr;
 }

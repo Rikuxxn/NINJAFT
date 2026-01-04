@@ -32,17 +32,24 @@ CBackground::~CBackground()
 //=============================================================================
 CBackground* CBackground::Create(D3DXVECTOR3 pos, float fWidth, float fHeight, const char* path)
 {
-	CBackground* pBackground = nullptr;
+	CBackground* pBackground = new CBackground();
 
-	pBackground = new CBackground();
+	// nullptr‚¾‚Á‚½‚ç
+	if (pBackground == nullptr)
+	{
+		return nullptr;
+	}
 
 	pBackground->SetPath(path);
 	pBackground->SetPos(pos);
 	pBackground->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	pBackground->SetSize(fWidth, fHeight);
 
-	// ‰Šú‰»ˆ—
-	pBackground->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pBackground->Init()))
+	{
+		return nullptr;
+	}
 
 	return pBackground;
 }

@@ -41,16 +41,23 @@ CRankTime::~CRankTime()
 //=============================================================================
 CRankTime* CRankTime::Create(float baseX,float baseY,float digitWidth,float digitHeight)
 {
-	CRankTime* pRankTime;
+	CRankTime* pRankTime = new CRankTime;
 
-	pRankTime = new CRankTime;
+	// nullptr‚¾‚Á‚½‚ç
+	if (pRankTime == nullptr)
+	{
+		return nullptr;
+	}
 
 	pRankTime->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
 	pRankTime->m_digitWidth = digitWidth;
 	pRankTime->m_digitHeight = digitHeight;
 
-	// ‰Šú‰»ˆ—
-	pRankTime->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pRankTime->Init()))
+	{
+		return nullptr;
+	}
 
 	return pRankTime;
 }

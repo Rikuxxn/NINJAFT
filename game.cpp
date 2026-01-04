@@ -21,6 +21,7 @@
 #include "resultcount.h"
 #include "grid.h"
 #include "generateMap.h"
+#include "meshfield.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -83,6 +84,9 @@ HRESULT CGame::Init(void)
 
 	// ランダムマップ生成
 	CGenerateMap::GetInstance()->GenerateRandomMap(m_nSeed);
+
+	//// メッシュフィールドの生成
+	//CMeshField::Create(D3DXVECTOR3(0.0f, 50.0f, 0.0f), 800.0f, 800.0f, 100, 100);
 
 	// キャラクターマネージャーの生成
 	auto& charaMgr = CCharacterManager::GetInstance();

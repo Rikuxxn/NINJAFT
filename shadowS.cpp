@@ -38,11 +38,20 @@ CShadowS* CShadowS::Create(const char* pFilepath,D3DXVECTOR3 size)
 {
 	CShadowS* pShadowS = new CShadowS;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pShadowS == nullptr)
+	{
+		return nullptr;
+	}
+
 	pShadowS->SetPath(pFilepath);
 	pShadowS->SetSize(size);
 
-	// ‰Šú‰»ˆ—
-	pShadowS->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pShadowS->Init()))
+	{
+		return nullptr;
+	}
 
 	return pShadowS;
 }

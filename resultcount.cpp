@@ -41,17 +41,24 @@ CCount::~CCount()
 //=============================================================================
 CCount* CCount::Create(float baseX, float baseY, float digitWidth, float digitHeight, int count)
 {
-	CCount* pCount = nullptr;
+	CCount* pCount = new CCount;
 
-	pCount = new CCount;
+	// nullptr‚¾‚Á‚½‚ç
+	if (pCount == nullptr)
+	{
+		return nullptr;
+	}
 
 	pCount->m_basePos = D3DXVECTOR3(baseX, baseY, 0.0f);
 	pCount->m_digitWidth = digitWidth;
 	pCount->m_digitHeight = digitHeight;
 	pCount->m_nCount = count;
 
-	// ‰Šú‰»ˆ—
-	pCount->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pCount->Init()))
+	{
+		return nullptr;
+	}
 
 	return pCount;
 }

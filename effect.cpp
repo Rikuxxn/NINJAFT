@@ -42,10 +42,19 @@ CEffect* CEffect::Create(const EffectDesc& desc)
 	// エフェクトオブジェクトの生成
 	CEffect* pEffect = new CEffect;
 
+	// nullptrだったら
+	if (pEffect == nullptr)
+	{
+		return nullptr;
+	}
+
 	pEffect->SetPath(desc.path);
 
-	// 初期化処理
-	pEffect->Init();
+	// 初期化失敗時
+	if (FAILED(pEffect->Init()))
+	{
+		return nullptr;
+	}
 
 	pEffect->SetPos(desc.pos);
 	pEffect->SetMove(desc.move);

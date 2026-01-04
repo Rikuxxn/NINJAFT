@@ -48,13 +48,22 @@ CObjectX* CObjectX::Create(const char* pFilepath, D3DXVECTOR3 pos, D3DXVECTOR3 r
 {
 	CObjectX* pObjectX = new CObjectX;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pObjectX == nullptr)
+	{
+		return nullptr;
+	}
+
 	pObjectX->m_pos = pos;
 	pObjectX->m_rot = D3DXToRadian(rot);
 	pObjectX->m_size = size;
 	pObjectX->SetPath(pFilepath);	// ƒpƒX•Û‘¶
 
-	// ‰Šú‰»ˆ—
-	pObjectX->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pObjectX->Init()))
+	{
+		return nullptr;
+	}
 
 	return pObjectX;
 }

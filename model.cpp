@@ -51,12 +51,21 @@ CModel* CModel::Create(const char* pFilepath, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
 	CModel* pModel = new CModel;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pModel == nullptr)
+	{
+		return nullptr;
+	}
+
 	pModel->m_pos = pos;
 	pModel->m_rot = D3DXToRadian(rot);
 	strcpy_s(pModel->m_Path, pFilepath); // ƒpƒX•Û‘¶
 
-	// ‰Šú‰»ˆ—
-	pModel->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pModel->Init()))
+	{
+		return nullptr;
+	}
 
 	return pModel;
 }

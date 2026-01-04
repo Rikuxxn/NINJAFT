@@ -39,8 +39,6 @@ CPlayer::CPlayer()
 	m_isInGrass			= false;						// 草の範囲内か
 	m_isInTorch			= false;						// 灯籠の範囲内か
 	m_isStealth			= false;						// ステルス状態か
-	m_prevIn			= false;						// 直前に入ったか
-	m_prevMoving		= false;						// 直前に動いていたか
 	m_canControl		= false;						// 操作フラグ
 	m_smokeTimer		= 30;							// 煙生成時間
 	m_smokeActive		= true;							// 煙フラグ
@@ -61,12 +59,21 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
 	CPlayer* pPlayer = new CPlayer;
 
+	// nullptrだったら
+	if (pPlayer == nullptr)
+	{
+		return nullptr;
+	}
+
 	pPlayer->SetPos(pos);
 	pPlayer->SetRot(D3DXToRadian(rot));
 	pPlayer->SetSize(D3DXVECTOR3(1.2f, 1.2f, 1.2f));
 
-	// 初期化処理
-	pPlayer->Init();
+	// 初期化失敗時
+	if (FAILED(pPlayer->Init()))
+	{
+		return nullptr;
+	}
 
 	return pPlayer;
 }
@@ -185,28 +192,6 @@ void CPlayer::Update(void)
 	// 特定のブロックに当たっているか判定する
 	bool playerInGrass = pBlockManager->IsPlayerInGrass();
 
-	// 草に入った
-	bool enteredGrass = playerInGrass && !m_prevIn;
-
-	// 動いている
-	bool isMoving = m_bIsMoving;
-
-	// 草の中で止まった
-	bool stoppedInGrass = playerInGrass && !isMoving && m_prevMoving;
-
-	if (enteredGrass && (!isMoving || m_isStealth))
-	{
-		m_smokeActive = true;
-		m_smokeTimer = 10;
-	}
-
-	// 草の中で 移動 → 停止
-	if (stoppedInGrass && !m_pMotion->IsCurrentMotion(STEALTH_MOVE))
-	{
-		m_smokeActive = true;
-		m_smokeTimer = 10;
-	}
-
 	// ゲーム開始時
 	if (m_isGameStartSmoke)
 	{
@@ -215,7 +200,7 @@ void CPlayer::Update(void)
 		m_isGameStartSmoke = false;
 	}
 
-	if (m_smokeActive && (playerInGrass || !m_isGameStartSmoke))
+	if (m_smokeActive && !m_isGameStartSmoke)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -234,9 +219,6 @@ void CPlayer::Update(void)
 			m_smokeActive = false;
 		}
 	}
-
-	m_prevIn = playerInGrass;
-	m_prevMoving = isMoving;
 
 	// 向きの更新処理
 	UpdateRotation(0.09f);

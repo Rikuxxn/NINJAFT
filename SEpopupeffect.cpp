@@ -34,13 +34,22 @@ CSEPopupEffect* CSEPopupEffect::Create(const char* path, D3DXVECTOR3 pos, D3DXCO
 {
 	CSEPopupEffect* pSEPopupEffect = new CSEPopupEffect;
 
+	// nullptr‚¾‚Á‚½‚ç
+	if (pSEPopupEffect == nullptr)
+	{
+		return nullptr;
+	}
+
 	pSEPopupEffect->SetPath(path);
 	pSEPopupEffect->SetPos(pos);
 	pSEPopupEffect->SetCol(col);
 	pSEPopupEffect->SetLife(nLife);
 
-	// ‰Šú‰»ˆ—
-	pSEPopupEffect->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pSEPopupEffect->Init()))
+	{
+		return nullptr;
+	}
 
 	return pSEPopupEffect;
 }

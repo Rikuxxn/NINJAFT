@@ -21,7 +21,7 @@ public:
     CItemSelect();
     ~CItemSelect();
 
-    void Init(void);                     // 初期化
+    void Init(void);                    // 初期化
     void Uninit(void);
     void Update(void);                  // 更新（入力処理）
     void Draw(void);                    // 描画

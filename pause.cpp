@@ -56,12 +56,21 @@ CPause* CPause::Create(MENU type,D3DXVECTOR3 pos, float fWidth, float fHeight)
 		break;
 	}
 
+	// nullptrだったら
+	if (pPause == nullptr)
+	{
+		return nullptr;
+	}
+
 	pPause->SetPos(pos);
 	pPause->SetSize(fWidth, fHeight);
 	pPause->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	// 初期化処理
-	pPause->Init();
+	// 初期化失敗時
+	if (FAILED(pPause->Init()))
+	{
+		return nullptr;
+	}
 
 	return pPause;
 }

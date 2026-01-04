@@ -40,8 +40,17 @@ CObject3D* CObject3D::Create(void)
 	// オブジェクトの生成
 	CObject3D* pObject3D = new CObject3D;
 
-	// 初期化処理
-	pObject3D->Init();
+	// nullptrだったら
+	if (pObject3D == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 初期化失敗時
+	if (FAILED(pObject3D->Init()))
+	{
+		return nullptr;
+	}
 
 	return pObject3D;
 }

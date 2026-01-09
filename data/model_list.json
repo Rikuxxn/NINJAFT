@@ -1,0 +1,66 @@
+[
+  {
+    "type": 0,
+    "filepath": "data/MODELS/wall_01.x"
+  },
+  {
+    "type": 1,
+    "filepath": "data/MODELS/wall_top.x"
+  },
+  {
+    "type": 2,
+    "filepath": "data/MODELS/wall_mini.x"
+  },
+  {
+    "type": 3,
+    "filepath": "data/MODELS/floor_01.x"
+  },
+  {
+    "type": 4,
+    "filepath": "data/MODELS/torch_01.x"
+  },
+  {
+    "type": 5,
+    "filepath": "data/MODELS/rock_01.x"
+  },
+  {
+    "type": 6,
+    "filepath": "data/MODELS/grass.x"
+  },
+  {
+    "type": 7,
+    "filepath": "data/MODELS/water_01.x"
+  },
+  {
+    "type": 8,
+    "filepath": "data/MODELS/floor_02.x"
+  },
+  {
+    "type": 9,
+    "filepath": "data/MODELS/blossom_tree.x"
+  },
+  {
+    "type": 10,
+    "filepath": "data/MODELS/buried_treasure.x"
+  },
+  {
+    "type": 11,
+    "filepath": "data/MODELS/old_door.x"
+  },
+  {
+    "type": 12,
+    "filepath": "data/MODELS/ghostobject.x"
+  },
+  {
+    "type": 13,
+    "filepath": "data/MODELS/gate.x"
+  },
+  {
+    "type": 14,
+    "filepath": "data/MODELS/board.x"
+  },
+  {
+    "type": 15,
+    "filepath": "data/MODELS/gear.x"
+  }
+]

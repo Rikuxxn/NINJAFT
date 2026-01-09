@@ -1086,7 +1086,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\C++game\\NINJAFT\\data\\TEXTURE\\soil.jpg";
+    "data/TEXTURE/soil.jpg";
    }
   }
  }

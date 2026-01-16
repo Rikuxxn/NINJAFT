@@ -40,7 +40,7 @@ HRESULT CRanking::Init(void)
 	m_pRankingManager = CRankingManager::GetInstance();
 
 	// 背景の生成
-	CBackground::Create(D3DXVECTOR3(850.0f, 490.0f, 0.0f), 280.0f, 390.0f, "data/TEXTURE/ranking_back.png");
+	CBackground::Create("data/TEXTURE/ranking_back.png", 0.57f, 0.7f, 0.15f, 0.4f);
 
 	//// タイムランキング
 	//TimeRanking(m_pRankingManager);
@@ -136,7 +136,7 @@ void CRanking::TimeRanking(CRankingManager* pRankingManager)
 void CRanking::ItemRanking(CRankingManager* pRankingManager)
 {
 	// ランキングアイテムの生成
-	m_pRankItem = CRankItem::Create(660.0f, 190.0f, 62.0f, 78.0f);
+	m_pRankItem = CRankItem::Create(0.53f, 0.23f, 0.08f, 0.09f, 1.3f);
 
 	// ランキングデータをセット
 	if (pRankingManager)

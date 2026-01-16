@@ -58,6 +58,8 @@ public:
 	static int GetSeed(void) { return m_nSeed; }
 
 private:
+	static constexpr int WAIT_TIME = 190;					// 初回の待機時間
+
 	std::unique_ptr<CRankingManager> m_pRankingManager;		// ランキングへのポインタ
 	CPlayer*						 m_pPlayer;				// プレイヤーへのポインタ
 	CEnemy*							 m_pEnemy;				// 敵へのポインタ

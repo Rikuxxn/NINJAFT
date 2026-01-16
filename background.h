@@ -21,7 +21,16 @@ public:
 	CBackground();
 	~CBackground();
 
-	static CBackground* Create(D3DXVECTOR3 pos, float fWidth, float fHeight, const char* path);
+	// UIレイアウト構造体
+	struct UILayout
+	{
+		float anchorX;   // 0.0～1.0
+		float anchorY;   // 0.0～1.0
+		float widthRate; // 画面比率
+		float heightRate;
+	};
+
+	static CBackground* Create(const char* path, float anchorX, float anchorY, float widthRate, float heightRate);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -35,10 +44,17 @@ public:
 
 		strcpy_s(m_szPath, MAX_PATH, path); 
 	}
+	void SetAnchor(float x, float y)
+	{
+		m_layout.anchorX = x;
+		m_layout.anchorY = y;
+	}
+	void SetSizeRate(float width, float height) { m_layout.widthRate = width; m_layout.heightRate = height; }
 
 private:
-	int		m_nIdxTexture;		// テクスチャインデックス
-	char	m_szPath[MAX_PATH];	// ファイルパス
+	int			m_nIdxTexture;		// テクスチャインデックス
+	char		m_szPath[MAX_PATH];	// ファイルパス
+	UILayout    m_layout;           // レイアウト構造体変数
 
 };
 

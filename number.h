@@ -28,7 +28,7 @@ public:
 	void SetDigit(int digit);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetScaleAnim(void);
-
+	void SetSize(float w, float h) { m_fWidth = w; m_fHeight = h; }
 private:
 	static constexpr float MAX_SCALE = 1.3f;// ç≈ëÂägëÂó¶
 

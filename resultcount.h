@@ -22,7 +22,18 @@ public:
 	CCount(int nPriority = 6);
 	~CCount();
 
-	static CCount* Create(float baseX, float baseY, float digitWidth, float digitHeight, int count);
+	// レイアウト構造体
+	struct Layout
+	{
+		float anchorX;
+		float anchorY;
+		float digitWidthRate;
+		float digitHeightRate;
+	};
+
+	static CCount* Create(float anchorX, float anchorY,
+		float digitWidthRate, float digitHeightRate, int count);
+
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -41,6 +52,8 @@ private:
 	float		m_digitHeight;				// 数字1桁あたりの高さ
 	D3DXVECTOR3 m_basePos;					// 表示の開始位置
 	int			m_nIdxTexture;				// テクスチャインデックス
+	Layout		m_layout;					// レイアウト構造体変数
+	D3DXVECTOR3 m_layoutPos;				// レイアウト時の位置
 };
 
 

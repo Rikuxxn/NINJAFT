@@ -37,6 +37,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
+	void SetSize(float w, float h) { m_fWidth = w; m_fHeight = h; }
+
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファ
 	D3DXVECTOR3				m_pos;			// 位置

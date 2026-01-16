@@ -30,7 +30,7 @@ CBackground::~CBackground()
 //=============================================================================
 // 生成処理
 //=============================================================================
-CBackground* CBackground::Create(D3DXVECTOR3 pos, float fWidth, float fHeight, const char* path)
+CBackground* CBackground::Create(const char* path, float anchorX, float anchorY, float widthRate, float heightRate)
 {
 	CBackground* pBackground = new CBackground();
 
@@ -41,9 +41,9 @@ CBackground* CBackground::Create(D3DXVECTOR3 pos, float fWidth, float fHeight, c
 	}
 
 	pBackground->SetPath(path);
-	pBackground->SetPos(pos);
+	pBackground->SetAnchor(anchorX, anchorY);
 	pBackground->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	pBackground->SetSize(fWidth, fHeight);
+	pBackground->SetSizeRate(widthRate, heightRate);
 
 	// 初期化失敗時
 	if (FAILED(pBackground->Init()))
@@ -79,6 +79,22 @@ void CBackground::Uninit(void)
 //=============================================================================
 void CBackground::Update(void)
 {
+	// バックバッファサイズの取得
+	float sw = (float)CManager::GetRenderer()->GetBackBufferWidth();
+	float sh = (float)CManager::GetRenderer()->GetBackBufferHeight();
+
+	float w = sw * m_layout.widthRate;
+	float h = sh * m_layout.heightRate;
+
+	float x = sw * m_layout.anchorX - w * 0.5f;
+	float y = sh * m_layout.anchorY - h * 0.5f;
+
+	// サイズの更新
+	SetSize(w, h);
+
+	// 位置の更新
+	SetPos({ x, y, 0.0f });
+
 	// 2Dオブジェクトの更新処理
 	CObject2D::Update();
 }

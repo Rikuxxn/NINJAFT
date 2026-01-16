@@ -158,7 +158,7 @@ HRESULT CGame::Init(void)
 	escape_keyboard->Hide();
 
 	m_startState = StartState::WaitStart;
-	m_stateTimer = 190;   // 開始時の初期待機
+	m_stateTimer = WAIT_TIME;   // 開始時の初期待機
 	m_canControl = false;
 
 	// ポーズマネージャーの生成

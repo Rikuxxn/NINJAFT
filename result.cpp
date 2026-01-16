@@ -69,7 +69,7 @@ HRESULT CResult::Init(void)
 	m_pBlockManager->LoadFromJson("data/result_blockinfo.json");
 
 	// 背景の生成
-	CBackground::Create(D3DXVECTOR3(360.0f, 540.0f, 0.0f), 360.0f, 540.0f, "data/TEXTURE/.png");
+	CBackground::Create("data/TEXTURE/.png", 0.29f, 0.75f, 0.2f, 0.5f);
 
 	// ダミープレイヤーの生成
 	CDummyPlayer::Create(D3DXVECTOR3(0.0f, 110.0f, 0.0f), D3DXVECTOR3(0.0f, 180.0f, 0.0f), CDummyPlayer::DUSH);
@@ -79,13 +79,13 @@ HRESULT CResult::Init(void)
 
 
 	// 宝獲得数の表示
-	CCount::Create(220.0f, 130.0f, 80.0f, 95.0f, m_treasureCount);
+	CCount::Create(0.2f, 0.2f, 0.08f, 0.1f, m_treasureCount);
 
 	// 音発生数の表示
-	CCount::Create(220.0f, 380.0f, 80.0f, 95.0f, m_soundCount);
+	CCount::Create(0.2f, 0.46f, 0.08f, 0.1f, m_soundCount);
 
 	// 発見された回数の表示
-	CCount::Create(220.0f, 620.0f, 80.0f, 95.0f, m_insightCount);
+	CCount::Create(0.2f, 0.72f, 0.08f, 0.1f, m_insightCount);
 
 	// 「埋蔵金の数」UI生成
 	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 0.18f, 0.12f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.11f, 0.05f);

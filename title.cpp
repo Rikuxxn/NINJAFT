@@ -20,8 +20,6 @@
 //*****************************************************************************
 CBlockManager* CTitle::m_pBlockManager = nullptr;		// ブロックマネージャーへのポインタ
 
-// 名前空間stdの使用
-using namespace std;
 
 //=============================================================================
 // コンストラクタ
@@ -98,13 +96,23 @@ HRESULT CTitle::Init(void)
 
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	
+	// バックバッファサイズの取得
+	float screenW = (float)CManager::GetRenderer()->GetBackBufferWidth();
+	float screenH = (float)CManager::GetRenderer()->GetBackBufferHeight();
 
-	ImageInfo images[1] =
+	float logoW = screenW * LOGO_WRATE;
+	float logoH = screenH * LOGO_HRATE;
+
+	float centerX = screenW * ANCHOR_X;
+	float centerY = screenH * ANCHOR_Y;
+
+	ImageInfo images[TITLE_ITEM_NUM] =
 	{
-		   { D3DXVECTOR3(420.0f, 270.0f, 0.0f), 320.0f, 130.0f },	// タイトルロゴ
+		{ D3DXVECTOR3(centerX, centerY, 0.0f), logoW * 0.5f, logoH * 0.5f },
 	};
 
-	for (int nCnt = 0; nCnt < 1; nCnt++)
+	for (int nCnt = 0; nCnt < TITLE_ITEM_NUM; nCnt++)
 	{
 		// 頂点座標の設定
 		pVtx[0].pos = D3DXVECTOR3(images[nCnt].pos.x - images[nCnt].width, images[nCnt].pos.y - images[nCnt].height, 0.0f);
@@ -136,7 +144,7 @@ HRESULT CTitle::Init(void)
 	m_pVtxBuff->Unlock();
 
 	// 項目選択の生成
-	m_pItemSelect = make_unique<CItemSelect>();
+	m_pItemSelect = std::make_unique<CItemSelect>();
 
 	// 項目選択の初期化処理
 	m_pItemSelect->Init();
@@ -194,6 +202,9 @@ void CTitle::Uninit(void)
 //=============================================================================
 void CTitle::Update(void)
 {
+	// ロゴの更新処理
+	UpdateLogoVertex();
+
 	m_timer++;
 
 	if (m_timer >= 15)// 一定間隔で生成
@@ -210,6 +221,34 @@ void CTitle::Update(void)
 
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
+}
+//=============================================================================
+// ロゴの更新処理
+//=============================================================================
+void CTitle::UpdateLogoVertex(void)
+{
+	// バックバッファサイズの取得
+	float screenW = (float)CManager::GetRenderer()->GetBackBufferWidth();
+	float screenH = (float)CManager::GetRenderer()->GetBackBufferHeight();
+
+	float logoW = screenW * LOGO_WRATE * 0.5f;
+	float logoH = screenH * LOGO_HRATE * 0.5f;
+
+	float cx = screenW * ANCHOR_X;
+	float cy = screenH * ANCHOR_Y;
+
+	VERTEX_2D* pVtx;// 頂点情報へのポインタ
+
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].pos = { cx - logoW, cy - logoH, 0.0f };
+	pVtx[1].pos = { cx + logoW, cy - logoH, 0.0f };
+	pVtx[2].pos = { cx - logoW, cy + logoH, 0.0f };
+	pVtx[3].pos = { cx + logoW, cy + logoH, 0.0f };
+
+	// 頂点バッファをアンロックする
+	m_pVtxBuff->Unlock();
 }
 //=============================================================================
 // 描画処理

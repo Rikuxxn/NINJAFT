@@ -115,12 +115,12 @@ HRESULT CMovie::Init(void)
 	pCamera->SetMovieCamera(movie);
 
 	// レターボックスUI生成
-	auto topBar = CUITexture::Create(nullptr, 850.0f, -80.0f, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 855.0f, 75.0f);
-	auto bottomBar = CUITexture::Create(nullptr, 850.0f, 1040.0f, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 855.0f, 75.0f);
+	auto topBar = CUITexture::Create(nullptr, 0.73f, 0.1f, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 0.7f, 0.1f);
+	auto bottomBar = CUITexture::Create(nullptr, 0.73f, 1.0f, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 0.7f, 0.1f);
 
 	// スキップUI生成
-	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 890.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 890.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 0.9f, 0.95f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.09f, 0.06f);
+	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 0.9f, 0.95f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.09f, 0.06f);
 
 	// レターボックスUI登録
 	CUIManager::GetInstance()->AddUI("MovieTopBar", topBar);
@@ -133,10 +133,13 @@ HRESULT CMovie::Init(void)
 	// UI初期設定
 	skip_xinput->Show();
 	skip_keyboard->Hide();
+	
+	float barHeightPx =
+		CManager::GetRenderer()->GetBackBufferHeight();
 
 	// レターボックスをスライドインさせる
-	topBar->SlideIn(D3DXVECTOR3(850.0f, -80.0f, 0.0f), D3DXVECTOR3(850.0f, 70.0f, 0.0f), 60.0f);
-	bottomBar->SlideIn(D3DXVECTOR3(850.0f, 1040.0f, 0.0f), D3DXVECTOR3(850.0f, 890.0f, 0.0f), 60.0f);
+	topBar->SlideIn(D3DXVECTOR3(0.0f, -barHeightPx, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 60.0f);
+	bottomBar->SlideIn(D3DXVECTOR3(0.0f, barHeightPx, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 60.0f);
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();

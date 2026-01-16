@@ -12,8 +12,6 @@
 #include "renderer.h"
 #include "manager.h"
 
-// 名前空間stdの使用
-using namespace std;
 
 //=============================================================================
 // マウス位置からワールドレイを取得する処理
@@ -94,8 +92,8 @@ bool CRayCast::IntersectAABB(const D3DXVECTOR3& rayOrigin,
                 std::swap(t1, t2);
             }
 
-            tMin = max(tMin, t1);
-            tMax = min(tMax, t2);
+            tMin = std::max(tMin, t1);
+            tMax = std::min(tMax, t2);
 
             if (tMin > tMax)
             {

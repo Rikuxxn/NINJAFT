@@ -11,8 +11,6 @@
 #include "imguimaneger.h"
 #include "imgui_internal.h"
 
-// 名前空間の使用
-using namespace std;
 
 //*****************************************************************************
 // 静的メンバ変数宣言

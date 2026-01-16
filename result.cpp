@@ -88,19 +88,19 @@ HRESULT CResult::Init(void)
 	CCount::Create(220.0f, 620.0f, 80.0f, 95.0f, m_insightCount);
 
 	// 「埋蔵金の数」UI生成
-	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 220.0f, 80.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f, 45.0f);
+	auto treasureCount = CUITexture::Create("data/TEXTURE/ui_treasurecount.png", 0.18f, 0.12f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.11f, 0.05f);
 
 	// 「音の発生数」UI生成
-	auto soundCount = CUITexture::Create("data/TEXTURE/ui_soundcount.png", 220.0f, 310.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f, 45.0f);
+	auto soundCount = CUITexture::Create("data/TEXTURE/ui_soundcount.png", 0.18f, 0.37f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.11f, 0.05f);
 
 	// 「発見された回数」UI生成
-	auto insight = CUITexture::Create("data/TEXTURE/ui_insightcount.png", 260.0f, 560.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 230.0f, 45.0f);
+	auto insight = CUITexture::Create("data/TEXTURE/ui_insightcount.png", 0.22f, 0.64f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.13f, 0.06f);
 
 	// ランクUI生成
-	auto rank = CUITexture::Create("data/TEXTURE/ui_resultRank.png", 530.0f, 830.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 100.0f, 100.0f);
+	auto rank = CUITexture::Create("data/TEXTURE/ui_resultRank.png", 0.33f, 0.88f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.045f, 0.07f);
 
 	// 「評価」UI生成
-	auto evaluation = CUITexture::Create("data/TEXTURE/ui_evaluation.png", 430.0f, 890.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 200.0f,45.0f);
+	auto evaluation = CUITexture::Create("data/TEXTURE/ui_evaluation.png", 0.3f, 0.9f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.11f, 0.06f);
 
 	// 「埋蔵金の数」UI登録
 	CUIManager::GetInstance()->AddUI("TreasureCount", treasureCount);

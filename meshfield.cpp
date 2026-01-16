@@ -11,19 +11,8 @@
 #include "meshfield.h"
 #include "manager.h"
 #include "texture.h"
-#include <algorithm>
+#include "algorithm"
 
-////*****************************************************************************
-//// 定数宣言
-////*****************************************************************************
-//namespace MESHFIELD
-//{
-//	constexpr int X_VTX		= 5;											// X方向の分割数
-//	constexpr int Z_VTX		= 5;											// Z方向の分割数
-//	constexpr int VERTEX	= ((X_VTX + 1) * (Z_VTX + 1));					// 頂点数
-//	constexpr int POLYGON	= (((X_VTX * Z_VTX) * 2)) + (4 * (Z_VTX - 1));	// ポリゴン数
-//	constexpr int INDEX		= POLYGON + 2;									// インデックス数
-//};
 
 //=============================================================================
 // コンストラクタ
@@ -31,16 +20,16 @@
 CMeshField::CMeshField(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	m_pIdx = nullptr;		// インデックスバッファ
-	m_pVtx = nullptr;		// 頂点バッファ
-	m_pos = INIT_VEC3;		// 位置
-	m_rot = INIT_VEC3;		// 向き
-	m_mtxWorld = {};		// ワールドマトリックス
-	m_MeshFiled = {};		// 構造体変数
-	m_riverDir = RIVER_X;	// 川の方向
-	m_riverCenter = 0.0f;   // X or Z
-	m_riverWidth = 0.0f;    // 半径
-	m_riverDepth = 0.0f;    // 深さ
+	m_pIdx			= nullptr;		// インデックスバッファ
+	m_pVtx			= nullptr;		// 頂点バッファ
+	m_pos			= INIT_VEC3;	// 位置
+	m_rot			= INIT_VEC3;	// 向き
+	m_mtxWorld		= {};			// ワールドマトリックス
+	m_MeshFiled		= {};			// 構造体変数
+	m_riverDir		= RIVER_X;		// 川の方向
+	m_riverCenter	= 0.0f;			// X or Z
+	m_riverWidth	= 0.0f;			// 半径
+	m_riverDepth	= 0.0f;			// 深さ
 }
 //=============================================================================
 // デストラクタ
@@ -421,12 +410,13 @@ void CMeshField::CreateRiverLine(void)
 			// 出口正面かどうか
 			if (z <= m_MeshFiled.nNumZ)
 			{
-				float t = (float)z / m_MeshFiled.nNumZ; // 0:出口 / 1:少し手前
+				float t = (float)z / m_MeshFiled.nNumZ;					// 0:出口 / 1:少し手前
 				t = std::clamp(t, 0.0f, 1.0f);
 
 				float noise =
-					((rand() / (float)RAND_MAX) - 0.5f) * 20.0f * t; // 揺れを徐々に減らす
+					((rand() / (float)RAND_MAX) - 0.5f) * 20.0f * t;	// 揺れを徐々に減らす
 
+				// 出口正面から横にずらす
 				m_riverLine[z] = sideX + noise;
 				continue;
 			}

@@ -21,8 +21,6 @@
 #include "meshfield.h"
 #include "generateMap.h"
 
-// 名前空間stdの使用
-using namespace std;
 
 //=============================================================================
 // コンストラクタ
@@ -471,7 +469,7 @@ bool CPlayer::OnGroundMesh(const CMeshField* field, float footOffset)
 	float h1 = field->GetHeight(btPos.getX() + r, btPos.getZ());
 	float h2 = field->GetHeight(btPos.getX() - r, btPos.getZ());
 
-	float groundY = max(h0, max(h1, h2));
+	float groundY = std::max(h0, std::max(h1, h2));
 	float footY = groundY + footOffset;
 
 	return (btPos.getY() <= footY + 1.0f);

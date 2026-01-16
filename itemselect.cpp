@@ -40,38 +40,28 @@ void CItemSelect::Init(void)
     // 空にする
     m_Item.clear();
 
-    // 各項目の位置
-    std::vector<D3DXVECTOR3> Positions =
+    // 仮の初期位置（Updateで上書き）
+    for (int i = 0; i < ITEM_NUM; i++)
     {
-        D3DXVECTOR3(420.0f, 510.0f, 0.0f),
-        D3DXVECTOR3(420.0f, 650.0f, 0.0f),
-    };
-
-    for (int i = 0; i < (int)Positions.size(); i++)
-    {
-        // 位置
-        D3DXVECTOR3 Pos(Positions[i].x, Positions[i].y, Positions[i].z);
-
         CItem* item = nullptr;
+
         switch (i)
         {
         case 0:
-            item = CItem::Create(CItem::ITEM_ID_PLAY, Pos, 150.0f, 60.0f);
+            item = CItem::Create(CItem::ITEM_ID_PLAY, {}, ITEM_W, ITEM_H);
             break;
         case 1:
-            item = CItem::Create(CItem::ITEM_ID_EXIT, Pos, 150.0f, 60.0f);
+            item = CItem::Create(CItem::ITEM_ID_EXIT, {}, ITEM_W, ITEM_H);
             break;
         }
 
         item->Init();
         item->SetSelected(false);
-
         m_Item.push_back(item);
     }
 
     m_SelectedIndex = 0;
     m_Item[m_SelectedIndex]->SetSelected(true);
-
     m_inputLock = false;
 }
 //=============================================================================
@@ -87,6 +77,32 @@ void CItemSelect::Uninit(void)
 //=============================================================================
 void CItemSelect::Update(void)
 {
+    // バックバッファサイズの取得
+    float screenW = (float)CManager::GetRenderer()->GetBackBufferWidth();
+    float screenH = (float)CManager::GetRenderer()->GetBackBufferHeight();
+
+    // 横にずらす
+    float baseX = screenW * ANCHOR_X;
+    float startY = screenH * ANCHOR_Y;
+
+    // サイズも画面サイズに伴って調整
+    float itemW = screenW * ITEM_WRATE;
+    float itemH = screenH * ITEM_HRATE;
+
+    // 項目の位置更新
+    for (int i = 0; i < (int)m_Item.size(); i++)
+    {
+        m_Item[i]->SetSize(itemW, itemH);
+
+        D3DXVECTOR3 pos(
+            baseX - itemW * 0.5f,
+            startY + i * SPACING_Y,
+            0.0f
+        );
+
+        m_Item[i]->SetPos(pos);
+    }
+
     int mouseOver = GetMouseOverIndex();
 
     // マウスオーバー時の選択変更＆SE

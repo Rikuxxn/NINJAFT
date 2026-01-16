@@ -12,8 +12,6 @@
 #include "renderer.h"
 #include "manager.h"
 
-// 名前空間stdの使用
-using namespace std;
 
 //=============================================================================
 // コンストラクタ
@@ -126,13 +124,13 @@ HRESULT CObjectX::Init(void)
 		{
 			D3DXVECTOR3* p = (D3DXVECTOR3*)(pVtxBuff + sizeFVF * nCnt);
 
-			vMin.x = min(vMin.x, p->x);
-			vMin.y = min(vMin.y, p->y);
-			vMin.z = min(vMin.z, p->z);
+			vMin.x = std::min(vMin.x, p->x);
+			vMin.y = std::min(vMin.y, p->y);
+			vMin.z = std::min(vMin.z, p->z);
 
-			vMax.x = max(vMax.x, p->x);
-			vMax.y = max(vMax.y, p->y);
-			vMax.z = max(vMax.z, p->z);
+			vMax.x = std::max(vMax.x, p->x);
+			vMax.y = std::max(vMax.y, p->y);
+			vMax.z = std::max(vMax.z, p->z);
 		}
 
 		// 頂点バッファのアンロック

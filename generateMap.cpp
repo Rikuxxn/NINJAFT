@@ -15,6 +15,7 @@
 #include "meshfield.h"
 #include "waterfield.h"
 
+
 //=============================================================================
 // マップジェネレーターのインスタンス生成
 //=============================================================================
@@ -38,7 +39,7 @@ void CGenerateMap::GenerateRandomMap(int seed)
 	m_pMeshField = CMeshField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 800.0f, 800.0f, 100, 100);
 
 	// 水フィールドの生成
-	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, -4.0f, 0.0f), 800.0f, 800.0f, 100, 100);
+	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, -4.0f, 0.0f), 800.0f, 800.0f, 10, 10);
 
 	// クラスタ生成
 	GenerateClusters(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ);
@@ -96,7 +97,7 @@ void CGenerateMap::GenerateClusters(int gridX, int gridZ, float areaSize,
 			);
 
 			// クラスタの要素生成
-			CreateClusterElement(pos, areaSize, gridX, gridZ, offsetX, offsetZ/*, waterPositions*/);
+			CreateClusterElement(pos, areaSize, gridX, gridZ, offsetX, offsetZ);
 		}
 	}
 }
@@ -124,8 +125,8 @@ void CGenerateMap::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 
 	CBlock::TYPE type = CBlock::TYPE_GRASS;
 
-	// 川の上なら生成しない
-	if (m_pMeshField && m_pMeshField->IsRiverArea(pos.x, pos.z))
+	// 川の上だったら飛ばす
+	if (m_pMeshField && m_pMeshField->IsRiverCell(pos.x, pos.z, areaSize))
 	{
 		return;
 	}

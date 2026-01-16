@@ -288,7 +288,7 @@ CMainProc::~CMainProc()
 // ウィンドウフルスクリーン
 //=============================================================================
 void CMainProc::ToggleFullScreen(HWND hWnd)
-{
+{ 
 	// 切り替えフラグを宣言
 	static bool isFullscreen = false;
 

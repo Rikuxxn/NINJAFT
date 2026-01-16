@@ -27,9 +27,6 @@ CScene* CManager::m_pScene = nullptr;
 CFade* CManager::m_pFade = nullptr;
 std::unique_ptr<btDiscreteDynamicsWorld> CManager::m_pDynamicsWorld = nullptr;
 
-// 名前空間stdの使用
-using namespace std;
-
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -100,12 +97,12 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	}
 
 	// Bullet物理ワールドの生成
-	m_pBroadphase = make_unique<btDbvtBroadphase>();
-	m_pCollisionConfiguration = make_unique <btDefaultCollisionConfiguration>();
-	m_pDispatcher = make_unique <btCollisionDispatcher>(m_pCollisionConfiguration.get());
-	m_pSolver = make_unique <btSequentialImpulseConstraintSolver>();
+	m_pBroadphase = std::make_unique<btDbvtBroadphase>();
+	m_pCollisionConfiguration = std::make_unique <btDefaultCollisionConfiguration>();
+	m_pDispatcher = std::make_unique <btCollisionDispatcher>(m_pCollisionConfiguration.get());
+	m_pSolver = std::make_unique <btSequentialImpulseConstraintSolver>();
 
-	m_pDynamicsWorld = make_unique <btDiscreteDynamicsWorld>(m_pDispatcher.get(), m_pBroadphase.get(), m_pSolver.get(), m_pCollisionConfiguration.get());
+	m_pDynamicsWorld = std::make_unique <btDiscreteDynamicsWorld>(m_pDispatcher.get(), m_pBroadphase.get(), m_pSolver.get(), m_pCollisionConfiguration.get());
 
 	// 重力を設定
 	m_pDynamicsWorld->setGravity(btVector3(0, -9.8f, 0));

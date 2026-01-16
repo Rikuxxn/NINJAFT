@@ -24,16 +24,16 @@ public:
 	//*************************************************************************
 	struct WaterField
 	{
-		float fRadiusX;			// X方向の半径
-		float fRadiusZ;			// Z方向の半径
-		int nNumPrimitive;		// プリミティブ数
-		int nNumIdx;			// インデックス数
-		int nNumAllVtx;			// 全体頂点数
-		int nNumX;				// X頂点
-		int nNumZ;				// Z頂点
-		int nTexIdx;			// テクスチャインデックス
-		float fSurfaceHeight;	// 水面高さ
-	};
+		float	fRadiusX;			// X方向の半径
+		float	fRadiusZ;			// Z方向の半径
+		int		nNumPrimitive;		// プリミティブ数
+		int		nNumIdx;			// インデックス数
+		int		nNumAllVtx;			// 全体頂点数
+		int		nNumX;				// X頂点
+		int		nNumZ;				// Z頂点
+		int		nTexIdx;			// テクスチャインデックス
+		float	fSurfaceHeight;		// 水面高さ
+	};	
 
 	CWaterField(int nPriority = 4);
 	~CWaterField();

@@ -13,9 +13,13 @@
 #include "object2D.h"
 #include "objectBillboard.h"
 
+
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CCharacter;
 class CBuriedTreasureBlock;
+
 
 //*****************************************************************************
 // ゲージクラス
@@ -44,13 +48,13 @@ public:
 	void SetTargetCharacter(CCharacter* pChar) { m_pTargetChar = pChar; }
 
 private:
-	int m_nIdxTexture;			// テクスチャインデックス
-	GUAGETYPE m_type;			// ゲージの種類
-	float m_targetRate;			// 実際のHP割合
-	float m_currentRate;		// 表示用ゲージ割合（追従用）
-	float m_speed;				// 追従速度
-	float m_delayTimer;			// 遅延タイマー(バックゲージ用)
-	CCharacter* m_pTargetChar;	// このゲージが追従するキャラクター
+	int			m_nIdxTexture;		// テクスチャインデックス
+	GUAGETYPE	m_type;				// ゲージの種類
+	float		m_targetRate;		// 実際のHP割合
+	float		m_currentRate;		// 表示用ゲージ割合（追従用）
+	float		m_speed;			// 追従速度
+	float		m_delayTimer;		// 遅延タイマー(バックゲージ用)
+	CCharacter* m_pTargetChar;		// このゲージが追従するキャラクター
 };
 
 //*****************************************************************************

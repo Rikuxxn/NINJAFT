@@ -14,9 +14,6 @@
 #include "game.h"
 #include "player.h"
 
-// –¼‘O‹óŠÔstd‚ÌŽg—p
-using namespace std;
-
 //=============================================================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //=============================================================================
@@ -491,10 +488,10 @@ void CCamera::MovieCamera(void)
 		return; // ‚Ü‚¾“®‚©‚³‚È‚¢
 	}
 
-	int duration = max(1, to.duration); // š0–hŽ~
+	int duration = std::max(1, to.duration); // š0–hŽ~
 
 	float t = (float)m_directionFrame / (float)duration;
-	t = max(0.0f, min(1.0f, t));
+	t = std::max(0.0f, std::min(1.0f, t));
 
 	// •âŠÔ
 	m_posV = from.posV + (to.posV - from.posV) * t;
@@ -569,7 +566,7 @@ void CCamera::CameraShake(void)
 
 		float maxDist = SHAKE_DISTANCE;// U“®‚·‚é‹——£
 		float ambientIntensity = 1.0f - (dist / maxDist);
-		ambientIntensity = max(0.0f, min(1.0f, ambientIntensity));
+		ambientIntensity = std::max(0.0f, std::min(1.0f, ambientIntensity));
 
 		if (ambientIntensity > 0.0f)
 		{

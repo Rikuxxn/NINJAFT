@@ -80,26 +80,26 @@ HRESULT CTutorial::Init(void)
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
 	// 「チュートリアル」UI生成
-	auto tutorial = CUITexture::Create("data/TEXTURE/ui_tutorial.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	auto tutorial = CUITexture::Create("data/TEXTURE/ui_tutorial.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.15f, 0.12f);
 
 	// スキップUI生成
-	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 1480.0f, 850.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto skip_xinput = CUITexture::Create("data/TEXTURE/ui_skip_xinput.png", 0.9f, 0.9f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.09f, 0.06f);
+	auto skip_keyboard = CUITexture::Create("data/TEXTURE/ui_skip_keyboard.png", 0.9f, 0.9f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.09f, 0.06f);
 
 	// 開始UI生成
-	auto start_xinput = CUITexture::Create("data/TEXTURE/ui_mission_start_xinput.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto start_keyboard = CUITexture::Create("data/TEXTURE/ui_mission_start_keyboard.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto start_xinput = CUITexture::Create("data/TEXTURE/ui_mission_start_xinput.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, 0.06f);
+	auto start_keyboard = CUITexture::Create("data/TEXTURE/ui_mission_start_keyboard.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, 0.06f);
 
 	// ルールUI生成
-	auto rule_1 = CUITexture::Create("data/TEXTURE/ui_rule1.png", 220.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
-	auto rule_2 = CUITexture::Create("data/TEXTURE/ui_rule2.png", 220.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
-	auto rule_3 = CUITexture::Create("data/TEXTURE/ui_rule3.png", 220.0f, 460.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 40.0f);
+	auto rule_1 = CUITexture::Create("data/TEXTURE/ui_rule1.png", 0.18f, 0.2f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.05f);
+	auto rule_2 = CUITexture::Create("data/TEXTURE/ui_rule2.png", 0.18f, 0.35f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.05f);
+	auto rule_3 = CUITexture::Create("data/TEXTURE/ui_rule3.png", 0.18f, 0.5f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.05f);
 
 	// 操作UI生成
-	auto dush_xinput = CUITexture::Create("data/TEXTURE/ui_operation_dush_xinput.png", 1410.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 35.0f);
-	auto stealth_xinput = CUITexture::Create("data/TEXTURE/ui_operation_stealth_xinput.png", 1410.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 35.0f);
-	auto dush_keyboard = CUITexture::Create("data/TEXTURE/ui_operation_dush_keyboard.png", 1410.0f, 180.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 35.0f);
-	auto stealth_keyboard = CUITexture::Create("data/TEXTURE/ui_operation_stealth_keyboard.png", 1410.0f, 320.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 190.0f, 35.0f);
+	auto dush_xinput = CUITexture::Create("data/TEXTURE/ui_operation_dush_xinput.png", 0.95f, 0.2f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.045f);
+	auto stealth_xinput = CUITexture::Create("data/TEXTURE/ui_operation_stealth_xinput.png", 0.95f, 0.35f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.045f);
+	auto dush_keyboard = CUITexture::Create("data/TEXTURE/ui_operation_dush_keyboard.png", 0.95f, 0.2f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.045f);
+	auto stealth_keyboard = CUITexture::Create("data/TEXTURE/ui_operation_stealth_keyboard.png", 0.95f, 0.35f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.12f, 0.045f);
 
 	// 「チュートリアル」UI登録
 	CUIManager::GetInstance()->AddUI("Tutorial", tutorial);
@@ -379,7 +379,7 @@ void CTutorial::UpdateLight(void)
 
 	// 補助光
 	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f;
-	warmFactor = max(0.0f, warmFactor);
+	warmFactor = std::max(0.0f, warmFactor);
 
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,

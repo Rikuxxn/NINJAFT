@@ -132,14 +132,14 @@ HRESULT CGame::Init(void)
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
 	// ルールUI生成
-	auto rule = CUITexture::Create("data/TEXTURE/ui_rule.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	auto rule = CUITexture::Create("data/TEXTURE/ui_rule.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.15f, 0.12f);
 
 	// 任務失敗UI生成
-	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 880.0f, 490.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 290.0f, 110.0f);
+	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.15f, 0.12f);
 
 	// 脱出UI生成
-	auto escape_xinput = CUITexture::Create("data/TEXTURE/ui_escape_xinput.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
-	auto escape_keyboard = CUITexture::Create("data/TEXTURE/ui_escape_keyboard.png", 880.0f, 820.0f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 165.0f, 60.0f);
+	auto escape_xinput = CUITexture::Create("data/TEXTURE/ui_escape_xinput.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, 0.06f);
+	auto escape_keyboard = CUITexture::Create("data/TEXTURE/ui_escape_keyboard.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, 0.06f);
 
 	// ルールUI登録
 	CUIManager::GetInstance()->AddUI("Rule", rule);
@@ -168,7 +168,7 @@ HRESULT CGame::Init(void)
 	m_pPauseManager->Init();
 
 	// ランキングマネージャーのインスタンス生成
-	m_pRankingManager = make_unique<CRankingManager>();
+	m_pRankingManager = std::make_unique<CRankingManager>();
 
 	// 音の取得
 	CSound* pSound = CManager::GetSound();
@@ -474,7 +474,7 @@ void CGame::UpdateLight(void)
 
 	// 補助光
 	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f;
-	warmFactor = max(0.0f, warmFactor);
+	warmFactor = std::max(0.0f, warmFactor);
 
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,

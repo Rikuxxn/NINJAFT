@@ -20,22 +20,22 @@
 CModel::CModel()
 {
 	// 値のクリア
-	memset(m_Path, 0, sizeof(m_Path));	// ファイルパス
-	m_nIdxTexture	= 0;				// テクスチャインデックス
-	m_pos			= INIT_VEC3;		// 位置
-	m_rot			= INIT_VEC3;		// 向き
-	m_move			= INIT_VEC3;		// 移動量
-	m_col			= INIT_XCOL_WHITE;	// 色
-	m_pMesh			= nullptr;			// メッシュへのポインタ
-	m_pBuffMat		= nullptr;			// マテリアルへのポインタ
-	m_dwNumMat		= NULL;				// マテリアル数
-	m_mtxWorld		= {};				// ワールドマトリックス
-	m_pParent		= nullptr;			// 親モデルへのポインタ
-	m_pOutlineVS	= nullptr;
-	m_pOutlinePS	= nullptr;
-	m_pVSConsts		= nullptr;
-	m_pPSConsts		= nullptr;
-	m_outlineColor	= D3DXVECTOR4(0, 0, 0, 1);// アウトラインカラー
+	memset(m_Path, 0, sizeof(m_Path));			// ファイルパス
+	m_nIdxTexture	= 0;						// テクスチャインデックス
+	m_pos			= INIT_VEC3;				// 位置
+	m_rot			= INIT_VEC3;				// 向き
+	m_move			= INIT_VEC3;				// 移動量
+	m_col			= INIT_XCOL_WHITE;			// 色
+	m_pMesh			= nullptr;					// メッシュへのポインタ
+	m_pBuffMat		= nullptr;					// マテリアルへのポインタ
+	m_dwNumMat		= NULL;						// マテリアル数
+	m_mtxWorld		= {};						// ワールドマトリックス
+	m_pParent		= nullptr;					// 親モデルへのポインタ
+	m_pOutlineVS	= nullptr;					// 頂点シェーダ
+	m_pOutlinePS	= nullptr;					// ピクセルシェーダ
+	m_pVSConsts		= nullptr;					// 頂点シェーダコンスタントテーブル
+	m_pPSConsts		= nullptr;					// ピクセルシェーダコンスタントテーブル
+	m_outlineColor	= D3DXVECTOR4(0, 0, 0, 1);	// アウトラインカラー
 }
 //=============================================================================
 // デストラクタ
@@ -144,10 +144,6 @@ HRESULT CModel::Init(void)
 	// 頂点バッファのロック
 	m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
 
-
-	// 最大値・最小値はなし
-
-
 	// 頂点バッファのアンロック
 	m_pMesh->UnlockVertexBuffer();
 
@@ -175,10 +171,10 @@ HRESULT CModel::Init(void)
 	CRenderer* pRenderer = CManager::GetRenderer();
 
 	// 頂点シェーダをコンパイル
-	pRenderer->CompileVertexShader("data/shader/OutlineVS.hlsl", "VSMain", &m_pOutlineVS, &m_pVSConsts);
+	pRenderer->CompileVertexShader("data/Shader/OutlineVS.hlsl", "VSMain", &m_pOutlineVS, &m_pVSConsts);
 
 	// ピクセルシェーダをコンパイル
-	pRenderer->CompilePixelShader("data/shader/OutlinePS.hlsl", "PSMain", &m_pOutlinePS, &m_pPSConsts);
+	pRenderer->CompilePixelShader("data/Shader/OutlinePS.hlsl", "PSMain", &m_pOutlinePS, &m_pPSConsts);
 
 	return S_OK;
 }

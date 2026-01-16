@@ -10,8 +10,6 @@
 //*****************************************************************************
 #include "collisionUtils.h"
 
-// 名前空間の使用
-using namespace std;
 
 //=============================================================================
 // シリンダーとAABBの当たり判定(その距離を返す)
@@ -400,7 +398,7 @@ float CCollision::DistanceSqPointSegment(const D3DXVECTOR3& p, const D3DXVECTOR3
 	D3DXVECTOR3 ab = b - a;
 	D3DXVECTOR3 ap = p - a;
 	float t = D3DXVec3Dot(&ap, &ab) / D3DXVec3Dot(&ab, &ab);
-	t = max(0.0f, min(1.0f, t));
+	t = std::max(0.0f, std::min(1.0f, t));
 	D3DXVECTOR3 closest = a + ab * t;
 	D3DXVECTOR3 dis = p - closest;
 	return D3DXVec3LengthSq(&dis);
@@ -414,9 +412,9 @@ D3DXVECTOR3 CCollision::ClosestPointSegmentAABB(const D3DXVECTOR3& a, const D3DX
 	// 線分の中点を取って、AABBにクランプする(簡易)
 	D3DXVECTOR3 mid = (a + b) * 0.5f;
 	D3DXVECTOR3 result = mid;
-	result.x = max(minVal.x, min(result.x, maxVal.x));
-	result.y = max(minVal.y, min(result.y, maxVal.y));
-	result.z = max(minVal.z, min(result.z, maxVal.z));
+	result.x = std::max(minVal.x, std::min(result.x, maxVal.x));
+	result.y = std::max(minVal.y, std::min(result.y, maxVal.y));
+	result.z = std::max(minVal.z, std::min(result.z, maxVal.z));
 	return result;
 }
 //=============================================================================
@@ -516,7 +514,7 @@ float CCollision::DistanceSqSegmentSegment(
 	{
 		s = 0.0f;
 		t = f / e;// 線分2上で線分1点に最も近い点のパラメータ
-		t = max(0.0f, min(1.0f, t));// 線分範囲にクランプ
+		t = std::max(0.0f, std::min(1.0f, t));// 線分範囲にクランプ
 	}
 	else
 	{
@@ -527,7 +525,7 @@ float CCollision::DistanceSqSegmentSegment(
 		{
 			t = 0.0f;
 			s = -c / a;// 線分1上で線分2点に最も近い点のパラメータ
-			s = max(0.0f, min(1.0f, s));// 線分範囲にクランプ
+			s = std::max(0.0f, std::min(1.0f, s));// 線分範囲にクランプ
 		}
 		else
 		{
@@ -544,7 +542,7 @@ float CCollision::DistanceSqSegmentSegment(
 				s = 0.0f; // 平行な場合は0固定
 			}
 
-			s = max(0.0f, min(1.0f, s));// 線分範囲にクランプ
+			s = std::max(0.0f, std::min(1.0f, s));// 線分範囲にクランプ
 
 			t = (b * s + f) / e;
 
@@ -552,12 +550,12 @@ float CCollision::DistanceSqSegmentSegment(
 			if (t < 0.0f)
 			{
 				t = 0.0f;
-				s = max(0.0f, min(1.0f, -c / a));
+				s = std::max(0.0f, std::min(1.0f, -c / a));
 			}
 			else if (t > 1.0f)
 			{
 				t = 1.0f;
-				s = max(0.0f, min(1.0f, (b - c) / a));
+				s = std::max(0.0f, std::min(1.0f, (b - c) / a));
 			}
 		}
 	}

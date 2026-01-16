@@ -12,7 +12,9 @@
 //*****************************************************************************
 #include "Object2D.h"
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CUIBase;
 
 //*****************************************************************************
@@ -53,6 +55,7 @@ public:
 	CUIBase(int nPriority = 6);
 	virtual ~CUIBase();
 
+    // フェードの種類
     enum class FadeMode
     {
         None,
@@ -60,11 +63,21 @@ public:
         FadeOut
     };
 
+    // スライドの種類
     enum class SlideMode
     {
         None,
         SlideIn,
         SlideOut
+    };
+
+    // UIレイアウト構造体
+    struct UILayout
+    {
+        float anchorX;   // 0.0～1.0
+        float anchorY;   // 0.0～1.0
+        float widthRate; // 画面比率
+        float heightRate;
     };
 
     static CUIBase* Create(float x, float y, D3DXCOLOR col, float width, float height);
@@ -83,6 +96,14 @@ public:
 
         strcpy_s(m_szPath, MAX_PATH, path); 
     }
+    void SetAnchor(float x, float y)
+    { 
+        m_useLayout = true;// レイアウト使用
+        m_layout.anchorX = x; 
+        m_layout.anchorY = y; 
+    }
+
+    void SetSizeRate(float width, float height) { m_layout.widthRate = width; m_layout.heightRate = height; }
 
     // 表示・非表示(即時)
     void Show(void);
@@ -119,6 +140,10 @@ private:
     float       m_slideT;               // 0.0f ～ 1.0f
     float       m_slideSpeed;           // スライドスピード
     SlideMode   m_slideMode;            // スライドモード
+    bool        m_useLayout;            // レイアウトの使用フラグ
+    UILayout    m_layout;               // レイアウト構造体変数
+    D3DXVECTOR3 m_layoutPos;            // レイアウト用位置
+    D3DXVECTOR3 m_slideOffset;          // オフセット位置
 };
 
 //*****************************************************************************
@@ -130,7 +155,7 @@ public:
     CUITexture();
     ~CUITexture();
 
-    static CUITexture* Create(const char* path, float x, float y, D3DXCOLOR col, float width, float height);
+    static CUITexture* Create(const char* path, float anchorX, float anchorY, D3DXCOLOR col, float widthRate, float heightRate);
 
     virtual HRESULT Init(void) override;
     virtual void Uninit(void) override;

@@ -22,12 +22,12 @@
 CWaterField::CWaterField(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	m_pIdx = nullptr;		// インデックスバッファ
-	m_pVtx = nullptr;		// 頂点バッファ
-	m_pos = INIT_VEC3;		// 位置
-	m_rot = INIT_VEC3;		// 向き
-	m_mtxWorld = {};		// ワールドマトリックス
-	m_WaterFiled = {};		// 構造体変数
+	m_pIdx			= nullptr;		// インデックスバッファ
+	m_pVtx			= nullptr;		// 頂点バッファ
+	m_pos			= INIT_VEC3;	// 位置
+	m_rot			= INIT_VEC3;	// 向き
+	m_mtxWorld		= {};			// ワールドマトリックス
+	m_WaterFiled	= {};			// 構造体変数
 }
 //=============================================================================
 // デストラクタ
@@ -394,9 +394,9 @@ void CWaterField::SpawnCylinder(void)
 		CMeshCylinder::Create(pos, D3DXCOLOR(0.3f, 0.7f, 1.0f, 0.9f), 5.0f, 8.0f, 0.5f, 50, 0.03f);
 	};
 
-	IsNotStealthSpec        notStealth;	// ステルス中じゃない
-	IsMovingSpec            isMoving;	// 移動中
-	IsNotDamageMotionSpec   notDamage;	// ダメージモーションじゃない
+	IsNotStealthSpec        notStealth;								// ステルス中じゃない
+	IsMovingSpec            isMoving;								// 移動中
+	IsNotDamageMotionSpec   notDamage;								// ダメージモーションじゃない
 
 	AndSpecification<CPlayer> cond1(notStealth, isMoving);			// 条件の合成(ステルス中じゃない && 移動中)
 	AndSpecification<CPlayer> playerConditionSpec(cond1, notDamage);// 条件の合成(cond1 && ダメージモーションじゃない)

@@ -76,6 +76,12 @@
     <Filter Include="ヘッダー ファイル\State">
       <UniqueIdentifier>{2be08488-6ecc-4aa3-a11f-cf38d473749e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Pause">
+      <UniqueIdentifier>{fe9638fc-9add-49d0-875d-492c264e8541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Pause">
+      <UniqueIdentifier>{53b49c4e-4549-4ce2-a9e7-d7f3f47a5da0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="background.cpp">
@@ -139,12 +145,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="pause.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="pausemanager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -300,6 +300,12 @@
     <ClCompile Include="ranktime.cpp">
       <Filter>ソース ファイル\Ranking</Filter>
     </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>ソース ファイル\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="pausemanager.cpp">
+      <Filter>ソース ファイル\Pause</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="background.h">
@@ -369,12 +375,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="particle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="pause.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="pausemanager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
@@ -550,6 +550,12 @@
     </ClInclude>
     <ClInclude Include="objectX.h">
       <Filter>ヘッダー ファイル\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>ヘッダー ファイル\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="pausemanager.h">
+      <Filter>ヘッダー ファイル\Pause</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

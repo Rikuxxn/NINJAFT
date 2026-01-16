@@ -20,8 +20,6 @@
 #include "motion.h"
 #include "meshfield.h"
 
-// 名前空間stdの使用
-using namespace std;
 
 //=============================================================================
 // コンストラクタ
@@ -300,7 +298,7 @@ bool CEnemy::OnGroundMesh(const CMeshField* field, float footOffset)
 	float h1 = field->GetHeight(btPos.getX() + r, btPos.getZ());
 	float h2 = field->GetHeight(btPos.getX() - r, btPos.getZ());
 
-	float groundY = max(h0, max(h1, h2));
+	float groundY = std::max(h0, std::max(h1, h2));
 	float footY = groundY + footOffset;
 
 	return (btPos.getY() <= footY + 1.0f);
@@ -355,7 +353,7 @@ HRESULT CEnemyLeader::Init(void)
 	if (GetWeapon())
 	{
 		// 武器コライダーの生成
-		m_pWeaponCollider = make_unique<CWeaponCollider>();
+		m_pWeaponCollider = std::make_unique<CWeaponCollider>();
 
 #ifdef _DEBUG
 		// 武器コライダーモデルの生成

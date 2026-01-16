@@ -40,6 +40,9 @@ public:
 	int GetMotionFrame(void);
 
 private:
+	bool FindToken(FILE* f, char* buf, const char* token);
+
+private:
 	static constexpr int MAX_WORD	= 1024;	// 最大文字数
 	static constexpr int MAX_PARTS	= 32;	// 最大パーツ数
 	static constexpr int MAX_KEY	= 256;	// 最大キー数
@@ -76,6 +79,9 @@ private:
 		int nFrame;								// 再生フレーム
 		KEY aKey[MAX_PARTS];					// 各パーツのキー要素
 	}KEY_INFO;
+	void ParseKeySet(FILE* f, char* buf, KEY_INFO& keyInfo);
+	void ParseKey(FILE* f, char* buf, KEY_INFO& keyInfo,
+		int& posIdx, int& rotIdx);
 
 	//*************************************************************************
 	// モーション情報の構造体

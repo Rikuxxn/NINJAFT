@@ -18,13 +18,13 @@
 CGuage::CGuage()
 {
 	// 値のクリア
-	m_nIdxTexture = 0;			// テクスチャインデックス
-	m_type = TYPE_NONE;			// ゲージの種類
-	m_targetRate = 0.0f;		// 実際のHP割合
-	m_currentRate = 0.0f;		// 表示用ゲージ割合（追従用）
-	m_speed = 0.0f;				// 追従速度
-	m_delayTimer = 0;			// 遅延タイマー(バックゲージ用)
-	m_pTargetChar = nullptr; // このゲージが追従するキャラクター
+	m_nIdxTexture	= 0;			// テクスチャインデックス
+	m_type			= TYPE_NONE;	// ゲージの種類
+	m_targetRate	= 0.0f;			// 実際のHP割合
+	m_currentRate	= 0.0f;			// 表示用ゲージ割合（追従用）
+	m_speed			= 0.0f;			// 追従速度
+	m_delayTimer	= 0;			// 遅延タイマー(バックゲージ用)
+	m_pTargetChar	= nullptr;		// このゲージが追従するキャラクター
 }
 //=============================================================================
 // コンストラクタ
@@ -105,9 +105,6 @@ void CGuage::Uninit(void)
 //=============================================================================
 void CGuage::Update(void)
 {
-	// 名前空間stdの使用
-	using namespace std;
-
 	if (m_type == TYPE_FRAME) 
 	{
 		UpdateFrame();
@@ -115,7 +112,7 @@ void CGuage::Update(void)
 	}
 
 	float fRate = m_pTargetChar->GetHp() / m_pTargetChar->GetMaxHp();
-	fRate = max(0.0f, min(fRate, 1.0f));
+	fRate = std::max(0.0f, std::min(fRate, 1.0f));
 
 	if (m_type == TYPE_GUAGE)
 	{
@@ -183,8 +180,8 @@ void CGuage::Draw(void)
 C3DGuage::C3DGuage(int nPriority) : CObjectBillboard(nPriority)
 {
 	// 値のクリア
-	m_type = TYPE_NONE;			// ゲージの種類
-	m_bVisible = false;
+	m_type		= TYPE_NONE;			// ゲージの種類
+	m_bVisible	= false;
 }
 //=============================================================================
 // コンストラクタ

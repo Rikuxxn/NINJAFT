@@ -80,22 +80,34 @@ void CPauseManager::Init(void)
     // 空にする
     m_Items.clear();
 
-    // ポーズの生成
-    m_Items.push_back(CPause::Create(CPause::MENU_CONTINUE, D3DXVECTOR3(860.0f, 310.0f, 0.0f), 200.0f, 80.0f));
-    m_Items.push_back(CPause::Create(CPause::MENU_RETRY, D3DXVECTOR3(860.0f, 510.0f, 0.0f), 200.0f, 80.0f));
-    m_Items.push_back(CPause::Create(CPause::MENU_QUIT, D3DXVECTOR3(860.0f, 710.0f, 0.0f), 200.0f, 80.0f));
-
-    for (auto item : m_Items)
+    // 仮の初期位置（Updateで上書き）
+    for (int i = 0; i < ITEM_NUM; i++)
     {
-        // ポーズの初期化処理
-        item->Init();
+        CPause* pause = nullptr;
 
-        item->SetSelected(false);
+        // ポーズ項目の生成
+        switch (i)
+        {
+        case CPause::MENU_CONTINUE:
+            pause = CPause::Create(CPause::MENU_CONTINUE, {}, ITEM_W, ITEM_H);
+            break;
+        case CPause::MENU_RETRY:
+            pause = CPause::Create(CPause::MENU_RETRY, {}, ITEM_W, ITEM_H);
+            break;
+        case CPause::MENU_QUIT:
+            pause = CPause::Create(CPause::MENU_QUIT, {}, ITEM_W, ITEM_H);
+            break;
+        }
+
+        // ポーズの初期化処理
+        pause->Init();
+
+        pause->SetSelected(false);
+        m_Items.push_back(pause);
     }
 
     m_SelectedIndex = 0;
     m_Items[m_SelectedIndex]->SetSelected(true);
-
     m_inputLock = false;
 }
 //=============================================================================
@@ -121,6 +133,35 @@ void CPauseManager::Update(void)
     if (!CGame::GetisPaused())
     {
         return;
+    }
+
+    // バックバッファサイズの取得
+    float screenW = (float)CManager::GetRenderer()->GetBackBufferWidth();
+    float screenH = (float)CManager::GetRenderer()->GetBackBufferHeight();
+
+    // 横にずらす
+    float baseX = screenW * ANCHOR_X;
+    float startY = screenH * ANCHOR_Y;
+
+    // サイズも画面サイズに伴って調整
+    float itemW = screenW * ITEM_WRATE;
+    float itemH = screenH * ITEM_HRATE;
+    float spacingY = screenH * SPACING_YRATE;
+
+    // 項目の位置更新
+    for (int i = 0; i < (int)m_Items.size(); i++)
+    {
+        // サイズの更新
+        m_Items[i]->SetSize(itemW, itemH);
+
+        D3DXVECTOR3 pos(
+            baseX - itemW * 0.5f,
+            startY + i * spacingY,
+            0.0f
+        );
+
+        // 位置の更新
+        m_Items[i]->SetPos(pos);
     }
 
     int mouseOver = GetMouseOverIndex();

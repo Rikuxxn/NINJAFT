@@ -122,6 +122,9 @@ CUIBase::CUIBase(int nPriority) : CObject2D(nPriority)
     m_slideMode     = SlideMode::None;
     m_slideT        = 0.0f;
     m_slideSpeed    = 0.0f;
+    m_useLayout     = false;            // レイアウトの使用フラグ
+    m_layoutPos     = INIT_VEC3;        // レイアウト用位置
+    m_slideOffset   = INIT_VEC3;        // オフセット位置
 }
 //=============================================================================
 // デストラクタ
@@ -187,6 +190,24 @@ void CUIBase::Uninit(void)
 //=============================================================================
 void CUIBase::Update(void)
 {
+    // レイアウトを使用する場合
+    if (m_useLayout)
+    {
+        // バックバッファサイズの取得
+        float sw = (float)CManager::GetRenderer()->GetBackBufferWidth();
+        float sh = (float)CManager::GetRenderer()->GetBackBufferHeight();
+
+        float w = sw * m_layout.widthRate;
+        float h = sh * m_layout.heightRate;
+
+        m_layoutPos.x = sw * m_layout.anchorX - w * 0.5f;
+        m_layoutPos.y = sh * m_layout.anchorY - h * 0.5f;
+        m_layoutPos.z = 0.0f;
+
+        SetSize(w, h);
+        //SetPos({ x, y, 0.0f });
+    }
+
     // フェード制御
     if (m_fadeMode == FadeMode::FadeIn)
     {
@@ -214,6 +235,7 @@ void CUIBase::Update(void)
         ApplyAlpha();
     }
 
+    // スライド制御
     if (m_slideMode != SlideMode::None)
     {
         m_slideT += m_slideSpeed;
@@ -233,12 +255,12 @@ void CUIBase::Update(void)
         // イージング
         float t = CEasing::Ease(0.0f, 1.0f, m_slideT, CEasing::EaseOutQuint);
 
-        D3DXVECTOR3 pos =
+        m_slideOffset =
             m_slideStartPos + (m_slideEndPos - m_slideStartPos) * t;
-
-        // 位置を設定
-        SetPos(pos);
     }
+
+    // 最終座標を合成して更新
+    SetPos(m_layoutPos + m_slideOffset);
 
     // 2Dオブジェクトの更新処理
     CObject2D::Update();
@@ -326,12 +348,10 @@ void CUIBase::SlideIn(const D3DXVECTOR3& from, const D3DXVECTOR3& to, float dura
     m_slideT        = 0.0f;
     m_slideSpeed    = 1.0f / duration;
     m_slideMode     = SlideMode::SlideIn;
-
-    SetPos(from);
 }
 void CUIBase::SlideOut(const D3DXVECTOR3& to, float duration)
 {
-    m_slideStartPos = GetPos();
+    m_slideStartPos = m_slideOffset;
     m_slideEndPos   = to;
     m_slideT        = 0.0f;
     m_slideSpeed    = 1.0f / duration;
@@ -384,19 +404,28 @@ CUITexture::~CUITexture()
     // なし
 }
 //=============================================================================
-// UIテクスチャ生成処理
+// UIテクスチャ生成処理(位置割合指定)
 //=============================================================================
-CUITexture* CUITexture::Create(const char* path, float x, float y, D3DXCOLOR col, float width, float height)
+CUITexture* CUITexture::Create(const char* path, float anchorX, float anchorY, D3DXCOLOR col, float widthRate, float heightRate)
 {
     CUITexture* pUi = new CUITexture;
 
-    pUi->SetPath(path);
-    pUi->SetPos(D3DXVECTOR3(x, y, 0.0f));
-    pUi->SetCol(col);
-    pUi->SetSize(width, height);
+    // nullptrだったら
+    if (pUi == nullptr)
+    {
+        return nullptr;
+    }
 
-    // 初期化処理
-    pUi->Init();
+    pUi->SetPath(path);
+    pUi->SetAnchor(anchorX, anchorY);
+    pUi->SetCol(col);
+    pUi->SetSizeRate(widthRate, heightRate);
+
+    // 初期化失敗時
+    if (FAILED(pUi->Init()))
+    {
+        return nullptr;
+    }
 
     return pUi;
 }

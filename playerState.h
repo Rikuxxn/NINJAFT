@@ -126,7 +126,7 @@ public:
 		CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
 
 		float speedRate = 1.0f - treasureCount * 0.05f;// 5%ずつ低下
-		speedRate = max(speedRate, 0.5f); // 最大50%
+		speedRate = std::max(speedRate, 0.5f); // 最大50%
 
 		// ダッシュ入力
 		if ((pKeyboard->GetPress(DIK_LSHIFT) || pJoypad->GetPress(CInputJoypad::JOYKEY_RB)) &&
@@ -154,7 +154,7 @@ public:
 			
 			// 埋蔵金を取るたびにレートを落とす
 			float NewSpeedRate = speedRate - treasureCount * 0.08f;// 8%ずつ低下
-			NewSpeedRate = max(NewSpeedRate, 0.5f); // 最大50%
+			NewSpeedRate = std::max(NewSpeedRate, 0.5f); // 最大50%
 
 			speedRate = NewSpeedRate;
 		}

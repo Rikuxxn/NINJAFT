@@ -64,6 +64,8 @@ public:
 	static int GetFPS(void) { return m_nFPS; }
 	LPDIRECT3DDEVICE9 GetDevice(void) { return m_pD3DDevice; };
 	D3DXCOLOR GetBgCol(void) { return m_bgCol; }
+	UINT GetBackBufferWidth(void) { return m_d3dpp.BackBufferWidth; }
+	UINT GetBackBufferHeight(void) { return m_d3dpp.BackBufferHeight; }
 
 private:
 	LPDIRECT3D9				m_pD3D;				// DirectX3Dオブジェクトへのポインタ

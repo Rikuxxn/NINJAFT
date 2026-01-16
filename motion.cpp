@@ -59,7 +59,6 @@ CMotion* CMotion::Load(const char* pFilepath, CModel* pModel[], int& nNumModel, 
 
 	char aString[MAX_WORD];
 	int nIdx = 0;
-
 	int nCntMotion = 0;
 
 	// 一時的な親のインデックス配列
@@ -72,37 +71,39 @@ CMotion* CMotion::Load(const char* pFilepath, CModel* pModel[], int& nNumModel, 
 
 	while (fscanf(pFile, "%s", aString) != EOF)
 	{
+		// SCRIPT 以外は無視
 		if (strcmp(aString, "SCRIPT") != 0)
 		{
 			continue;
 		}
 
-		while (true)
+		while (fscanf(pFile, "%s", aString) != EOF)
 		{
-			if (fscanf(pFile, "%s", aString) == EOF)
+			if (strcmp(aString, "END_SCRIPT") == 0)
 			{
 				break;
 			}
 
-			if (strcmp(aString, "NUM_MODEL") == 0 || strcmp(aString, "MODEL_FILENAME") == 0)
+			if (strcmp(aString, "NUM_MODEL") == 0 ||
+				strcmp(aString, "MODEL_FILENAME") == 0)
 			{
-				// モデル情報の読み込み処理
 				pMotion->LoadModelInfo(pFile, aString, pModel, nNumModel, nIdx);
+				continue;
 			}
-			else if (strcmp(aString, "CHARACTERSET") == 0)
+
+			if (strcmp(aString, "CHARACTERSET") == 0)
 			{
-				// キャラの設定処理
 				pMotion->LoadCharacterSet(pFile, aString, pModel, nNumModel, parentIdx);
+				continue;
 			}
-			else if (strcmp(aString, "MOTIONSET") == 0)
+
+			if (strcmp(aString, "MOTIONSET") == 0)
 			{
-				// モーションの読み込み処理
 				pMotion->LoadMotionSet(pFile, aString, pMotion, nCntMotion, nMaxMotion);
+				continue;
 			}
-			else if (strcmp(aString, "END_SCRIPT") == 0)
-			{
-				break;
-			}
+
+			// これら以外は無視
 		}
 	}
 
@@ -176,13 +177,6 @@ void CMotion::LoadCharacterSet(FILE* pFile, char* aString, CModel* pModel[], int
 		{
 			if (strcmp(aString, "END_PARTSSET") == 0)
 			{
-				// データ設定
-				if (idx >= 0 && idx < nNumModel && pModel[idx] != nullptr)
-				{
-					pModel[idx]->SetPos(pos);
-					pModel[idx]->SetRot(rot);
-					parentIdx[idx] = pIdx;
-				}
 				break;
 			}
 
@@ -190,22 +184,115 @@ void CMotion::LoadCharacterSet(FILE* pFile, char* aString, CModel* pModel[], int
 			{
 				fscanf(pFile, "%s", aString); // "="
 				fscanf(pFile, "%d", &idx);
+				continue;
 			}
-			else if (strcmp(aString, "PARENT") == 0)
+
+			if (strcmp(aString, "PARENT") == 0)
 			{
 				fscanf(pFile, "%s", aString); // "="
 				fscanf(pFile, "%d", &pIdx);
+				continue;
 			}
-			else if (strcmp(aString, "POS") == 0)
+
+			if (strcmp(aString, "POS") == 0)
 			{
 				fscanf(pFile, "%s", aString); // "="
 				fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);
+				continue;
 			}
-			else if (strcmp(aString, "ROT") == 0)
+
+			if (strcmp(aString, "ROT") == 0)
 			{
 				fscanf(pFile, "%s", aString); // "="
 				fscanf(pFile, "%f %f %f", &rot.x, &rot.y, &rot.z);
+				continue;
 			}
+
+			// これら以外は無視
+		}
+
+		// 設定確定
+		if (idx < 0 || idx >= nNumModel || pModel[idx] == nullptr)
+		{
+			continue;
+		}
+
+		pModel[idx]->SetPos(pos);
+		pModel[idx]->SetRot(rot);
+		parentIdx[idx] = pIdx;
+	}
+}
+//=============================================================================
+// トークン探索関数
+//=============================================================================
+bool CMotion::FindToken(FILE* f, char* buf, const char* token)
+{
+	while (fscanf(f, "%s", buf) != EOF)
+	{
+		if (strcmp(buf, token) == 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+//=============================================================================
+// キーセットリード関数
+//=============================================================================
+void CMotion::ParseKeySet(FILE* f, char* buf, KEY_INFO& keyInfo)
+{
+	int posIdx = 0;
+	int rotIdx = 0;
+
+	while (fscanf(f, "%s", buf) != EOF)
+	{
+		if (strcmp(buf, "END_KEYSET") == 0)
+		{
+			return;
+		}
+
+		if (strcmp(buf, "KEY") != 0)
+		{
+			continue;
+		}
+
+		ParseKey(f, buf, keyInfo, posIdx, rotIdx);
+	}
+}
+//=============================================================================
+// キーリード関数
+//=============================================================================
+void CMotion::ParseKey(FILE* f, char* buf, KEY_INFO& keyInfo,
+	int& posIdx, int& rotIdx)
+{
+	while (fscanf(f, "%s", buf) != EOF)
+	{
+		if (strcmp(buf, "END_KEY") == 0)
+		{
+			return;
+		}
+
+		if (strcmp(buf, "POS") == 0)
+		{
+			fscanf(f, "%s", buf); // "="
+			fscanf(f, "%f %f %f",
+				&keyInfo.aKey[posIdx].fPosX,
+				&keyInfo.aKey[posIdx].fPosY,
+				&keyInfo.aKey[posIdx].fPosZ);
+			++posIdx;
+			continue;
+		}
+
+		if (strcmp(buf, "ROT") == 0)
+		{
+			fscanf(f, "%s", buf); // "="
+			fscanf(f, "%f %f %f",
+				&keyInfo.aKey[rotIdx].fRotX,
+				&keyInfo.aKey[rotIdx].fRotY,
+				&keyInfo.aKey[rotIdx].fRotZ);
+			++rotIdx;
+			continue;
 		}
 	}
 }
@@ -219,23 +306,22 @@ void CMotion::LoadMotionSet(FILE* pFile, char* aString, CMotion* pMotion, int& n
 		return;
 	}
 
-	int nCntKey = 0;
+	auto& motion = pMotion->m_aMotionInfo[nCntMotion];
 
 	while (fscanf(pFile, "%s", aString) != EOF)
 	{
 		if (strcmp(aString, "END_MOTIONSET") == 0)
 		{
-			nCntMotion++;
-			break;
+			++nCntMotion;
+			return;
 		}
 
-		// ループ情報
 		if (strcmp(aString, "LOOP") == 0)
 		{
-			fscanf(pFile, "%s", aString); // "="
-			int nLoop = 0;
-			fscanf(pFile, "%d", &nLoop);
-			pMotion->m_aMotionInfo[nCntMotion].bLoop = (nLoop != 0); // 0ならfalse、1ならtrue
+			fscanf(pFile, "%s", aString);
+			int loop;
+			fscanf(pFile, "%d", &loop);
+			motion.bLoop = (loop != 0);
 			continue;
 		}
 
@@ -244,75 +330,20 @@ void CMotion::LoadMotionSet(FILE* pFile, char* aString, CMotion* pMotion, int& n
 			continue;
 		}
 
-		fscanf(pFile, "%s", aString); // "="
-		fscanf(pFile, "%d", &pMotion->m_aMotionInfo[nCntMotion].nNumKey);
+		fscanf(pFile, "%s", aString);
+		fscanf(pFile, "%d", &motion.nNumKey);
 
-		// キー数分ループ
-		for (nCntKey = 0; nCntKey < pMotion->m_aMotionInfo[nCntMotion].nNumKey; nCntKey++)
+		for (int i = 0; i < motion.nNumKey; ++i)
 		{
-			while (fscanf(pFile, "%s", aString) != EOF)
-			{
-				if (strcmp(aString, "KEYSET") == 0)
-				{
-					break;
-				}
-			}
+			FindToken(pFile, aString, "KEYSET");
+			FindToken(pFile, aString, "FRAME");
 
-			// フレーム読み込み
-			while (fscanf(pFile, "%s", aString) != EOF)
-			{
-				if (strcmp(aString, "FRAME") == 0)
-				{
-					fscanf(pFile, "%s", aString); // "="
-					fscanf(pFile, "%d", &pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].nFrame);
-					break;
-				}
-			}
+			fscanf(pFile, "%s", aString);
+			fscanf(pFile, "%d", &motion.aKeyInfo[i].nFrame);
 
-			int nCntPos = 0;
-			int nCntRot = 0;
-
-			// KEY内ループ
-			while (fscanf(pFile, "%s", aString) != EOF)
-			{
-				if (strcmp(aString, "END_KEYSET") == 0)
-				{
-					break;
-				}
-
-				if (strcmp(aString, "KEY") != 0)
-				{
-					continue;
-				}
-
-				while (fscanf(pFile, "%s", aString) != EOF)
-				{
-					if (strcmp(aString, "END_KEY") == 0)
-					{
-						break;
-					}
-
-					if (strcmp(aString, "POS") == 0)
-					{
-						fscanf(pFile, "%s", aString); // "="
-						fscanf(pFile, "%f %f %f",
-							&pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntPos].fPosX,
-							&pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntPos].fPosY,
-							&pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntPos].fPosZ);
-						nCntPos++;
-					}
-					else if (strcmp(aString, "ROT") == 0)
-					{
-						fscanf(pFile, "%s", aString); // "="
-						fscanf(pFile, "%f %f %f",
-							&pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntRot].fRotX,
-							&pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntRot].fRotY,
-							&pMotion->m_aMotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntRot].fRotZ);
-						nCntRot++;
-					}
-				} // END while KEY
-			} // END while KEYSET
-		} // END for NUM_KEY
+			// キーセット
+			ParseKeySet(pFile, aString, motion.aKeyInfo[i]);
+		}
 	}
 }
 //=============================================================================
@@ -322,6 +353,7 @@ void CMotion::AdvanceKeyCounter(int motionType, int& nKey, int& nCounter, bool b
 {
 	m_motionCounterAcc += m_motionSpeedRate;
 
+	// 進まないなら何もしない
 	if (m_motionCounterAcc < 1.0f)
 	{
 		return;
@@ -332,23 +364,36 @@ void CMotion::AdvanceKeyCounter(int motionType, int& nKey, int& nCounter, bool b
 
 	nCounter += step;
 
-	while (nCounter >= m_aMotionInfo[motionType].aKeyInfo[nKey].nFrame)
-	{
-		nCounter -= m_aMotionInfo[motionType].aKeyInfo[nKey].nFrame;
-		nKey++;
+	const auto& motion = m_aMotionInfo[motionType];
 
-		if (nKey >= m_aMotionInfo[motionType].nNumKey)
+	while (true)
+	{
+		const int frame = motion.aKeyInfo[nKey].nFrame;
+
+		if (nCounter < frame)
 		{
-			if (bLoop)
-			{
-				nKey = 0;
-			}
-			else
-			{
-				nKey = m_aMotionInfo[motionType].nNumKey - 1;
-				break;
-			}
+			break;
 		}
+
+		nCounter -= frame;
+		++nKey;
+
+		// キー範囲内なら続行
+		if (nKey < motion.nNumKey)
+		{
+			continue;
+		}
+
+		// キー最後まで行ってループする場合
+		if (bLoop)
+		{
+			nKey = 0;
+			continue;
+		}
+
+		// ループしない場合は最後で停止
+		nKey = motion.nNumKey - 1;
+		break;
 	}
 }
 
@@ -481,7 +526,7 @@ inline D3DXVECTOR3 CMotion::LerpRot(const KEY& a, const KEY& b, float t)
 //=============================================================================
 void CMotion::SetMotionSpeedRate(float rate)
 {
-	m_motionSpeedRate = max(rate, 0.1f); // 下限
+	m_motionSpeedRate = std::max(rate, 0.1f); // 下限
 }
 //=============================================================================
 // モーションブレンド開始処理

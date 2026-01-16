@@ -11,8 +11,6 @@
 #include "sound.h"
 #include "manager.h"
 
-// 名前空間stdの使用
-using namespace std;
 
 //=============================================================================
 // コンストラクタ
@@ -377,7 +375,7 @@ void CSound::CalculateCustomPanning(SoundInstance& inst, FLOAT32* matrix)
 
 	// 距離減衰計算
 	float volumeScale = 1.0f - ((distance - inst.minDistance) / (inst.maxDistance - inst.minDistance));
-	volumeScale = max(0.0f, min(1.0f, volumeScale));
+	volumeScale = std::max(0.0f, std::min(1.0f, volumeScale));
 
 	// 方向ベクトルを正規化
 	D3DXVec3Normalize(&toEmitter, &toEmitter);
@@ -461,7 +459,7 @@ void CSound::UpdateSoundPosition(int instanceId, D3DXVECTOR3 pos)
 			// パンニング値をクリップ
 			for (int nCnt = 0; nCnt < 4; nCnt++)
 			{
-				matrix[nCnt] = max(0.0f, min(1.0f, matrix[nCnt]));
+				matrix[nCnt] = std::max(0.0f, std::min(1.0f, matrix[nCnt]));
 			}
 
 			// カスタムパンニング計算

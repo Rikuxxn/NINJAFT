@@ -60,7 +60,7 @@ void CGenerateMap::GenerateRandomMap(int seed)
 	GeneratePatrolPoints(mapCenter, gap, torchPositions, 120.0f, m_patrolPoints);
 }
 //=============================================================================
-// マップランダム生成処理
+// 地形ランダム生成処理
 //=============================================================================
 void CGenerateMap::GenerateRandomTerrain(int seed)
 {

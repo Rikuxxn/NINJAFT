@@ -13,7 +13,9 @@
 #include "particle.h"
 #include "enemy.h"
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CEnemySub_StandState;
 class CEnemySub_MoveState;
 class CEnemySub_ChaseState;
@@ -48,7 +50,7 @@ public:
 		// 移動量の取得
 		D3DXVECTOR3 move = pEnemy->GetMove();
 
-		move *= 0.95f; // 減速率
+		move *= DECELERATION_RATE; // 減速率
 		if (fabsf(move.x) < 0.01f) move.x = 0;
 		if (fabsf(move.z) < 0.01f) move.z = 0;
 
@@ -123,6 +125,8 @@ public:
 	}
 
 private:
+	static constexpr float DECELERATION_RATE = 0.98f;// 減速率
+
 	int m_nParticleTimer;
 };
 
@@ -206,13 +210,12 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
 
-		// 補間後の速度をプレイヤーにセット
+		// 補間後の速度をセット
 		pEnemy->SetMove(currentMove);
 
 		// 目標の角度を算出
@@ -267,6 +270,8 @@ public:
 	}
 
 private:
+	static constexpr float ACCEL_RATE = 0.15f;
+
 	int m_nParticleTimer;
 
 };
@@ -339,12 +344,12 @@ public:
 		}
 
 		// 一定距離になったら速度を落とす
-		if (distance < 50.0f)
+		if (distance < DECELERATION_DISTANCE)
 		{
 			// 移動量の取得
 			D3DXVECTOR3 move = pEnemy->GetMove();
 
-			move *= 0.95f; // 減速率
+			move *= DECELETATION_RATE; // 減速率
 			if (fabsf(move.x) < 0.01f) move.x = 0;
 			if (fabsf(move.z) < 0.01f) move.z = 0;
 
@@ -372,13 +377,12 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
 
-		// 補間後の速度をプレイヤーにセット
+		// 補間後の速度をセット
 		pEnemy->SetMove(currentMove);
 
 		// 追跡モーションが終わっていたら
@@ -395,6 +399,10 @@ public:
 	}
 
 private:
+	static constexpr float DECELETATION_RATE		= 0.95f;// 減速率
+	static constexpr float ACCEL_RATE				= 0.15f;
+	static constexpr float DECELERATION_DISTANCE	= 50.0f;// 減速開始する距離
+
 	int m_nParticleTimer;
 };
 
@@ -423,7 +431,7 @@ public:
 		float distance = D3DXVec3Length(&diff);
 
 		// モーション中にプレイヤーが一定範囲近づいたら
-		if (distance < 150.0f)
+		if (distance < CHASE_DISTANCE)
 		{
 			// 追跡状態リクエスト
 			pEnemy->SetRequestedAction(CEnemy::AI_CHASE);
@@ -481,13 +489,12 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
 
-		// 補間後の速度をプレイヤーにセット
+		// 補間後の速度をセット
 		pEnemy->SetMove(currentMove);
 
 		// 目標の角度を算出
@@ -520,6 +527,9 @@ public:
 	}
 
 private:
+	static constexpr float CHASE_DISTANCE	= 150.0f;// 追跡開始距離
+	static constexpr float ACCEL_RATE		= 0.15f;
+
 	int m_nParticleTimer;
 };
 
@@ -550,7 +560,7 @@ public:
 		// 移動量の取得
 		D3DXVECTOR3 move = pEnemy->GetMove();
 
-		move *= 0.95f; // 減速率
+		move *= DECELERATION_RATE; // 減速率
 		if (fabsf(move.x) < 0.01f) move.x = 0;
 		if (fabsf(move.z) < 0.01f) move.z = 0;
 
@@ -571,7 +581,7 @@ public:
 		}
 
 		// モーション中にプレイヤーが一定範囲近づいたら
-		if (distance < 150.0f)
+		if (distance < CHASE_DISTANCE)
 		{
 			// 追跡状態リクエスト
 			pEnemy->SetRequestedAction(CEnemy::AI_CHASE);
@@ -624,6 +634,9 @@ public:
 	}
 
 private:
+	static constexpr float DECELERATION_RATE	= 0.98f;	// 減速率
+	static constexpr float CHASE_DISTANCE		= 150.0f;	// 追跡開始距離
+
 	int m_nParticleTimer;
 };
 
@@ -691,12 +704,13 @@ public:
 			// 補間して回転
 			pEnemy->UpdateRotation(0.05f);
 
-			if (distance < 100.0f)
+			// 一定距離近づいたら減速する
+			if (distance < DECELERATION_DISTANCE)
 			{
 				// 移動量の取得
 				D3DXVECTOR3 move = pEnemy->GetMove();
 
-				move *= 0.95f; // 減速率
+				move *= DECELERATION_RATE; // 減速率
 				if (fabsf(move.x) < 0.01f) move.x = 0;
 				if (fabsf(move.z) < 0.01f) move.z = 0;
 
@@ -724,13 +738,12 @@ public:
 			}
 
 			// 現在速度との補間（イージング）
-			const float accelRate = 0.15f;
 			D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-			currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-			currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+			currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
+			currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
 
-			// 補間後の速度をプレイヤーにセット
+			// 補間後の速度をセット
 			pEnemy->SetMove(currentMove);
 		}
 	}
@@ -741,6 +754,10 @@ public:
 	}
 
 private:
+	static constexpr float DECELERATION_RATE		= 0.98f;	// 減速率
+	static constexpr float DECELERATION_DISTANCE	= 100.0f;	// 減速開始する距離
+	static constexpr float ACCEL_RATE				= 0.15f;
+
 	int m_nParticleTimer;
 };
 

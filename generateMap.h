@@ -12,7 +12,9 @@
 //*****************************************************************************
 
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CBlock;
 class CMeshField;
 class CWaterField;
@@ -36,7 +38,6 @@ public:
         m_patrolPoints.clear();
         m_treasurePositions.clear();
     }
-
 
     // マップランダム生成処理(集約)
     void GenerateRandomMap(int seed);
@@ -71,6 +72,7 @@ public:
 
     CMeshField* GetMeshField(void) { return m_pMeshField; }
     CWaterField* GetWaterField(void) { return m_pWater; }
+
 private:
     static constexpr int MAX_ATTEMPTS   = 50;       // 試行回数
     static constexpr int MAX_TORCH      = 2;        // 灯籠の設置数

@@ -47,10 +47,10 @@ void CItemSelect::Init(void)
 
         switch (i)
         {
-        case 0:
+        case CItem::ITEM_ID_PLAY:
             item = CItem::Create(CItem::ITEM_ID_PLAY, {}, ITEM_W, ITEM_H);
             break;
-        case 1:
+        case CItem::ITEM_ID_EXIT:
             item = CItem::Create(CItem::ITEM_ID_EXIT, {}, ITEM_W, ITEM_H);
             break;
         }

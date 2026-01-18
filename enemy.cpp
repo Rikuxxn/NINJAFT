@@ -537,10 +537,11 @@ HRESULT CEnemySub::Init(void)
 
 	btRigidBody* pRigid = GetRigidBody();
 
-	// 重力を無効化
+	// 重力を無効化しY方向に移動しないようにする
 	if (pRigid)
 	{
 		pRigid->setGravity(btVector3(0, 0, 0));
+		pRigid->setAngularFactor(btVector3(1, 0, 1));     // 移動方向
 	}
 
 	// インスタンスのポインタを渡す
@@ -562,6 +563,7 @@ void CEnemySub::Uninit(void)
 		m_pMotion = nullptr;
 	}
 
+	// 敵の終了処理
 	CEnemy::Uninit();
 }
 //=============================================================================

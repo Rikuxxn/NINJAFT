@@ -85,7 +85,7 @@ HRESULT CTitle::Init(void)
 	m_vertexRanges[TYPE_FIRST] = { 0, 3 }; // タイトル
 
 	// 頂点バッファの生成
-	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4 * 2,
+	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4 * TITLE_ITEM_NUM,
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_2D,
 		D3DPOOL_MANAGED,

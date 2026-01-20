@@ -41,13 +41,16 @@ public:
 	FADE GetFade(void) { return m_fade; }
 
 private:
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファへのポインタ
-	D3DXVECTOR3				m_pos;		// 位置
-	FADE					m_fade;		// フェードの状態
-	D3DXCOLOR				m_fadeCol;	// フェードの色
-	CScene::MODE			m_SceneNext;// 次の画面
-	float					m_fWidth;	// 幅
-	float					m_fHeight;	// 高さ
+	static constexpr float FHD_WIDTH	= 1920.0f;	// 画面の幅
+	static constexpr float FHD_HEIGHT	= 1080.0f;	// 画面の高さ
+
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;				// 頂点バッファへのポインタ
+	D3DXVECTOR3				m_pos;					// 位置
+	FADE					m_fade;					// フェードの状態
+	D3DXCOLOR				m_fadeCol;				// フェードの色
+	CScene::MODE			m_SceneNext;			// 次の画面
+	float					m_fWidth;				// 幅
+	float					m_fHeight;				// 高さ
 };
 
 #endif

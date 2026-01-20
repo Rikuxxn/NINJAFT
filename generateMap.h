@@ -72,21 +72,23 @@ public:
 
     CMeshField* GetMeshField(void) { return m_pMeshField; }
     CWaterField* GetWaterField(void) { return m_pWater; }
-
+    
 private:
-    static constexpr int MAX_ATTEMPTS   = 50;       // 試行回数
-    static constexpr int MAX_TORCH      = 2;        // 灯籠の設置数
-    static constexpr int MAX_TREASURE   = 8;        // 埋蔵金の設置数
-
     // マップ生成パラメータ
-    static constexpr int    GRID_X         = 10;    // Xサイズ
-    static constexpr int    GRID_Z         = 10;    // Zサイズ
-    static constexpr float  AREA_SIZE      = 80.0f; // 1エリアの広さ
+    static constexpr int    GRID_X              = 10;       // Xサイズ
+    static constexpr int    GRID_Z              = 10;       // Zサイズ
+    static constexpr float  AREA_SIZE           = 80.0f;    // 1エリアの広さ
 
-    std::vector<D3DXVECTOR3> m_patrolPoints;        // 巡回ポイント
-    std::vector<D3DXVECTOR3> m_treasurePositions;   // 埋蔵金の設置ポイント
-    CMeshField* m_pMeshField;                       // メッシュフィールドへのポインタ
-    CWaterField* m_pWater;                          // 水フィールドへのポインタ
+    static constexpr int    MAX_ATTEMPTS        = 50;       // 試行回数
+    static constexpr int    MAX_TORCH           = 2;        // 灯籠の設置数
+    static constexpr int    MAX_TREASURE        = 8;        // 埋蔵金の設置数
+    static constexpr int    CLUSTER_COUNT       = 10;       // クラスター数
+    static constexpr float  TORCH_OFFSET_HEIGHT = 38.0f;    // 灯籠の高さのオフセット
+
+    std::vector<D3DXVECTOR3> m_patrolPoints;                // 巡回ポイント
+    std::vector<D3DXVECTOR3> m_treasurePositions;           // 埋蔵金の設置ポイント
+    CMeshField*              m_pMeshField;                  // メッシュフィールドへのポインタ
+    CWaterField*             m_pWater;                      // 水フィールドへのポインタ
 };
 
 #endif

@@ -27,14 +27,14 @@ CTime* CMovie::m_pTime = nullptr;					// タイムへのポインタ
 CMovie::CMovie() : CScene(CScene::MODE_MOVIE)
 {
 	// 値のクリア
-	m_pBlockManager = nullptr;
-	m_pLight		= nullptr;
-	m_timer			= 0;
-	m_particleTimer = 0;
-	m_pDummyPlayer	= nullptr;
-	m_smokeTimer	= 0;
-	m_smokeActive	= false;
-	m_delayTime		= 0;
+	m_pBlockManager = nullptr;		// ブロックマネージャーへのポインタ
+	m_pLight		= nullptr;		// ライトへのポインタ
+	m_timer			= 0;			// タイマー
+	m_particleTimer = 0;			// パーティクル生成タイマー
+	m_pDummyPlayer	= nullptr;		// ダミープレイヤーへのポインタ
+	m_smokeTimer	= 0;			// 煙タイマー
+	m_smokeActive	= false;		// 煙が出たか
+	m_delayTime		= 0;			// 遅延時間
 }
 //=============================================================================
 // デストラクタ

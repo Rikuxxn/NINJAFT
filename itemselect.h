@@ -43,9 +43,9 @@ private:
     static constexpr float ITEM_HRATE       = 0.06f;    // 画面高さに対しての項目高さ率
 
 
-    std::vector<CItem*> m_Item;             // 項目
-    static int          m_SelectedIndex;    // 選択したインデックス
-    bool                m_inputLock;        // 入力制限フラグ
+    std::vector<CItem*> m_Item;                         // 項目
+    static int          m_SelectedIndex;                // 選択したインデックス
+    bool                m_inputLock;                    // 入力制限フラグ
 
 };
 

@@ -25,6 +25,7 @@ private:
     static constexpr int    SIZE        = 5;    // 半径
     static constexpr float  SPACING     = 80.0f;// マス間隔
 
+    // 頂点構造体
     struct CUSTOMVERTEX
     {
         D3DXVECTOR3 position;

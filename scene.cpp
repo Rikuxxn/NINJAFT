@@ -22,7 +22,7 @@
 CScene::CScene(MODE mode):CObject(7)
 {
 	// 値のクリア
-	m_mode = mode;
+	m_mode = mode;	// モード
 }
 //=============================================================================
 // デストラクタ
@@ -81,9 +81,4 @@ CScene* CScene::Create(MODE mode)
 	}
 
 	return pScene;
-}
-
-D3DXVECTOR3 CScene::GetPos(void)
-{
-	return D3DXVECTOR3();
 }

@@ -262,16 +262,16 @@ void CEnemy::SetNearestTreasurePosition(void)
 	float minDist = FLT_MAX;
 	int closestIndex = 0;
 
-	for (size_t i = 0; i < list.size(); ++i)
+	for (size_t nCnt = 0; nCnt < list.size(); ++nCnt)
 	{
-		D3DXVECTOR3 dis = list[i] - GetPos();
+		D3DXVECTOR3 dis = list[nCnt] - GetPos();
 
 		// 一番近い埋蔵金ポイントに設定する
 		float dist = D3DXVec3Length(&dis);
 		if (dist < minDist)
 		{
 			minDist = dist;
-			closestIndex = (int)i;
+			closestIndex = (int)nCnt;
 		}
 	}
 
@@ -475,7 +475,7 @@ void CEnemyLeader::Update(void)
 		float dy = targetY - btPos.getY();
 
 		// バネ的に地面に吸着（上にも下にも動ける）
-		vel.setY(dy * 5.0f);
+		vel.setY(dy * GRAVITY_RATE);
 
 		pRigidBody->setLinearVelocity(vel);
 
@@ -503,7 +503,8 @@ CEnemySub::CEnemySub()
 	SetAI(std::make_unique<CEnemyAI_Sub>());
 
 	// 値のクリア
-	m_pMotion = nullptr;	// モーションへのポインタ
+	m_pMotion	= nullptr;	// モーションへのポインタ
+	m_bOnGround = false;	// 接地判定
 }
 //=============================================================================
 // サブ敵のデストラクタ
@@ -533,16 +534,7 @@ HRESULT CEnemySub::Init(void)
 	SetupModels(pModels, nNumModels);
 
 	// カプセルコライダーの設定
-	CreatePhysics(0.0f, 0.0f, 0.1f);
-
-	btRigidBody* pRigid = GetRigidBody();
-
-	// 重力を無効化しY方向に移動しないようにする
-	if (pRigid)
-	{
-		pRigid->setGravity(btVector3(0, 0, 0));
-		pRigid->setAngularFactor(btVector3(1, 0, 1));     // 移動方向
-	}
+	CreatePhysics(CAPSULE_RADIUS, CAPSULE_HEIGHT, 0.1f);
 
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);
@@ -589,4 +581,50 @@ void CEnemySub::Update(void)
 
 	// モーションの更新処理
 	m_pMotion->Update(GetModels(), n);
+
+	// メッシュフィールドの取得
+	CMeshField* pMeshField = CGenerateMap::GetInstance()->GetMeshField();
+
+	if (!pMeshField)
+	{
+		return;
+	}
+
+	// 接地判定
+	m_bOnGround = OnGroundMesh(pMeshField, COLLIDER_OFFSET);
+
+	// Bullet現在位置取得
+	btTransform trans;
+	btRigidBody* pRigidBody = GetRigidBody();
+	pRigidBody->getMotionState()->getWorldTransform(trans);
+	btVector3 btPos = trans.getOrigin();
+
+	D3DXVECTOR3 RigidPos;
+	btVector3 vel = pRigidBody->getLinearVelocity();
+
+	if (m_bOnGround)	// 接地中
+	{
+		// 見た目位置を地形に吸着
+		float groundY = pMeshField->GetHeight(btPos.getX(), btPos.getZ());
+		float targetY = groundY + COLLIDER_OFFSET;
+
+		float dy = targetY - btPos.getY();
+
+		// バネ的に地面に吸着（上にも下にも動ける）
+		vel.setY(dy * GRAVITY_RATE);
+
+		pRigidBody->setLinearVelocity(vel);
+
+		// 見た目
+		SetPos(D3DXVECTOR3(btPos.getX(), groundY, btPos.getZ()));
+	}
+	else// 空中
+	{
+		// Bullet主導で見た目を更新
+		RigidPos.x = btPos.getX();
+		RigidPos.y = btPos.getY() - COLLIDER_OFFSET;
+		RigidPos.z = btPos.getZ();
+
+		SetPos(RigidPos);
+	}
 }

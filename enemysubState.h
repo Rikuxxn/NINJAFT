@@ -47,22 +47,16 @@ public:
 		D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
 		float distance = D3DXVec3Length(&diff);
 
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= DECELERATION_RATE; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		// パーティクル発生位置
 		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
+		spawnPos.y += OFFSET_POS;
 
 		m_nParticleTimer++;
 
-		if (m_nParticleTimer >= 6)
+		if (m_nParticleTimer >= PARTICLE_INTERVAL)
 		{
 			m_nParticleTimer = 0;
 
@@ -125,7 +119,8 @@ public:
 	}
 
 private:
-	static constexpr float DECELERATION_RATE = 0.98f;// 減速率
+	static constexpr int	PARTICLE_INTERVAL	= 6;		// パーティクル生成インターバル
+	static constexpr float	OFFSET_POS			= 50.0f;	// オフセット位置
 
 	int m_nParticleTimer;
 };
@@ -178,10 +173,11 @@ public:
 
 		// パーティクル発生位置
 		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
+		spawnPos.y += OFFSET_POS;
 
 		m_nParticleTimer++;
 
-		if (m_nParticleTimer >= 6)
+		if (m_nParticleTimer >= PARTICLE_INTERVAL)
 		{
 			m_nParticleTimer = 0;
 
@@ -212,8 +208,8 @@ public:
 		// 現在速度との補間（イージング）
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
-		currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemySub::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemySub::ACCEL_RATE;
 
 		// 補間後の速度をセット
 		pEnemy->SetMove(currentMove);
@@ -236,7 +232,7 @@ public:
 		// ----------------------
 		if (pEnemy->HasReachedTarget())
 		{
-			if ((rand() % 100) < 55)
+			if ((rand() % 100) < PROBABILITY)
 			{
 				// 今到達した巡回ポイントの到達判定がずっと通ってしまうため、次の巡回ポイントを設定しておく
 				pEnemy->ChooseNextPatrolPoint();
@@ -247,7 +243,7 @@ public:
 			else
 			{
 				// 確率で前回立てた音の場所に調査に向かう
-				if ((rand() % 100) < 55)
+				if ((rand() % 100) < PROBABILITY)
 				{
 					// 音の位置を設定
 					pEnemy->OnSoundHeard(pEnemy->GetLastHeardSoundPos());
@@ -270,8 +266,9 @@ public:
 	}
 
 private:
-	static constexpr float ACCEL_RATE = 0.15f;
-
+	static constexpr int	PARTICLE_INTERVAL	= 6;		// パーティクル生成インターバル
+	static constexpr float	OFFSET_POS			= 50.0f;	// オフセット位置
+	static constexpr int	PROBABILITY			= 55;		// 確率
 	int m_nParticleTimer;
 
 };
@@ -289,8 +286,6 @@ public:
 
 		// 追跡モーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemySub::CHASE, 10);
-
-		pEnemy->SetSize(D3DXVECTOR3(1.8f, 1.8f, 1.8f));
 	}
 
 	void OnUpdate(CEnemySub* pEnemy)override
@@ -300,10 +295,11 @@ public:
 
 		// パーティクル発生位置
 		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
+		spawnPos.y += OFFSET_POS;
 
 		m_nParticleTimer++;
 
-		if (m_nParticleTimer >= 6)
+		if (m_nParticleTimer >= PARTICLE_INTERVAL)
 		{
 			m_nParticleTimer = 0;
 
@@ -346,15 +342,8 @@ public:
 		// 一定距離になったら速度を落とす
 		if (distance < DECELERATION_DISTANCE)
 		{
-			// 移動量の取得
-			D3DXVECTOR3 move = pEnemy->GetMove();
-
-			move *= DECELETATION_RATE; // 減速率
-			if (fabsf(move.x) < 0.01f) move.x = 0;
-			if (fabsf(move.z) < 0.01f) move.z = 0;
-
-			// 移動量を設定
-			pEnemy->SetMove(move);
+			// 減速処理
+			pEnemy->ApplyDeceleration();
 
 			return; // 近すぎたら止まる
 		}
@@ -379,8 +368,8 @@ public:
 		// 現在速度との補間（イージング）
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
-		currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemySub::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemySub::ACCEL_RATE;
 
 		// 補間後の速度をセット
 		pEnemy->SetMove(currentMove);
@@ -393,15 +382,15 @@ public:
 		}
 	}
 
-	void OnExit(CEnemySub* pEnemy)override
+	void OnExit(CEnemySub* /*pEnemy*/)override
 	{
-		pEnemy->SetSize(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+
 	}
 
 private:
-	static constexpr float DECELETATION_RATE		= 0.95f;// 減速率
-	static constexpr float ACCEL_RATE				= 0.15f;
-	static constexpr float DECELERATION_DISTANCE	= 50.0f;// 減速開始する距離
+	static constexpr int	PARTICLE_INTERVAL		= 6;		// パーティクル生成インターバル
+	static constexpr float	OFFSET_POS				= 50.0f;	// オフセット位置
+	static constexpr float	DECELERATION_DISTANCE	= 50.0f;	// 減速開始する距離
 
 	int m_nParticleTimer;
 };
@@ -457,10 +446,11 @@ public:
 
 		// パーティクル発生位置
 		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
+		spawnPos.y += OFFSET_POS;
 
 		m_nParticleTimer++;
 
-		if (m_nParticleTimer >= 6)
+		if (m_nParticleTimer >= PARTICLE_INTERVAL)
 		{
 			m_nParticleTimer = 0;
 
@@ -491,8 +481,8 @@ public:
 		// 現在速度との補間（イージング）
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
-		currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemySub::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemySub::ACCEL_RATE;
 
 		// 補間後の速度をセット
 		pEnemy->SetMove(currentMove);
@@ -527,8 +517,9 @@ public:
 	}
 
 private:
-	static constexpr float CHASE_DISTANCE	= 150.0f;// 追跡開始距離
-	static constexpr float ACCEL_RATE		= 0.15f;
+	static constexpr int	PARTICLE_INTERVAL	= 6;		// パーティクル生成インターバル
+	static constexpr float	OFFSET_POS			= 50.0f;	// オフセット位置
+	static constexpr float	CHASE_DISTANCE		= 150.0f;	// 追跡開始距離
 
 	int m_nParticleTimer;
 };
@@ -557,22 +548,16 @@ public:
 		D3DXVECTOR3 diff = pPlayer->GetPos() - pEnemy->GetPos();
 		float distance = D3DXVec3Length(&diff);
 
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= DECELERATION_RATE; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		// パーティクル発生位置
 		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
+		spawnPos.y += OFFSET_POS;
 
 		m_nParticleTimer++;
 
-		if (m_nParticleTimer >= 6)
+		if (m_nParticleTimer >= PARTICLE_INTERVAL)
 		{
 			m_nParticleTimer = 0;
 
@@ -634,8 +619,9 @@ public:
 	}
 
 private:
-	static constexpr float DECELERATION_RATE	= 0.98f;	// 減速率
-	static constexpr float CHASE_DISTANCE		= 150.0f;	// 追跡開始距離
+	static constexpr int	PARTICLE_INTERVAL	= 6;		// パーティクル生成
+	static constexpr float	OFFSET_POS			= 50.0f;	// オフセット位置
+	static constexpr float	CHASE_DISTANCE		= 150.0f;	// 追跡開始距離
 
 	int m_nParticleTimer;
 };
@@ -672,10 +658,11 @@ public:
 
 		// パーティクル発生位置
 		D3DXVECTOR3 spawnPos = pEnemy->GetPos();
+		spawnPos.y += OFFSET_POS;
 
 		m_nParticleTimer++;
 
-		if (m_nParticleTimer >= 6)
+		if (m_nParticleTimer >= PARTICLE_INTERVAL)
 		{
 			m_nParticleTimer = 0;
 
@@ -707,15 +694,8 @@ public:
 			// 一定距離近づいたら減速する
 			if (distance < DECELERATION_DISTANCE)
 			{
-				// 移動量の取得
-				D3DXVECTOR3 move = pEnemy->GetMove();
-
-				move *= DECELERATION_RATE; // 減速率
-				if (fabsf(move.x) < 0.01f) move.x = 0;
-				if (fabsf(move.z) < 0.01f) move.z = 0;
-
-				// 移動量を設定
-				pEnemy->SetMove(move);
+				// 減速処理
+				pEnemy->ApplyDeceleration();
 
 				return; // 近すぎたら止まる
 			}
@@ -740,8 +720,8 @@ public:
 			// 現在速度との補間（イージング）
 			D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-			currentMove.x += (targetMove.x - currentMove.x) * ACCEL_RATE;
-			currentMove.z += (targetMove.z - currentMove.z) * ACCEL_RATE;
+			currentMove.x += (targetMove.x - currentMove.x) * CEnemySub::ACCEL_RATE;
+			currentMove.z += (targetMove.z - currentMove.z) * CEnemySub::ACCEL_RATE;
 
 			// 補間後の速度をセット
 			pEnemy->SetMove(currentMove);
@@ -754,9 +734,9 @@ public:
 	}
 
 private:
-	static constexpr float DECELERATION_RATE		= 0.98f;	// 減速率
-	static constexpr float DECELERATION_DISTANCE	= 100.0f;	// 減速開始する距離
-	static constexpr float ACCEL_RATE				= 0.15f;
+	static constexpr int	PARTICLE_INTERVAL		= 6;		// パーティクル生成
+	static constexpr float	OFFSET_POS				= 50.0f;	// オフセット位置
+	static constexpr float	DECELERATION_DISTANCE	= 100.0f;	// 減速開始する距離
 
 	int m_nParticleTimer;
 };

@@ -46,7 +46,7 @@ CGuage* CGuage::Create(GUAGETYPE type, D3DXVECTOR3 pos, float fWidth, float fHei
 		return nullptr;
 	}
 
-	// ‰Šú‰»ˆ—
+	// Ý’è
 	pGuage->SetPos(pos);
 	pGuage->SetSize(fWidth, fHeight);
 	pGuage->m_type = type;
@@ -197,7 +197,7 @@ C3DGuage* C3DGuage::Create(GUAGETYPE type, D3DXVECTOR3 pos, float fWidth, float 
 {
 	C3DGuage* pGuage = new C3DGuage;
 
-	// ‰Šú‰»ˆ—
+	// Ý’è
 	pGuage->SetPos(pos);
 	pGuage->SetSize(fWidth, fHeight);
 	pGuage->m_type = type;
@@ -212,8 +212,11 @@ C3DGuage* C3DGuage::Create(GUAGETYPE type, D3DXVECTOR3 pos, float fWidth, float 
 		pGuage->SetPath("data/TEXTURE/HpFrame.png");
 	}
 
-	// ‰Šú‰»ˆ—
-	pGuage->Init();
+	// ‰Šú‰»Ž¸”sŽž
+	if (FAILED(pGuage->Init()))
+	{
+		return nullptr;
+	}
 
 	return pGuage;
 }

@@ -13,7 +13,9 @@
 #include "guage.h"
 #include "blockmanager.h"
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CPlayer;
 class CBlock;
 
@@ -135,6 +137,7 @@ public:
 
 		return false;
 	}
+	bool IsFinished(void) const { return m_isFinished; }
 
 	static int GetTreasureCount(void) { return m_getCount; }
 
@@ -154,6 +157,7 @@ private:
 	float		m_guageDecreaseSpeed;							// ゲージの減る量
 	bool		m_bUiActive;									// UIの表示・非表示フラグ
 	static int	m_getCount;										// 取得数
+	bool		m_isFinished;									// 取得し終えたか(単体)
 };
 
 //*****************************************************************************

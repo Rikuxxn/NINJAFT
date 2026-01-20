@@ -68,11 +68,21 @@ public:
 
 		T* pEnemy = new T();
 
+		// nullptrだったら
+		if (pEnemy == nullptr)
+		{
+			return nullptr;
+		}
+
 		pEnemy->SetPos(pos);
 		pEnemy->SetRot(rot);
 		pEnemy->SetSize(D3DXVECTOR3(1.1f, 1.1f, 1.1f));
 
-		pEnemy->Init();
+		// 初期化失敗時
+		if (FAILED(pEnemy->Init()))
+		{
+			return nullptr;
+		}
 
 		return pEnemy;
 	}
@@ -96,11 +106,11 @@ public:
 
 		// 現在のポイントのインデックスを求める
 		int currentIndex = -1;
-		for (size_t i = 0; i < m_patrolPoints.size(); ++i)
+		for (size_t nCnt = 0; nCnt < m_patrolPoints.size(); ++nCnt)
 		{
-			if (m_patrolPoints[i] == m_currentPatrolTarget)
+			if (m_patrolPoints[nCnt] == m_currentPatrolTarget)
 			{
-				currentIndex = (int)i;
+				currentIndex = (int)nCnt;
 				break;
 			}
 		}
@@ -150,16 +160,16 @@ public:
 		float minDist = FLT_MAX;
 		int closestIndex = 0;
 
-		for (size_t i = 0; i < m_patrolPoints.size(); ++i)
+		for (size_t nCnt = 0; nCnt < m_patrolPoints.size(); ++nCnt)
 		{
-			D3DXVECTOR3 dis = m_patrolPoints[i] - GetPos();
+			D3DXVECTOR3 dis = m_patrolPoints[nCnt] - GetPos();
 
 			// 一番近い巡回ポイントに設定する
 			float dist = D3DXVec3Length(&dis);
 			if (dist < minDist)
 			{
 				minDist = dist;
-				closestIndex = (int)i;
+				closestIndex = (int)nCnt;
 			}
 		}
 
@@ -212,16 +222,16 @@ public:
 	{
 		m_nNumModel = nNumModels;
 
-		for (int i = 0; i < nNumModels; i++)
+		for (int nCnt = 0; nCnt < nNumModels; nCnt++)
 		{
-			m_apModel[i] = pModels[i];
+			m_apModel[nCnt] = pModels[nCnt];
 
-			m_apModel[i]->SetOffsetPos(m_apModel[i]->GetPos());
-			m_apModel[i]->SetOffsetRot(m_apModel[i]->GetRot());
+			m_apModel[nCnt]->SetOffsetPos(m_apModel[nCnt]->GetPos());
+			m_apModel[nCnt]->SetOffsetRot(m_apModel[nCnt]->GetRot());
 
-			if (strstr(m_apModel[i]->GetPath(), "weapon") != nullptr)
+			if (strstr(m_apModel[nCnt]->GetPath(), "weapon") != nullptr)
 			{
-				m_pSwordModel = m_apModel[i];
+				m_pSwordModel = m_apModel[nCnt];
 			}
 		}
 	}
@@ -251,30 +261,29 @@ public:
 	int GetInsightCount(void) { return m_insightCount; }
 
 private:
-	static constexpr int MAX_PARTS = 32;	// 最大パーツ数
-	static constexpr float CAPSULE_RADIUS = 14.0f;					// カプセルコライダーの半径
-	static constexpr float CAPSULE_HEIGHT = 60.0f;					// カプセルコライダーの高さ
-	static constexpr float DEFAULT_COLLIDER_OFFSET = 45.0f;			// コライダーのオフセット位置
+	static constexpr int	MAX_PARTS				= 32;		// 最大パーツ数
+	static constexpr float	CAPSULE_RADIUS			= 14.0f;	// カプセルコライダーの半径
+	static constexpr float	CAPSULE_HEIGHT			= 60.0f;	// カプセルコライダーの高さ
+	static constexpr float	DEFAULT_COLLIDER_OFFSET = 45.0f;	// コライダーのオフセット位置
 
-	D3DXMATRIX m_mtxWorld;					// ワールドマトリックス
-	CModel* m_apModel[MAX_PARTS];			// モデル(パーツ)へのポインタ
-	CDebugProc3D* m_pDebug3D;				// 3Dデバッグ表示へのポインタ
-	int m_nNumModel;						// モデル(パーツ)の総数
-	CModel* m_pSwordModel;					// 武器モデルのポインタ
-	float m_sightRange;						// 視界距離
-	float m_sightAngle;						// 視界範囲
-	EEnemyAction m_requestedAction;			// AIのリクエスト
-	std::vector<D3DXVECTOR3> m_patrolPoints;// 巡回ポイント
-
-	D3DXVECTOR3 m_currentPatrolTarget;		// 現在の巡回ポイント
-	D3DXVECTOR3 m_nearestTreasurePosition;	// 一番近い埋蔵金ポイント
-	D3DXVECTOR3 m_lastHeardSoundPos;		// 最後に聞いた音の座標
-	bool m_hasHeardSound;					// 音を聞いたかどうか
-	bool m_returnToPatrol;					// 最寄りの巡回ポイントに戻るフラグ
-	bool m_canControl;						// 操作フラグ
-	int m_makeSoundCount;					// 音発生数
-	int m_insightCount;						// 発見された回数
-	std::unique_ptr<IEnemyAI> m_pAI;
+	D3DXMATRIX					m_mtxWorld;						// ワールドマトリックス
+	CModel*						m_apModel[MAX_PARTS];			// モデル(パーツ)へのポインタ
+	CDebugProc3D*				m_pDebug3D;						// 3Dデバッグ表示へのポインタ
+	int							m_nNumModel;					// モデル(パーツ)の総数
+	CModel*						m_pSwordModel;					// 武器モデルのポインタ
+	float						m_sightRange;					// 視界距離
+	float						m_sightAngle;					// 視界範囲
+	EEnemyAction				m_requestedAction;				// AIのリクエスト
+	std::vector<D3DXVECTOR3>	m_patrolPoints;					// 巡回ポイント
+	D3DXVECTOR3					m_currentPatrolTarget;			// 現在の巡回ポイント
+	D3DXVECTOR3					m_nearestTreasurePosition;		// 一番近い埋蔵金ポイント
+	D3DXVECTOR3					m_lastHeardSoundPos;			// 最後に聞いた音の座標
+	bool						m_hasHeardSound;				// 音を聞いたかどうか
+	bool						m_returnToPatrol;				// 最寄りの巡回ポイントに戻るフラグ
+	bool						m_canControl;					// 操作フラグ
+	int							m_makeSoundCount;				// 音発生数
+	int							m_insightCount;					// 発見された回数
+	std::unique_ptr<IEnemyAI>	m_pAI;							// AIへのポインタ
 };
 
 
@@ -287,9 +296,11 @@ public:
 	CEnemyLeader();
 	~CEnemyLeader();
 
-	static constexpr float SPEED = 7.0f;				// 移動スピード
-	static constexpr float INVESTIGATE_SPEED = 15.0f;	// 調査時の移動スピード
-	static constexpr float CHASE_SPEED = 15.0f;			// 追跡時の移動スピード
+	static constexpr float SPEED				= 7.0f;		// 移動スピード
+	static constexpr float INVESTIGATE_SPEED	= 15.0f;	// 調査時の移動スピード
+	static constexpr float CHASE_SPEED			= 15.0f;	// 追跡時の移動スピード
+	static constexpr float DECELERATION_RATE	= 0.85f;	// 減速率
+	static constexpr float ACCEL_RATE			= 0.15f;	// 補間率
 
 	// リーダー敵モーションの種類
 	typedef enum
@@ -311,9 +322,23 @@ public:
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
+	void ApplyDeceleration(void)
+	{
+		D3DXVECTOR3 move = GetMove();
+
+		// 減速させる
+		move *= DECELERATION_RATE;
+
+		if (fabsf(move.x) < 0.01f) move.x = 0;
+		if (fabsf(move.z) < 0.01f) move.z = 0;
+
+		// 移動量の設定
+		SetMove(move);
+	}
 
 	// クールダウン設定
 	void SetCooldown(float time) { m_Cooldown = time * 60.0f; }
+
 	bool IsCooldown(void) const { return m_Cooldown > 0.0f; }
 
 	CWeaponCollider* GetWeaponCollider(void) { return m_pWeaponCollider.get(); }
@@ -321,18 +346,19 @@ public:
 	StateMachine<CEnemyLeader> GetStateMachine(void) { return m_stateMachine; }
 
 private:
-	static constexpr int MAX_PARTS = 32;			// 最大パーツ数
-	static constexpr float CAPSULE_RADIUS = 14.0f;	// カプセルコライダーの半径
-	static constexpr float CAPSULE_HEIGHT = 60.0f;	// カプセルコライダーの高さ
-	static constexpr float COLLIDER_OFFSET = 45.0f;	// コライダーのオフセット位置
+	static constexpr int	MAX_PARTS		= 32;			// 最大パーツ数
+	static constexpr float	CAPSULE_RADIUS	= 14.0f;		// カプセルコライダーの半径
+	static constexpr float	CAPSULE_HEIGHT	= 60.0f;		// カプセルコライダーの高さ
+	static constexpr float	COLLIDER_OFFSET = 45.0f;		// コライダーのオフセット位置
+	static constexpr float	GRAVITY_RATE	= 5.0f;			// 重力の割合
 
-	CMotion* m_pMotion;									// モーションへのポインタ
-	CShadowS* m_pShadowS;								// ステンシルシャドウへのポインタ
-	CObjectX* m_pTipModel;								// 武器コライダー用モデル
-	CObjectX* m_pBaseModel;								// 武器コライダー用モデル
-	std::unique_ptr<CWeaponCollider> m_pWeaponCollider;	// 武器の当たり判定へのポインタ
-	float m_Cooldown;									// クールダウン残り時間
-	bool m_bOnGround;									// 接地しているか
+	CMotion*							m_pMotion;			// モーションへのポインタ
+	CShadowS*							m_pShadowS;			// ステンシルシャドウへのポインタ
+	CObjectX*							m_pTipModel;		// 武器コライダー用モデル
+	CObjectX*							m_pBaseModel;		// 武器コライダー用モデル
+	std::unique_ptr<CWeaponCollider>	m_pWeaponCollider;	// 武器の当たり判定へのポインタ
+	float								m_Cooldown;			// クールダウン残り時間
+	bool								m_bOnGround;		// 接地しているか
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CEnemyLeader> m_stateMachine;
@@ -348,11 +374,13 @@ public:
 	CEnemySub();
 	~CEnemySub();
 
-	static constexpr float SPEED = 5.0f;				// 移動スピード
-	static constexpr float INVESTIGATE_SPEED = 10.0f;	// 調査時の移動スピード
-	static constexpr float CHASE_SPEED = 8.0f;			// 追跡時の移動スピード
-	static constexpr float FOLLOW_SPEED = 15.0f;		// 追従時のスピード
-	static constexpr float CHASE_DISTANCE = 150.0f;		// 追跡状態になる距離
+	static constexpr float SPEED				= 5.0f;		// 移動スピード
+	static constexpr float INVESTIGATE_SPEED	= 10.0f;	// 調査時の移動スピード
+	static constexpr float CHASE_SPEED			= 8.0f;		// 追跡時の移動スピード
+	static constexpr float FOLLOW_SPEED			= 15.0f;	// 追従時のスピード
+	static constexpr float CHASE_DISTANCE		= 150.0f;	// 追跡状態になる距離
+	static constexpr float ACCEL_RATE			= 0.15f;	// 補間率
+	static constexpr float DECELERATION_RATE	= 0.9f;		// 減速率
 
 	// サブ敵モーションの種類
 	typedef enum
@@ -369,16 +397,32 @@ public:
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
+	void ApplyDeceleration(void)
+	{
+		D3DXVECTOR3 move = GetMove();
+
+		// 減速させる
+		move *= DECELERATION_RATE;
+
+		if (fabsf(move.x) < 0.01f) move.x = 0;
+		if (fabsf(move.z) < 0.01f) move.z = 0;
+
+		// 移動量の設定
+		SetMove(move);
+	}
 
 	CMotion* GetMotion(void) { return m_pMotion; }
 	StateMachine<CEnemySub> GetStateMachine(void) { return m_stateMachine; }
 
 private:
-	static constexpr int MAX_PARTS = 10;			// 最大パーツ数
-	static constexpr float CAPSULE_RADIUS = 1.0f;	// カプセルコライダーの半径
-	static constexpr float CAPSULE_HEIGHT = 65.0f;	// カプセルコライダーの高さ
+	static constexpr int	MAX_PARTS		= 10;		// 最大パーツ数
+	static constexpr float	CAPSULE_RADIUS	= 1.0f;		// カプセルコライダーの半径
+	static constexpr float	CAPSULE_HEIGHT	= 65.0f;	// カプセルコライダーの高さ
+	static constexpr float	COLLIDER_OFFSET = 45.0f;	// コライダーのオフセット位置
+	static constexpr float	GRAVITY_RATE	= 5.0f;		// 重力の割合
 
-	CMotion* m_pMotion;								// モーションへのポインタ
+	CMotion*	m_pMotion;									// モーションへのポインタ
+	bool		m_bOnGround;								// 接地しているか
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CEnemySub> m_stateMachine;

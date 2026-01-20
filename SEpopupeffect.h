@@ -29,6 +29,7 @@ public:
 	void SetLife(int nLife) { m_nLife = nLife; }
 	void SetPath(const char* path)
 	{ 
+		// nullptr‚¾‚Á‚½‚ç
 		if (path == nullptr)
 		{
 			path = " ";

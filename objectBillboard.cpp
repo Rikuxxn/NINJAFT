@@ -45,7 +45,7 @@ HRESULT CObjectBillboard::Init(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	// テクスチャの取得
+	// テクスチャの登録
 	m_nIdxTexture = CManager::GetTexture()->RegisterDynamic(m_szPath);
 
 	// 頂点バッファの生成
@@ -143,16 +143,16 @@ void CObjectBillboard::UpdateTurn(void)
 	float s = sinf(m_rot.z);
 
 	// 元の頂点を回転
-	for (int i = 0; i < 4; i++)
+	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		float x = pVtx[i].pos.x;
-		float y = pVtx[i].pos.y;
+		float x = pVtx[nCnt].pos.x;
+		float y = pVtx[nCnt].pos.y;
 
-		pVtx[i].pos.x = x * c - y * s;
-		pVtx[i].pos.y = x * s + y * c;
+		pVtx[nCnt].pos.x = x * c - y * s;
+		pVtx[nCnt].pos.y = x * s + y * c;
 
 		// 色の更新
-		pVtx[i].col = m_col;
+		pVtx[nCnt].col = m_col;
 	}
 
 	// 頂点バッファをアンロックする

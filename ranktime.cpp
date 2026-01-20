@@ -67,42 +67,42 @@ CRankTime* CRankTime::Create(float baseX,float baseY,float digitWidth,float digi
 HRESULT CRankTime::Init(void)
 {
 	// 5位まで生成する
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
 		// 順位UIの生成
 		float UIbaseX = m_basePos.x + m_digitWidth;
-		float UIbaseY = m_basePos.y + i * (m_digitHeight + 50.0f);
+		float UIbaseY = m_basePos.y + nCnt * (m_digitHeight + 50.0f);
 
 		// 順位表示
-		CRank::Create(D3DXVECTOR3(UIbaseX, UIbaseY, 0.0f), m_digitWidth / 2, m_digitHeight, (float)i);
+		CRank::Create(D3DXVECTOR3(UIbaseX, UIbaseY, 0.0f), m_digitWidth / 2, m_digitHeight, (float)nCnt);
 
 		// 順位UIの幅
 		float rankWidth = (m_digitWidth / 2) + 50.0f;
 
 		// 分
-		for (int n = 0; n < 2; n++)
+		for (int nCnt2 = 0; nCnt2 < 2; nCnt2++)
 		{
-			float x = UIbaseX + rankWidth + n * m_digitWidth;
+			float x = UIbaseX + rankWidth + nCnt2 * m_digitWidth;
 			float y = UIbaseY;
 
-			m_apNumber[i][n] = CNumber::Create(x, y, m_digitWidth, m_digitHeight);
+			m_apNumber[nCnt][nCnt2] = CNumber::Create(x, y, m_digitWidth, m_digitHeight);
 		}
 		
 		// コロンの生成（分と秒の間）
 		float colonX = UIbaseX + rankWidth + 2 * m_digitWidth;
 		float colonY = UIbaseY;
-		m_apRankClon[i] = CRankColon::Create(D3DXVECTOR3(colonX, colonY, 0.0f), m_digitWidth / 2, m_digitHeight);
+		m_apRankClon[nCnt] = CRankColon::Create(D3DXVECTOR3(colonX, colonY, 0.0f), m_digitWidth / 2, m_digitHeight);
 
 		// コロンの幅
 		float colonWidth = rankWidth + m_digitWidth / 2;
 
 		// 秒
-		for (int n = 2; n < DIGITS; n++)
+		for (int nCnt2 = 2; nCnt2 < DIGITS; nCnt2++)
 		{
-			float x = UIbaseX + colonWidth + n * m_digitWidth;
+			float x = UIbaseX + colonWidth + nCnt2 * m_digitWidth;
 			float y = UIbaseY;
 
-			m_apNumber[i][n] = CNumber::Create(x, y, m_digitWidth, m_digitHeight);
+			m_apNumber[nCnt][nCnt2] = CNumber::Create(x, y, m_digitWidth, m_digitHeight);
 		}
 	}
 
@@ -117,17 +117,17 @@ HRESULT CRankTime::Init(void)
 //=============================================================================
 void CRankTime::Uninit(void)
 {
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
-		for (int n = 0; n < DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < DIGITS; nCnt2++)
 		{
-			if (m_apNumber[i][n])
+			if (m_apNumber[nCnt][nCnt2])
 			{
 				// ナンバーの終了処理
-				m_apNumber[i][n]->Uninit();
+				m_apNumber[nCnt][nCnt2]->Uninit();
 
-				delete m_apNumber[i][n];
-				m_apNumber[i][n] = nullptr;
+				delete m_apNumber[nCnt][nCnt2];
+				m_apNumber[nCnt][nCnt2] = nullptr;
 			}
 		}
 	}
@@ -140,14 +140,14 @@ void CRankTime::Uninit(void)
 //=============================================================================
 void CRankTime::Update(void)
 {
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
-		for (int n = 0; n < DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < DIGITS; nCnt2++)
 		{
-			if (m_apNumber[i][n])
+			if (m_apNumber[nCnt][nCnt2])
 			{
 				// ナンバーの更新処理(UV)
-				m_apNumber[i][n]->Update();
+				m_apNumber[nCnt][nCnt2]->Update();
 			}
 		}
 	}
@@ -163,17 +163,17 @@ void CRankTime::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
-		for (int n = 0; n < DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < DIGITS; nCnt2++)
 		{
-			if (m_apNumber[i][n])
+			if (m_apNumber[nCnt][nCnt2])
 			{
 				// テクスチャの設定
 				pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
 
 				// ナンバーの描画処理
-				m_apNumber[i][n]->Draw();
+				m_apNumber[nCnt][nCnt2]->Draw();
 			}
 		}
 	}
@@ -183,17 +183,17 @@ void CRankTime::Draw(void)
 //=============================================================================
 void CRankTime::SetRankList(const std::vector<std::pair<int, int>>& rankList)
 {
-	for (size_t i = 0; i < rankList.size() && i < MaxRanking; i++)
+	for (size_t nCnt = 0; nCnt < rankList.size() && nCnt < MaxRanking; nCnt++)
 	{
-		int min10 = rankList[i].first / 10;
-		int min1 = rankList[i].first % 10;
-		int sec10 = rankList[i].second / 10;
-		int sec1 = rankList[i].second % 10;
+		int min10 = rankList[nCnt].first / 10;
+		int min1 = rankList[nCnt].first % 10;
+		int sec10 = rankList[nCnt].second / 10;
+		int sec1 = rankList[nCnt].second % 10;
 
-		if (m_apNumber[i][0])m_apNumber[i][0]->SetDigit(min10);
-		if (m_apNumber[i][1])m_apNumber[i][1]->SetDigit(min1);
-		if (m_apNumber[i][2])m_apNumber[i][2]->SetDigit(sec10);
-		if (m_apNumber[i][3])m_apNumber[i][3]->SetDigit(sec1);
+		if (m_apNumber[nCnt][0])m_apNumber[nCnt][0]->SetDigit(min10);
+		if (m_apNumber[nCnt][1])m_apNumber[nCnt][1]->SetDigit(min1);
+		if (m_apNumber[nCnt][2])m_apNumber[nCnt][2]->SetDigit(sec10);
+		if (m_apNumber[nCnt][3])m_apNumber[nCnt][3]->SetDigit(sec1);
 	}
 }
 //=============================================================================
@@ -223,11 +223,11 @@ void CRankTime::ShowNewRankEffect(int rankIndex)
 CRankColon::CRankColon(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	m_pVtxBuff = nullptr;					// 頂点バッファ
-	m_pos = D3DXVECTOR3(0.0f,0.0f,0.0f);	// 位置
-	m_fWidth = 0.0f;						// 幅
-	m_fHeight = 0.0f;						// 高さ
-	m_nIdxTexture = 0;
+	m_pVtxBuff		= nullptr;		// 頂点バッファ
+	m_pos			= INIT_VEC3;	// 位置
+	m_fWidth		= 0.0f;			// 幅
+	m_fHeight		= 0.0f;			// 高さ
+	m_nIdxTexture	= 0;			// テクスチャインデックス
 }
 //=============================================================================
 // コロンのデストラクタ
@@ -241,16 +241,23 @@ CRankColon::~CRankColon()
 //=============================================================================
 CRankColon* CRankColon::Create(D3DXVECTOR3 pos, float fWidth, float fHeight)
 {
-	CRankColon* pRankColon;
+	CRankColon* pRankColon = new CRankColon;
 
-	pRankColon = new CRankColon;
+	// nullptrだったら
+	if (pRankColon == nullptr)
+	{
+		return nullptr;
+	}
 
 	pRankColon->m_pos = pos;
 	pRankColon->m_fWidth = fWidth;
 	pRankColon->m_fHeight = fHeight;
 
-	// 初期化処理
-	pRankColon->Init();
+	// 初期化失敗時
+	if (FAILED(pRankColon->Init()))
+	{
+		return nullptr;
+	}
 
 	return pRankColon;
 }
@@ -262,6 +269,7 @@ HRESULT CRankColon::Init(void)
 	// デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	// テクスチャの登録
 	m_nIdxTexture = CManager::GetTexture()->RegisterDynamic("data/TEXTURE/colon.png");
 
 	// 頂点バッファの生成
@@ -355,12 +363,4 @@ void CRankColon::Draw(void)
 		// ポリゴンの描画
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 	}
-}
-//=============================================================================
-// コロンの位置取得処理
-//=============================================================================
-D3DXVECTOR3 CRankColon::GetPos(void)
-{
-	// 使わない
-	return D3DXVECTOR3();
 }

@@ -15,7 +15,9 @@
 #include "rankingmanager.h"
 #include "time.h"
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CRankColon;
 
 //*****************************************************************************
@@ -35,8 +37,6 @@ public:
 
 	void SetRankList(const std::vector<std::pair<int, int>>& rankList);
 	void ShowNewRankEffect(int rankIndex);
-
-	D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(); }
 
 private:
 	static constexpr int MaxRanking = 5;		// 表示数
@@ -67,8 +67,6 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-
-	D3DXVECTOR3 GetPos(void);
 
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファ

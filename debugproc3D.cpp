@@ -132,10 +132,10 @@ void CDebugProc3D::DrawCapsuleCollider(btCapsuleShape* capsule, const btTransfor
     btVector3 top = up * halfHeight;
     btVector3 bottom = -up * halfHeight;
 
-    for (int i = 0; i < kNumSegments; i++)
+    for (int nCnt = 0; nCnt < kNumSegments; nCnt++)
     {
-        float theta1 = (2.0f * D3DX_PI * i) / kNumSegments;
-        float theta2 = (2.0f * D3DX_PI * (i + 1)) / kNumSegments;
+        float theta1 = (2.0f * D3DX_PI * nCnt) / kNumSegments;
+        float theta2 = (2.0f * D3DX_PI * (nCnt + 1)) / kNumSegments;
 
         btVector3 dir1 = cosf(theta1) * side1 + sinf(theta1) * side2;
         btVector3 dir2 = cosf(theta2) * side1 + sinf(theta2) * side2;
@@ -302,9 +302,9 @@ void CDebugProc3D::DrawBlockCollider(btRigidBody* rigidBody, D3DXCOLOR color)
             {0,4},{1,5},{2,6},{3,7}
         };
 
-        for (int i = 0; i < 12; i++)
+        for (int nCnt = 0; nCnt < 12; nCnt++)
         {
-            DrawLine3D(v[indices[i][0]], v[indices[i][1]], color);
+            DrawLine3D(v[indices[nCnt][0]], v[indices[nCnt][1]], color);
         }
         break;
     }
@@ -315,10 +315,10 @@ void CDebugProc3D::DrawBlockCollider(btRigidBody* rigidBody, D3DXCOLOR color)
         const int kSegments = 16;
         D3DXVECTOR3 center(0, 0, 0);
 
-        for (int i = 0; i < kSegments; i++)
+        for (int nCnt = 0; nCnt < kSegments; nCnt++)
         {
-            float t1 = (2.0f * D3DX_PI * i) / kSegments;
-            float t2 = (2.0f * D3DX_PI * (i + 1)) / kSegments;
+            float t1 = (2.0f * D3DX_PI * nCnt) / kSegments;
+            float t2 = (2.0f * D3DX_PI * (nCnt + 1)) / kSegments;
 
             // XY
             D3DXVECTOR3 p1 = center + D3DXVECTOR3(cosf(t1), sinf(t1), 0) * radius;
@@ -342,10 +342,10 @@ void CDebugProc3D::DrawBlockCollider(btRigidBody* rigidBody, D3DXCOLOR color)
         const btCompoundShape* compound = static_cast<const btCompoundShape*>(shape);
         int numChildren = compound->getNumChildShapes();
 
-        for (int i = 0; i < numChildren; i++)
+        for (int nCnt = 0; nCnt < numChildren; nCnt++)
         {
-            const btCollisionShape* childShape = compound->getChildShape(i);
-            const btTransform& childTrans = compound->getChildTransform(i);
+            const btCollisionShape* childShape = compound->getChildShape(nCnt);
+            const btTransform& childTrans = compound->getChildTransform(nCnt);
 
             // 子のローカル → ワールド変換
             btTransform worldTrans = transform * childTrans;
@@ -355,8 +355,6 @@ void CDebugProc3D::DrawBlockCollider(btRigidBody* rigidBody, D3DXCOLOR color)
             btQuaternion childRot = worldTrans.getRotation();
 
             // 行列作成
-            //D3DXQUATERNION dq(childRot.x(), childRot.y(), childRot.z(), childRot.w());
-            //D3DXMATRIX matRot, matTrans, matWorld;
             D3DXMatrixRotationQuaternion(&matRot, &dq);
             D3DXMatrixTranslation(&matTrans, childPos.x(), childPos.y(), childPos.z());
             matWorld = matRot * matTrans;
@@ -393,9 +391,9 @@ void CDebugProc3D::DrawBlockCollider(btRigidBody* rigidBody, D3DXCOLOR color)
                     {0,4},{1,5},{2,6},{3,7}
                 };
 
-                for (int j = 0; j < 12; j++)
+                for (int nCnt2 = 0; nCnt2 < 12; nCnt2++)
                 {
-                    DrawLine3D(v[indices[j][0]], v[indices[j][1]], color);
+                    DrawLine3D(v[indices[nCnt2][0]], v[indices[nCnt2][1]], color);
                 }
                 break;
             }
@@ -406,10 +404,10 @@ void CDebugProc3D::DrawBlockCollider(btRigidBody* rigidBody, D3DXCOLOR color)
                 const int kSegments = 16;
                 D3DXVECTOR3 center(0, 0, 0);
 
-                for (int j = 0; j < kSegments; j++)
+                for (int nCnt2 = 0; nCnt2 < kSegments; nCnt2++)
                 {
-                    float t1 = (2.0f * D3DX_PI * j) / kSegments;
-                    float t2 = (2.0f * D3DX_PI * (j + 1)) / kSegments;
+                    float t1 = (2.0f * D3DX_PI * nCnt2) / kSegments;
+                    float t2 = (2.0f * D3DX_PI * (nCnt2 + 1)) / kSegments;
 
                     // XY
                     D3DXVECTOR3 p1 = center + D3DXVECTOR3(cosf(t1), sinf(t1), 0) * radius;

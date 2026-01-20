@@ -7,7 +7,9 @@
 #ifndef _COLLISIONUTILS_H_// このマクロ定義がされていなかったら
 #define _COLLISIONUTILS_H_// 2重インクルード防止のマクロ定義
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CBoxCollider;
 class CCapsuleCollider;
 class CCylinderCollider;

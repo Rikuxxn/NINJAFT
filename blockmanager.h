@@ -104,23 +104,44 @@ public:
     }
 
 private:
-    static std::unordered_map<CBlock::TYPE, std::vector<CBlock*>> m_blocksByType;
-    static std::unordered_map<CBlock::TYPE, std::string> s_FilePathMap;
-    static std::vector<CBlock*> m_blocks;                                           // ブロック情報
-    static CBlock*              m_draggingBlock;                                    // ドラッグ中のブロック情報
-    static int                  m_selectedIdx;                                      // 選択中のインデックス
-    int                         m_prevSelectedIdx;                                  // 前回の選択中のインデックス
-    CDebugProc3D*               m_pDebug3D;			                                // 3Dデバッグ表示へのポインタ
-    bool                        m_autoUpdateColliderSize;                           // コライダー自動更新フラグ
-    static CBlock*              m_selectedBlock;                                    // 選択中のブロック
-    bool                        m_isDragging;                                       // ドラッグ中かどうか
+    static constexpr float THUMB_WIDTH  = 100.0f;// サムネイルの高さ
+    static constexpr float THUMB_HEIGHT = 100.0f;// サムネイルの高さ
 
+    //*****************************************************************************
+    // ブロック管理
+    //*****************************************************************************
+    static std::vector<CBlock*> m_blocks;
+    static std::unordered_map<CBlock::TYPE, std::vector<CBlock*>> m_blocksByType;
+
+    static CBlock* m_selectedBlock;
+    static CBlock* m_draggingBlock;
+
+    static int  m_selectedIdx;
+    int         m_prevSelectedIdx = -1;
+
+    bool m_isDragging = false;
+    bool m_hasConsumedPayload = false;
+    bool m_autoUpdateColliderSize = true;
+
+    //*****************************************************************************
+    // デバッグ
+    //*****************************************************************************
+    CDebugProc3D* m_pDebug3D = nullptr;
+
+    //*****************************************************************************
+    // ファイルパス管理
+    //*****************************************************************************
+    static std::unordered_map<CBlock::TYPE, std::string> s_FilePathMap;
+
+    //*****************************************************************************
+    // サムネイル用リソース
+    //*****************************************************************************
     LPDIRECT3DTEXTURE9          m_pThumbnailRT;
     LPDIRECT3DSURFACE9          m_pThumbnailZ;
     std::vector<IDirect3DTexture9*> m_thumbnailTextures;
     bool m_thumbnailsGenerated = false;                 // 一度だけ作るフラグ
-    float m_thumbWidth = 100.0f;
-    float m_thumbHeight = 100.0f;
+    float m_thumbWidth;
+    float m_thumbHeight;
 };
 
 #endif

@@ -40,7 +40,6 @@ public:
 	virtual void OnDeviceReset(void) {}
 	virtual void ReleaseThumbnail(void) {}
 	virtual void ResetThumbnail(void) {}
-	D3DXVECTOR3 GetPos(void);
 	MODE GetMode(void) { return m_mode; }
 
 private:

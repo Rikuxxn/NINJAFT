@@ -27,8 +27,10 @@ public:
 	static void Draw(D3DXCOLOR col,int posX,int posY);
 
 private:
-	static LPD3DXFONT	m_pFont;		// フォントへのポインタ
-	static char			m_aStr[1024];	// 文字列を格納するバッファ
+	static constexpr int MAX_WORD = 1024;	// 最大文字数
+
+	static LPD3DXFONT	m_pFont;			// フォントへのポインタ
+	static char			m_aStr[MAX_WORD];	// 文字列を格納するバッファ
 
 };
 #endif

@@ -357,7 +357,7 @@ void CWaterField::SpawnCylinder(void)
 	}
 
 	// ˆÚ“®‚µ‚Ä‚¢‚é‚Æ‚«‚É¶¬‚·‚é‚½‚ßA“ü—Í‚ğæ“¾‚·‚é
-	InputData input = pPlayer->GatherInput();
+	CPlayer::InputData input = pPlayer->GatherInput();
 
 	// ”g–ä¶¬ŠÖ”
 	auto spawnCylinder = [&]()

@@ -167,15 +167,15 @@ std::vector<CLight::LightInfo> CLight::GetCurrentLights(void)
 {
     std::vector<LightInfo> backup;
 
-    for (int i = 0; i < m_lightCount; i++)
+    for (int nCnt = 0; nCnt < m_lightCount; nCnt++)
     {
-        if (m_lights[i].enabled)
+        if (m_lights[nCnt].enabled)
         {
             LightInfo b;
-            b.light = m_lights[i].light;
-            b.direction = m_lights[i].direction;
-            b.position = m_lights[i].position;
-            b.enabled = m_lights[i].enabled;
+            b.light = m_lights[nCnt].light;
+            b.direction = m_lights[nCnt].direction;
+            b.position = m_lights[nCnt].position;
+            b.enabled = m_lights[nCnt].enabled;
             backup.push_back(b);
         }
     }

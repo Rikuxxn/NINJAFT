@@ -159,8 +159,6 @@ void CShadowS::Draw(void)
 	// ステンシルバッファの比較パラメータを設定
 	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
 	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);	// ステンシルテスト : 合格 / Zテスト : 合格
-	//pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCRSAT);// ステンシルテスト : 合格 / Zテスト : 不合格
-	//pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_INCRSAT);	// ステンシルテスト : 不合格
 
 	// 表面をカリング
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);

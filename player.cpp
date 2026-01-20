@@ -33,6 +33,7 @@ CPlayer::CPlayer()
 	m_nNumModel			= 0;							// モデル(パーツ)の総数
 	m_pShadowS			= nullptr;						// ステンシルシャドウへのポインタ
 	m_pMotion			= nullptr;						// モーションへのポインタ
+	m_pTargetTreasure	= nullptr;						// 埋蔵金ブロックへのポインタ
 	m_bIsMoving			= false;						// 移動入力フラグ
 	m_bOnGround			= false;						// 接地フラグ
 	m_pDebug3D			= nullptr;						// 3Dデバッグ表示へのポインタ
@@ -214,14 +215,14 @@ void CPlayer::Update(void)
 
 	if (m_smokeActive && !m_isGameStartSmoke)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int nCnt = 0; nCnt < EFFECT_CREATE_NUM; nCnt++)
 		{
 			D3DXVECTOR3 pos = GetPos();
-			pos.y += i * 30.0f;
+			pos.y += nCnt * 30.0f;
 
 			CParticle::Create<CSmokeParticle>(
 				INIT_VEC3, pos,
-				D3DXCOLOR(1, 1, 1, 1),
+				D3DXCOLOR(nCnt, nCnt, nCnt, nCnt),
 				120, 8
 				);
 		}
@@ -248,8 +249,6 @@ void CPlayer::Update(void)
 		SetRotDest(rotDest);
 	}
 
-	//// コライダーの位置更新(オフセットを設定)
-	//UpdateCollider(D3DXVECTOR3(0, 35.0f, 0));// 足元に合わせる
 
 	// Bullet現在位置取得
 	btTransform trans;
@@ -352,13 +351,13 @@ void CPlayer::Update(void)
 	CModel** models = GetModels();
 	int num = GetNumModels();
 
-	for (int i = 0; i < num; i++)
+	for (int nCnt = 0; nCnt < num; nCnt++)
 	{
 		// アウトラインカラーの設定
-		models[i]->SetOutlineColor(outlineColor);
+		models[nCnt]->SetOutlineColor(outlineColor);
 
 		// モデルカラーの設定
-		models[i]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, modelAlpha));
+		models[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, modelAlpha));
 	}
 
 	// モーションの更新処理
@@ -539,7 +538,7 @@ CBlock* CPlayer::FindFrontBlockByRaycast(float rayLength)
 //=============================================================================
 // 入力判定取得関数
 //=============================================================================
-InputData CPlayer::GatherInput(void)
+CPlayer::InputData CPlayer::GatherInput(void)
 {
 	InputData input{};
 	input.moveDir = D3DXVECTOR3(0, 0, 0);

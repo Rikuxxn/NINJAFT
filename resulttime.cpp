@@ -18,17 +18,14 @@
 CResultTime::CResultTime(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	for (int nCnt = 0; nCnt < DIGITS; nCnt++)
-	{
-		m_apNumber[nCnt] = {};					// 各桁の数字表示用
-	}
+	memset(m_apNumber, 0, sizeof(m_apNumber));	// 各桁の数字表示用
 	m_nMinutes		= 0;						// 分
 	m_nSeconds		= 0;						// 秒
 	m_nFrameCount	= 0;						// フレームカウント
 	m_digitWidth	= 0.0f;						// 数字1桁あたりの幅
 	m_digitHeight	= 0.0f;						// 数字1桁あたりの高さ
 	m_basePos		= INIT_VEC3;				// 表示の開始位置
-	m_pColon		= NULL;						// コロン
+	m_pColon		= nullptr;					// コロン
 	m_nIdxTexture	= NULL;						// テクスチャインデックス
 }
 //=============================================================================
@@ -149,7 +146,7 @@ void CResultTime::Update(void)
 	if (m_apNumber[2]) m_apNumber[2]->SetDigit(sec10);
 	if (m_apNumber[3]) m_apNumber[3]->SetDigit(sec1);
 
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int nCnt = 0; nCnt < DIGITS; nCnt++)
 	{
 		m_apNumber[nCnt]->Update();  // UV更新
 	}

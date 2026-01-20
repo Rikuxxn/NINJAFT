@@ -20,12 +20,12 @@ CCount::CCount(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
 	memset(m_apNumber, 0, sizeof(m_apNumber));	// 各桁の数字表示用
-	m_nCount		= 0;			// 数
-	m_digitWidth	= 0.0f;			// 数字1桁あたりの幅
-	m_digitHeight	= 0.0f;			// 数字1桁あたりの高さ
-	m_basePos		= INIT_VEC3;	// 表示の開始位置
-	m_nIdxTexture	= 0;			// テクスチャインデックス
-	m_layoutPos		= INIT_VEC3;	// レイアウト時の位置
+	m_nCount		= 0;						// 数
+	m_digitWidth	= 0.0f;						// 数字1桁あたりの幅
+	m_digitHeight	= 0.0f;						// 数字1桁あたりの高さ
+	m_basePos		= INIT_VEC3;				// 表示の開始位置
+	m_nIdxTexture	= 0;						// テクスチャインデックス
+	m_layoutPos		= INIT_VEC3;				// レイアウト時の位置
 }
 //=============================================================================
 // デストラクタ
@@ -125,29 +125,29 @@ void CCount::Update(void)
 
 	// 桁計算
 	int nSoundCount = m_nCount;
-	for (int i = 0; i < MAX_DIGITS; i++)
+	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
-		m_nDig[i] = 0;
+		m_nDig[nCnt] = 0;
 	}
 
-	for (int i = 0; i < digitCount; i++)
+	for (int nCnt = 0; nCnt < digitCount; nCnt++)
 	{
-		int idx = digitCount - 1 - i;
+		int idx = digitCount - 1 - nCnt;
 		m_nDig[idx] = nSoundCount % 10;
 		nSoundCount /= 10;
 	}
 
 	// 数字配置
-	for (int i = 0; i < digitCount; i++)
+	for (int nCnt = 0; nCnt < digitCount; nCnt++)
 	{
 		// 位置を代入する
-		D3DXVECTOR3 pos(startX + i * digitW, startY, 0.0f);
+		D3DXVECTOR3 pos(startX + nCnt * digitW, startY, 0.0f);
 
 		// 位置の更新
-		m_apNumber[i]->SetPos(pos);
+		m_apNumber[nCnt]->SetPos(pos);
 
-		m_apNumber[i]->SetSize(digitW, digitH);
-		m_apNumber[i]->Update();
+		m_apNumber[nCnt]->SetSize(digitW, digitH);
+		m_apNumber[nCnt]->Update();
 	}
 }
 //=============================================================================
@@ -155,12 +155,12 @@ void CCount::Update(void)
 //=============================================================================
 void CCount::Draw(void)
 {
-	for (int i = 0; i < DigitNum(m_nCount); i++)
+	for (int nCnt = 0; nCnt < DigitNum(m_nCount); nCnt++)
 	{
-		int digit = m_nDig[i];
+		int digit = m_nDig[nCnt];
 
 		// 桁の設定
-		m_apNumber[i]->SetDigit(digit);
+		m_apNumber[nCnt]->SetDigit(digit);
 
 		// テクスチャの取得
 		CTexture* pTexture = CManager::GetTexture();
@@ -173,7 +173,7 @@ void CCount::Draw(void)
 		pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
 
 		// 描画
-		m_apNumber[i]->Draw();
+		m_apNumber[nCnt]->Draw();
 	}
 }
 //=============================================================================

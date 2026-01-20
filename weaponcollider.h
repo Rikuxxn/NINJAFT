@@ -12,7 +12,9 @@
 //*****************************************************************************
 #include "collisionUtils.h"
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CCharacter;
 class CModel;
 
@@ -38,7 +40,7 @@ public:
     void Update(CModel* pWeapon, float tip, float base);
 
     // 当たり判定処理
-    void CheckHit(CCharacter* pCharacter, float fDamage);
+    void CheckHit(CCharacter* pCharacter, float fDamage, float radius);
 
 private:
     D3DXVECTOR3 m_prevBase; // 前回の根元の判定の位置
@@ -47,6 +49,7 @@ private:
     D3DXVECTOR3 m_currTip;  // 現在の先端の判定の位置
     bool        m_bActive;  // コライダーONフラグ
     bool        m_bHasHit;  // 当たったかどうか
+    float       m_fRadius;  // 当たり判定半径
 };
 
 #endif

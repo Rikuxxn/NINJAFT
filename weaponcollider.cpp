@@ -18,12 +18,13 @@
 CWeaponCollider::CWeaponCollider()
 {
 	// 値のクリア
-	m_prevBase = INIT_VEC3;
-	m_prevTip = INIT_VEC3;
-	m_currBase = INIT_VEC3;
-	m_currTip = INIT_VEC3;
-	m_bActive = false;
-	m_bHasHit = false;
+	m_prevBase  = INIT_VEC3;// 前回の根元の判定の位置
+    m_prevTip   = INIT_VEC3;// 前回の先端の判定の位置
+    m_currBase  = INIT_VEC3;// 現在の根元の判定の位置
+    m_currTip   = INIT_VEC3;// 現在の先端の判定の位置
+    m_bActive   = false;    // コライダーONフラグ
+    m_bHasHit   = false;    // 当たったかどうか
+    m_fRadius    = 0.0f;    // 当たり判定半径
 }
 //=============================================================================
 // デストラクタ
@@ -51,7 +52,7 @@ void CWeaponCollider::Update(CModel* pWeapon, float tip, float base)
 //=============================================================================
 // 当たり判定処理
 //=============================================================================
-void CWeaponCollider::CheckHit(CCharacter* pCharacter, float fDamage)
+void CWeaponCollider::CheckHit(CCharacter* pCharacter, float fDamage, float radius)
 {
     if (!m_bActive || m_bHasHit || !pCharacter)
     {
@@ -61,13 +62,12 @@ void CWeaponCollider::CheckHit(CCharacter* pCharacter, float fDamage)
     // カプセルの上下端点
     D3DXVECTOR3 top = pCharacter->GetPos() + D3DXVECTOR3(0, pCharacter->GetHeight() * 0.5f, 0);
     D3DXVECTOR3 bottom = pCharacter->GetPos() - D3DXVECTOR3(0, pCharacter->GetHeight() * 0.5f, 0);
-    float radius = pCharacter->GetRadius();
 
-    float weaponRadius = 30.0f; // 当たり判定の半径
+    m_fRadius = radius; // 当たり判定の半径
 
-    if (CCollision::IntersectSegmentCapsule(m_prevBase, m_currBase, bottom, top, radius + weaponRadius) ||
-        CCollision::IntersectSegmentCapsule(m_prevTip, m_currTip, bottom, top, radius + weaponRadius) ||
-        CCollision::IntersectSegmentCapsule(m_prevBase, m_currTip, bottom, top, radius + weaponRadius))
+    if (CCollision::IntersectSegmentCapsule(m_prevBase, m_currBase, bottom, top, radius + m_fRadius) ||
+        CCollision::IntersectSegmentCapsule(m_prevTip, m_currTip, bottom, top, radius + m_fRadius) ||
+        CCollision::IntersectSegmentCapsule(m_prevBase, m_currTip, bottom, top, radius + m_fRadius))
     {
         // ダメージ処理
         pCharacter->Damage(fDamage);

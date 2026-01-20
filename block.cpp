@@ -494,11 +494,11 @@ bool CBlock::IsHitOBBvsAABB(const OBB& obb, const D3DXVECTOR3& aabbMin, const D3
 	D3DXVECTOR3 diff = aabbCenter - obb.center;
 
 	// ï™ó£é≤íËóùÅiSATÅj
-	for (int i = 0; i < 3; i++)
+	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
 		// OBBÇÃé≤Ç…ëŒÇ∑ÇÈìäâeãóó£
-		float proj = fabs(D3DXVec3Dot(&diff, &obb.axis[i]));
-		float rA = obb.halfSize[i];
+		float proj = fabs(D3DXVec3Dot(&diff, &obb.axis[nCnt]));
+		float rA = obb.halfSize[nCnt];
 		float rB;
 		{
 			D3DXVECTOR3 axisX(1, 0, 0);
@@ -506,9 +506,9 @@ bool CBlock::IsHitOBBvsAABB(const OBB& obb, const D3DXVECTOR3& aabbMin, const D3
 			D3DXVECTOR3 axisZ(0, 0, 1);
 
 			rB =
-				aabbHalf.x * fabs(D3DXVec3Dot(&axisX, &obb.axis[i])) +
-				aabbHalf.y * fabs(D3DXVec3Dot(&axisY, &obb.axis[i])) +
-				aabbHalf.z * fabs(D3DXVec3Dot(&axisZ, &obb.axis[i]));
+				aabbHalf.x * fabs(D3DXVec3Dot(&axisX, &obb.axis[nCnt])) +
+				aabbHalf.y * fabs(D3DXVec3Dot(&axisY, &obb.axis[nCnt])) +
+				aabbHalf.z * fabs(D3DXVec3Dot(&axisZ, &obb.axis[nCnt]));
 		}
 
 		if (proj > rA + rB)
@@ -525,14 +525,14 @@ bool CBlock::IsHitOBBvsAABB(const OBB& obb, const D3DXVECTOR3& aabbMin, const D3
 		{0, 0, 1}
 	};
 
-	for (int i = 0; i < 3; i++)
+	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
-		float proj = fabs(D3DXVec3Dot(&diff, &aabbAxes[i]));
+		float proj = fabs(D3DXVec3Dot(&diff, &aabbAxes[nCnt]));
 		float rA =
-			obb.halfSize.x * fabs(D3DXVec3Dot(&obb.axis[0], &aabbAxes[i])) +
-			obb.halfSize.y * fabs(D3DXVec3Dot(&obb.axis[1], &aabbAxes[i])) +
-			obb.halfSize.z * fabs(D3DXVec3Dot(&obb.axis[2], &aabbAxes[i]));
-		float rB = aabbHalf[i];
+			obb.halfSize.x * fabs(D3DXVec3Dot(&obb.axis[0], &aabbAxes[nCnt])) +
+			obb.halfSize.y * fabs(D3DXVec3Dot(&obb.axis[1], &aabbAxes[nCnt])) +
+			obb.halfSize.z * fabs(D3DXVec3Dot(&obb.axis[2], &aabbAxes[nCnt]));
+		float rB = aabbHalf[nCnt];
 
 		if (proj > rA + rB)
 		{

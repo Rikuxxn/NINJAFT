@@ -306,5 +306,5 @@ D3DXCOLOR CObjectX::GetMaterialColor(void) const
 		return pMat[0].MatD3D.Diffuse;  // 0番目のマテリアルの拡散光色を返す
 	}
 
-	return D3DXCOLOR(1, 1, 1, 1); // デフォルト白
+	return INIT_XCOL_WHITE; // デフォルト白
 }

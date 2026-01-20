@@ -333,16 +333,16 @@ void CMotion::LoadMotionSet(FILE* pFile, char* aString, CMotion* pMotion, int& n
 		fscanf(pFile, "%s", aString);
 		fscanf(pFile, "%d", &motion.nNumKey);
 
-		for (int i = 0; i < motion.nNumKey; ++i)
+		for (int nCnt = 0; nCnt < motion.nNumKey; ++nCnt)
 		{
 			FindToken(pFile, aString, "KEYSET");
 			FindToken(pFile, aString, "FRAME");
 
 			fscanf(pFile, "%s", aString);
-			fscanf(pFile, "%d", &motion.aKeyInfo[i].nFrame);
+			fscanf(pFile, "%d", &motion.aKeyInfo[nCnt].nFrame);
 
 			// キーセット
-			ParseKeySet(pFile, aString, motion.aKeyInfo[i]);
+			ParseKeySet(pFile, aString, motion.aKeyInfo[nCnt]);
 		}
 	}
 }
@@ -407,32 +407,32 @@ void CMotion::Update(CModel** pModel, int& nNumModel)
 		// ブレンド進行度
 		float blendRate = (float)m_nCounterBlend / (float)m_nFrameBlend;
 
-		for (int i = 0; i < nNumModel; i++)
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
 			// 現在モーション
 			int nextKey = (m_nKey + 1) % m_aMotionInfo[m_motionType].nNumKey;
 
 			float tCur = (float)m_nCounterMotion / m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].nFrame;
-			D3DXVECTOR3 posCurrent = LerpPos(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[i],
-				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[i], tCur);
-			D3DXVECTOR3 rotCurrent = LerpRot(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[i],
-				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[i], tCur);
+			D3DXVECTOR3 posCurrent = LerpPos(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[nCnt],
+				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[nCnt], tCur);
+			D3DXVECTOR3 rotCurrent = LerpRot(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[nCnt],
+				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[nCnt], tCur);
 
 			// ブレンド先モーション
 			int nextKeyBlend = (m_nKeyBlend + 1) % m_aMotionInfo[m_motionTypeBlend].nNumKey;
 
 			float tBlend = (float)m_nCounterMotionBlend / m_aMotionInfo[m_motionTypeBlend].aKeyInfo[m_nKeyBlend].nFrame;
-			D3DXVECTOR3 posBlend = LerpPos(m_aMotionInfo[m_motionTypeBlend].aKeyInfo[m_nKeyBlend].aKey[i],
-				m_aMotionInfo[m_motionTypeBlend].aKeyInfo[nextKeyBlend].aKey[i], tBlend);
-			D3DXVECTOR3 rotBlend = LerpRot(m_aMotionInfo[m_motionTypeBlend].aKeyInfo[m_nKeyBlend].aKey[i],
-				m_aMotionInfo[m_motionTypeBlend].aKeyInfo[nextKeyBlend].aKey[i], tBlend);
+			D3DXVECTOR3 posBlend = LerpPos(m_aMotionInfo[m_motionTypeBlend].aKeyInfo[m_nKeyBlend].aKey[nCnt],
+				m_aMotionInfo[m_motionTypeBlend].aKeyInfo[nextKeyBlend].aKey[nCnt], tBlend);
+			D3DXVECTOR3 rotBlend = LerpRot(m_aMotionInfo[m_motionTypeBlend].aKeyInfo[m_nKeyBlend].aKey[nCnt],
+				m_aMotionInfo[m_motionTypeBlend].aKeyInfo[nextKeyBlend].aKey[nCnt], tBlend);
 
 			// ブレンド合成
 			D3DXVECTOR3 posFinal = posCurrent * (1.0f - blendRate) + posBlend * blendRate;
 			D3DXVECTOR3 rotFinal = rotCurrent * (1.0f - blendRate) + rotBlend * blendRate;
 
-			pModel[i]->SetOffsetPos(posFinal);
-			pModel[i]->SetOffsetRot(rotFinal);
+			pModel[nCnt]->SetOffsetPos(posFinal);
+			pModel[nCnt]->SetOffsetRot(rotFinal);
 		}
 
 		// カウンター進行
@@ -453,20 +453,20 @@ void CMotion::Update(CModel** pModel, int& nNumModel)
 	else
 	{
 		// 通常モーション
-		for (int i = 0; i < nNumModel; i++)
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
 			int nextKey = (m_nKey + 1 >= m_aMotionInfo[m_motionType].nNumKey) ?
 				(m_aMotionInfo[m_motionType].bLoop ? 0 : m_nKey) : m_nKey + 1;
 
 			float t = (float)m_nCounterMotion / m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].nFrame;
 
-			D3DXVECTOR3 pos = LerpPos(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[i],
-				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[i], t);
-			D3DXVECTOR3 rot = LerpRot(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[i],
-				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[i], t);
+			D3DXVECTOR3 pos = LerpPos(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[nCnt],
+				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[nCnt], t);
+			D3DXVECTOR3 rot = LerpRot(m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[nCnt],
+				m_aMotionInfo[m_motionType].aKeyInfo[nextKey].aKey[nCnt], t);
 
-			pModel[i]->SetOffsetPos(pos);
-			pModel[i]->SetOffsetRot(rot);
+			pModel[nCnt]->SetOffsetPos(pos);
+			pModel[nCnt]->SetOffsetRot(rot);
 		}
 
 		// カウンター進行

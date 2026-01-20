@@ -61,19 +61,19 @@ private:
 	}VertexRange;
 
 private:
-	static constexpr int	TITLE_ITEM_NUM	= 1;		// タイトルのUI数
-	static constexpr float	ANCHOR_X		= 0.25f;    // 横位置（%）
-	static constexpr float	ANCHOR_Y		= 0.3f;     // 縦位置（%）
-	static constexpr float	LOGO_WRATE		= 0.4f;		// 画面幅に対しての項目幅率
-	static constexpr float	LOGO_HRATE		= 0.3f;		// 画面高さに対しての項目高さ率
+	static constexpr int	TITLE_ITEM_NUM	= 1;			// タイトルのUI数
+	static constexpr float	ANCHOR_X		= 0.25f;		// 横位置（%）
+	static constexpr float	ANCHOR_Y		= 0.3f;			// 縦位置（%）
+	static constexpr float	LOGO_WRATE		= 0.4f;			// 画面幅に対しての項目幅率
+	static constexpr float	LOGO_HRATE		= 0.3f;			// 画面高さに対しての項目高さ率
 
-	VertexRange m_vertexRanges[TYPE_MAX];	// タイプごとに頂点範囲を設定
-	LPDIRECT3DVERTEXBUFFER9		 m_pVtxBuff;			// 頂点バッファへのポインタ
-	int							 m_nIdxTextureTitle;	// テクスチャインデックス
-	static CBlockManager*		 m_pBlockManager;		// ブロックマネージャーへのポインタ
-	CLight*						 m_pLight;				// ライトへのポインタ
-	int							 m_timer;				// パーティクル生成タイマー
-	std::unique_ptr<CItemSelect> m_pItemSelect;			// 項目選択へのポインタ
+	VertexRange					 m_vertexRanges[TYPE_MAX];	// タイプごとに頂点範囲を設定
+	LPDIRECT3DVERTEXBUFFER9		 m_pVtxBuff;				// 頂点バッファへのポインタ
+	int							 m_nIdxTextureTitle;		// テクスチャインデックス
+	static CBlockManager*		 m_pBlockManager;			// ブロックマネージャーへのポインタ
+	CLight*						 m_pLight;					// ライトへのポインタ
+	int							 m_timer;					// パーティクル生成タイマー
+	std::unique_ptr<CItemSelect> m_pItemSelect;				// 項目選択へのポインタ
 
 };
 

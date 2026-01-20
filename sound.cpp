@@ -78,13 +78,13 @@ HRESULT CSound::Init(HWND hWnd)
 	m_Listener.OrientTop = { 0.0f, 1.0f, 0.0f };
 	m_Listener.Velocity = { 0.0f, 0.0f, 0.0f };
 
-	for (int i = 0; i < SOUND_LABEL_MAX; ++i)
+	for (int nCnt = 0; nCnt < SOUND_LABEL_MAX; ++nCnt)
 	{
-		hr = LoadWave((SOUND_LABEL)i);
+		hr = LoadWave((SOUND_LABEL)nCnt);
 		if (FAILED(hr))
 		{
 			char msg[128];
-			sprintf_s(msg, "サウンドの読み込みに失敗: %s", m_aSoundInfo[i].pFilename);
+			sprintf_s(msg, "サウンドの読み込みに失敗: %s", m_aSoundInfo[nCnt].pFilename);
 			MessageBox(hWnd, msg, "Error", MB_OK);
 			Uninit();
 			return hr;
@@ -110,12 +110,12 @@ void CSound::Uninit(void)
 	m_Instances.clear();
 
 	// 各サウンドのオーディオデータ解放
-	for (int i = 0; i < SOUND_LABEL_MAX; ++i)
+	for (int nCnt = 0; nCnt < SOUND_LABEL_MAX; ++nCnt)
 	{
-		if (m_SoundData[i].pAudioData)
+		if (m_SoundData[nCnt].pAudioData)
 		{
-			free(m_SoundData[i].pAudioData);
-			m_SoundData[i].pAudioData = nullptr;
+			free(m_SoundData[nCnt].pAudioData);
+			m_SoundData[nCnt].pAudioData = nullptr;
 		}
 	}
 
@@ -577,7 +577,9 @@ HRESULT CSound::LoadWave(SOUND_LABEL label)
 		0, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
+	{
 		return E_FAIL;
+	}
 
 	DWORD dwChunkSize;
 	DWORD dwChunkPosition;

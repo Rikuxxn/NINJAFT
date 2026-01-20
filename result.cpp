@@ -16,6 +16,8 @@
 #include "ui.h"
 #include "background.h"
 #include "meshdome.h"
+#include "light.h"
+#include "blockmanager.h"
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾

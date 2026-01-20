@@ -19,9 +19,9 @@
 CPause::CPause(int nPriority) : CObject2D(nPriority)
 {
 	// 値のクリア
-	memset(m_szPath, 0, sizeof(m_szPath));
-	m_nIdxTexture	= 0;
-	m_isSelected = false;
+	memset(m_szPath, 0, sizeof(m_szPath));	// ファイルパス
+	m_nIdxTexture	= 0;					// テクスチャインデックス
+	m_isSelected	= false;				// 選択したかどうか
 }
 //=============================================================================
 // デストラクタ

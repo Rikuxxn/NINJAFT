@@ -69,7 +69,7 @@ private:
 		X3DAUDIO_EMITTER emitter = {};
 		SOUND_LABEL label;
 		bool active = false;
-		float minDistance = 0.0f, maxDistance = 0.0f;						// 最小距離と最大距離（距離減衰の範囲）
+		float minDistance = 0.0f, maxDistance = 0.0f;		// 最小距離と最大距離（距離減衰の範囲）
 	};
 
 	struct SoundData

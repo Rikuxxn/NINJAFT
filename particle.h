@@ -35,13 +35,17 @@ public:
 
 		particleType* pParticle = new particleType();// Œ^‚ÌƒCƒ“ƒXƒ^ƒ“ƒX¶¬
 
+		// nullptr‚¾‚Á‚½‚ç
 		if (!pParticle)
 		{
 			return nullptr;
 		}
 
-		// ‰Šú‰»ˆ—
-		pParticle->Init();
+		// ‰Šú‰»Ž¸”sŽž
+		if (FAILED(pParticle->Init()))
+		{
+			return nullptr;
+		}
 
 		if (dir != INIT_VEC3)
 		{

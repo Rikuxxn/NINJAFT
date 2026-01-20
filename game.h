@@ -15,7 +15,9 @@
 #include "pausemanager.h"
 #include "rankingmanager.h"
 
-// --- 前方宣言 ---
+//*****************************************************************************
+// 前方宣言
+//*****************************************************************************
 class CPlayer;
 class CEnemy;
 class CTime;
@@ -58,7 +60,8 @@ public:
 	static int GetSeed(void) { return m_nSeed; }
 
 private:
-	static constexpr int WAIT_TIME = 190;					// 初回の待機時間
+	static constexpr int WAIT_TIME			= 190;			// 初回の待機時間
+	static constexpr int NUM_SUB_ENEMIES	= 30;			// サブ敵の生成数
 
 	std::unique_ptr<CRankingManager> m_pRankingManager;		// ランキングへのポインタ
 	CPlayer*						 m_pPlayer;				// プレイヤーへのポインタ

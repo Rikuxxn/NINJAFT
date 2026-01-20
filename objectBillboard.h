@@ -34,6 +34,7 @@ public:
 
 		billboardType* pBillboard = new billboardType();// Œ^‚ÌƒCƒ“ƒXƒ^ƒ“ƒX¶¬
 
+		// nullptr‚¾‚Á‚½‚ç
 		if (!pBillboard)
 		{
 			return nullptr;
@@ -45,8 +46,11 @@ public:
 		pBillboard->SetHeight(fHeight);
 		pBillboard->m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-		// ‰Šú‰»ˆ—
-		pBillboard->Init();
+		// ‰Šú‰»Ž¸”sŽž
+		if (FAILED(pBillboard->Init()))
+		{
+			return nullptr;
+		}
 
 		return pBillboard;
 	}

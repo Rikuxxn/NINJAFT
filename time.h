@@ -14,7 +14,9 @@
 #include "number.h"
 
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CColon;
 
 //*****************************************************************************
@@ -40,7 +42,6 @@ public:
 	void SetVisibleFlag(bool flag) { m_isVisible = flag; }
 
 	float GetProgress(void) const;
-	D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(); }
 	int GetMinutes(void) { return m_nMinutes; }
 	int GetnSeconds(void) { return m_nSeconds; }
 
@@ -80,14 +81,13 @@ public:
 
 	void SetVisible(bool flag) { m_isVisible = flag; }
 
-	D3DXVECTOR3 GetPos(void);
-
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファ
-	D3DXVECTOR3 m_pos;						// 位置
-	float m_fWidth, m_fHeight;				// サイズ（幅・高さ）
-	int m_nIdxTexture;						// テクスチャインデックス
-	bool m_isVisible;						// 表示フラグ
+	D3DXVECTOR3				m_pos;			// 位置
+	float					m_fWidth;		// 幅
+	float					m_fHeight;		// 高さ
+	int						m_nIdxTexture;	// テクスチャインデックス
+	bool					m_isVisible;	// 表示フラグ
 
 };
 

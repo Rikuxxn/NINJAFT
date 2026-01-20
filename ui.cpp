@@ -112,19 +112,19 @@ CUIBase* CUIManager::GetUI(const std::string& name)
 CUIBase::CUIBase(int nPriority) : CObject2D(nPriority)
 {
 	// 値のクリア
-    memset(m_szPath, 0, sizeof(m_szPath));
-    m_nIdxTexture   = 0;
-    m_bVisible      = true;
-    m_parent        = nullptr;
-    m_alpha         = 0.0f;
-    m_fadeSpeed     = 0.0f;
-    m_fadeMode      = FadeMode::None;
-    m_slideMode     = SlideMode::None;
-    m_slideT        = 0.0f;
-    m_slideSpeed    = 0.0f;
-    m_useLayout     = false;            // レイアウトの使用フラグ
-    m_layoutPos     = INIT_VEC3;        // レイアウト用位置
-    m_slideOffset   = INIT_VEC3;        // オフセット位置
+    memset(m_szPath, 0, sizeof(m_szPath));  // ファイルパス
+    m_nIdxTexture   = 0;                    // テクスチャインデックス
+    m_bVisible      = true;                 // 表示フラグ
+    m_parent        = nullptr;              // 親ポインタ
+    m_alpha         = 0.0f;                 // アルファ値
+    m_fadeSpeed     = 0.0f;                 // フェードスピード
+    m_fadeMode      = FadeMode::None;       // フェードモード
+    m_slideMode     = SlideMode::None;      // スライドモード
+    m_slideT        = 0.0f;                 // スライド割合
+    m_slideSpeed    = 0.0f;                 // スライドスピード
+    m_useLayout     = false;                // レイアウトの使用フラグ
+    m_layoutPos     = INIT_VEC3;            // レイアウト用位置
+    m_slideOffset   = INIT_VEC3;            // オフセット位置
 }
 //=============================================================================
 // デストラクタ
@@ -475,46 +475,46 @@ void CUITexture::Update(void)
 
         if (EvaluationRate < 0.9f && EvaluationRate >= 0.8f)
         {// レートが90%より小さい かつ 80%以上
-            uvLeft = 0.25f;  // A
+            uvLeft = UV_1;  // A
         }
         else if (EvaluationRate < 0.8f && EvaluationRate >= 0.6f)
         {// レートが80%より小さい かつ 60%以上
-            uvLeft = 0.5f;   // B
+            uvLeft = UV_2;   // B
         }
         else if(EvaluationRate <= 0.6f)
         {// レートが50%以下
-            uvLeft = 0.75f;  // C
+            uvLeft = UV_3;  // C
         }
     }
     else if (treasureCount >= 5 && treasureCount <= 7)// Aランク
     {// 埋蔵金5個以上7個以下
-        uvLeft = 0.25f;  // A
+        uvLeft = UV_1;  // A
 
         if (EvaluationRate < 0.8f && EvaluationRate >= 0.6f)
         {// レートが80%より小さい かつ 60%以上
-            uvLeft = 0.5f;   // B
+            uvLeft = UV_2;   // B
         }
         else if(EvaluationRate <= 0.6f)
         {// レートが60%以下
-            uvLeft = 0.75f;  // C
+            uvLeft = UV_3;  // C
         }
     }
     else if (treasureCount >= 3 && treasureCount <= 4)// Bランク
     {// 埋蔵金3個以上4個以下
-        uvLeft = 0.5f;   // B
+        uvLeft = UV_2;   // B
 
         if (EvaluationRate <= 0.8f)
         {// レートが80%以下
-            uvLeft = 0.75f;  // C
+            uvLeft = UV_3;  // C
         }
     }
     else
     {// それ以外
-        uvLeft = 0.75f;  // C
+        uvLeft = UV_3;  // C
     }
 
     // テクスチャUV移動処理
-    CObject2D::MoveTexUV(uvLeft, 0.0f, 0.25f, 1.0f);
+    CObject2D::MoveTexUV(uvLeft, 0.0f, UV_1, 1.0f);
 }
 //=============================================================================
 // UIテクスチャ描画処理
@@ -551,13 +551,22 @@ CUIText* CUIText::Create(const std::string& text, float x, float y, int fontSize
 {
     CUIText* ui = new CUIText;
 
+    // nullptrだったら
+    if (ui == nullptr)
+    {
+        return nullptr;
+    }
+
     ui->SetPos(D3DXVECTOR3(x, y, 0.0f));
     ui->m_text = text;
     ui->m_fontSize = fontSize;
     ui->m_color = col;
 
-    // 初期化
-    ui->Init();
+    // 初期失敗時
+    if (FAILED(ui->Init()))
+    {
+        return nullptr;
+    }
 
     // テキスト矩形サイズに合わせてポリゴンサイズを調整
     RECT rc = { 0,0,0,0 };

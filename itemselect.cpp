@@ -41,11 +41,11 @@ void CItemSelect::Init(void)
     m_Item.clear();
 
     // 仮の初期位置（Updateで上書き）
-    for (int i = 0; i < ITEM_NUM; i++)
+    for (int nCnt = 0; nCnt < ITEM_NUM; nCnt++)
     {
         CItem* item = nullptr;
 
-        switch (i)
+        switch (nCnt)
         {
         case CItem::ITEM_ID_PLAY:
             item = CItem::Create(CItem::ITEM_ID_PLAY, {}, ITEM_W, ITEM_H);
@@ -90,17 +90,17 @@ void CItemSelect::Update(void)
     float itemH = screenH * ITEM_HRATE;
 
     // 項目の位置更新
-    for (int i = 0; i < (int)m_Item.size(); i++)
+    for (int nCnt = 0; nCnt < (int)m_Item.size(); nCnt++)
     {
-        m_Item[i]->SetSize(itemW, itemH);
+        m_Item[nCnt]->SetSize(itemW, itemH);
 
         D3DXVECTOR3 pos(
             baseX - itemW * 0.5f,
-            startY + i * SPACING_Y,
+            startY + nCnt * SPACING_Y,
             0.0f
         );
 
-        m_Item[i]->SetPos(pos);
+        m_Item[nCnt]->SetPos(pos);
     }
 
     int mouseOver = GetMouseOverIndex();
@@ -180,12 +180,12 @@ void CItemSelect::Update(void)
     }
 
     // 選択状態更新
-    for (size_t i = 0; i < m_Item.size(); i++)
+    for (size_t nCnt = 0; nCnt < m_Item.size(); nCnt++)
     {
-        m_Item[i]->SetSelected(i == static_cast<size_t>(m_SelectedIndex));
+        m_Item[nCnt]->SetSelected(nCnt == static_cast<size_t>(m_SelectedIndex));
 
         // ステージの更新処理
-        m_Item[i]->Update();
+        m_Item[nCnt]->Update();
     }
 }
 //=============================================================================
@@ -206,11 +206,11 @@ void CItemSelect::Draw(void)
 //=============================================================================
 int CItemSelect::GetMouseOverIndex(void) const
 {
-    for (size_t i = 0; i < m_Item.size(); i++)
+    for (size_t nCnt = 0; nCnt < m_Item.size(); nCnt++)
     {
-        if (m_Item[i]->IsMouseOver())
+        if (m_Item[nCnt]->IsMouseOver())
         {
-            return (int)i;
+            return (int)nCnt;
         }
     }
 

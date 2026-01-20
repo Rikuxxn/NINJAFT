@@ -103,7 +103,6 @@ HRESULT CGame::Init(void)
 	charaMgr.AddCharacter(pLeader);
 
 	// ÉTÉuìGê∂ê¨
-	constexpr int NUM_SUB_ENEMIES = 30;
 	std::vector<CEnemy*> subEnemies;
 	for (int i = 0; i < NUM_SUB_ENEMIES; i++)
 	{

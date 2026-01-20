@@ -78,17 +78,14 @@ void CGenerateMap::GenerateRandomTerrain(int seed)
 void CGenerateMap::GenerateClusters(int gridX, int gridZ, float areaSize,
 	float offsetX, float offsetZ)
 {
-	// クラスター数
-	const int clusterCount = 10;
-
-	for (int i = 0; i < clusterCount; i++)
+	for (int nCnt = 0; nCnt < CLUSTER_COUNT; nCnt++)
 	{
 		float centerX = offsetX + (rand() % gridX) * areaSize;
 		float centerZ = offsetZ + (rand() % gridZ) * areaSize;
 		float radius = 50.0f + rand() % 80;
 		int count = 8 + rand() % 3;
 
-		for (int j = 0; j < count; j++)
+		for (int nCnt2 = 0; nCnt2 < count; nCnt2++)
 		{
 			D3DXVECTOR3 pos(
 				centerX + cosf((rand() % 360) * D3DX_PI / 180.0f) * ((rand() / (float)RAND_MAX) * radius),
@@ -194,7 +191,7 @@ void CGenerateMap::EnsureTorchCount(int gridX, int gridZ, float areaSize,
 		if (CBlock* torch = CBlockManager::CreateBlock(CBlock::TYPE_TORCH_01, pos))
 		{
 			D3DXVECTOR3 offPos = pos;
-			offPos.y += 38.0f;
+			offPos.y += TORCH_OFFSET_HEIGHT;
 			torch->SetPos(offPos);
 			torchPositions.push_back(pos);
 		}
@@ -238,7 +235,7 @@ void CGenerateMap::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSiz
 	D3DXVECTOR3 clusterCenter;
 	bool foundCenter = false;
 
-	for (int i = 0; i < MAX_ATTEMPTS && !foundCenter; i++)
+	for (int nCnt = 0; nCnt < MAX_ATTEMPTS && !foundCenter; nCnt++)
 	{
 		float cx = minX + ((float)rand() / RAND_MAX) * (maxX - minX);
 		float cz = minZ + ((float)rand() / RAND_MAX) * (maxZ - minZ);
@@ -260,7 +257,7 @@ void CGenerateMap::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSiz
 		foundCenter = true;
 	}
 
-	for (int i = 0; i < clusterSize; i++)
+	for (int nCnt = 0; nCnt < clusterSize; nCnt++)
 	{
 		for (int a = 0; a < MAX_ATTEMPTS; a++)
 		{
@@ -405,7 +402,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		// --- 下辺 ---
 		for (float x = startX; x <= endX; x += areaSize / 2.0f)
 		{
-			for (int i = 0; i < clusterPerCell; ++i)
+			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
 				D3DXVECTOR3 pos(x + getVariation(), 0.0f, startZ + getVariation());
 
@@ -429,7 +426,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		// --- 上辺 ---
 		for (float x = startX; x <= endX; x += areaSize / 2.0f)
 		{
-			for (int i = 0; i < clusterPerCell; ++i)
+			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
 				D3DXVECTOR3 pos(x + getVariation(), 0.0f, endZ + getVariation());
 
@@ -453,7 +450,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		// --- 左辺 ---
 		for (float z = startZ + areaSize / 2.0f; z < endZ; z += areaSize / 2.0f)
 		{
-			for (int i = 0; i < clusterPerCell; ++i)
+			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
 				D3DXVECTOR3 pos(startX + getVariation(), 0.0f, z + getVariation());
 
@@ -477,7 +474,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		// --- 右辺 ---
 		for (float z = startZ + areaSize / 2.0f; z < endZ; z += areaSize / 2.0f)
 		{
-			for (int i = 0; i < clusterPerCell; ++i)
+			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
 				D3DXVECTOR3 pos(endX + getVariation(), 0.0f, z + getVariation());
 
@@ -522,9 +519,9 @@ void CGenerateMap::CreateGrassCluster(const D3DXVECTOR3& centerPos, float areaSi
 		dir.z = (centerPos.z > mapCenterZ) ? 1.0f : -1.0f;
 	}
 
-	for (int k = 0; k < grassLength; k++)
+	for (int nCnt = 0; nCnt < grassLength; nCnt++)
 	{
-		D3DXVECTOR3 grassPos = centerPos + dir * (k * areaSize);
+		D3DXVECTOR3 grassPos = centerPos + dir * (nCnt * areaSize);
 
 		// マップ範囲チェック
 		if (grassPos.x < offsetX - areaSize || grassPos.x > offsetX + (gridX - 1) * areaSize + areaSize ||

@@ -18,23 +18,20 @@
 CTime::CTime(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	for (int nCnt = 0; nCnt < DIGITS; nCnt++)
-	{
-		m_apNumber[nCnt] = {};					// 各桁の数字表示用
-	}
-	m_nMinutes = 0;								// 分
-	m_nSeconds = 0;								// 秒
-	m_nFrameCount = 0;							// フレームカウント
-	m_digitWidth = 0.0f;						// 数字1桁あたりの幅
-	m_digitHeight = 0.0f;						// 数字1桁あたりの高さ
-	m_basePos = INIT_VEC3;						// 表示の開始位置
-	m_pColon = nullptr;							// コロン
-	m_nIdxTexture = 0;							// テクスチャインデックス
+	memset(m_apNumber, 0, sizeof(m_apNumber));	// 各桁の数字表示用
+	m_nMinutes		= 0;						// 分
+	m_nSeconds		= 0;						// 秒
+	m_nFrameCount	= 0;						// フレームカウント
+	m_digitWidth	= 0.0f;						// 数字1桁あたりの幅
+	m_digitHeight	= 0.0f;						// 数字1桁あたりの高さ
+	m_basePos		= INIT_VEC3;				// 表示の開始位置
+	m_pColon		= nullptr;					// コロン
+	m_nIdxTexture	= 0;						// テクスチャインデックス
 	m_nStartMinutes = 0;						// 経過時間の割合の結果代入用
 	m_nStartSeconds = 0;						// 経過時間の割合の結果代入用
-	m_isTimeUp = false;							// タイムアップフラグ
-	m_isActive = false;							// アクティブフラグ
-	m_isVisible = true;							// 表示フラグ
+	m_isTimeUp		= false;					// タイムアップフラグ
+	m_isActive		= false;					// アクティブフラグ
+	m_isVisible		= true;						// 表示フラグ
 }
 //=============================================================================
 // デストラクタ
@@ -165,7 +162,7 @@ void CTime::Update(void)
 	if (m_apNumber[2]) m_apNumber[2]->SetDigit(sec10);
 	if (m_apNumber[3]) m_apNumber[3]->SetDigit(sec1);
 
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int nCnt = 0; nCnt < DIGITS; nCnt++)
 	{
 		m_apNumber[nCnt]->Update();  // UV更新
 	}
@@ -286,12 +283,12 @@ float CTime::GetProgress(void) const
 CColon::CColon(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
-	m_pVtxBuff = NULL;						// 頂点バッファ
-	m_pos = D3DXVECTOR3(0.0f,0.0f,0.0f);	// 位置
-	m_fWidth = 0.0f;						// 幅
-	m_fHeight = 0.0f;						// 高さ
-	m_nIdxTexture = 0;						// テクスチャインデックス
-	m_isVisible = true;						// 表示フラグ
+	m_pVtxBuff		= nullptr;		// 頂点バッファ
+	m_pos			= INIT_VEC3;	// 位置
+	m_fWidth		= 0.0f;			// 幅
+	m_fHeight		= 0.0f;			// 高さ
+	m_nIdxTexture	= 0;			// テクスチャインデックス
+	m_isVisible		= true;			// 表示フラグ
 }
 //=============================================================================
 // コロンのデストラクタ
@@ -305,17 +302,24 @@ CColon::~CColon()
 //=============================================================================
 CColon* CColon::Create(D3DXVECTOR3 pos, float fWidth, float fHeight, bool visibleFlag)
 {
-	CColon* pColon;
+	CColon* pColon = new CColon;
 
-	pColon = new CColon;
+	// nullptrだったら
+	if (pColon == nullptr)
+	{
+		return nullptr;
+	}
 
 	pColon->m_pos = pos;
 	pColon->m_fWidth = fWidth;
 	pColon->m_fHeight = fHeight;
 	pColon->SetVisible(visibleFlag);
 
-	// 初期化処理
-	pColon->Init();
+	// 初期化失敗時
+	if (FAILED(pColon->Init()))
+	{
+		return nullptr;
+	}
 
 	return pColon;
 }
@@ -327,6 +331,7 @@ HRESULT CColon::Init(void)
 	// デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	// テクスチャの登録
 	m_nIdxTexture = CManager::GetTexture()->RegisterDynamic("data/TEXTURE/colon.png");
 
 	// 頂点バッファの生成
@@ -423,12 +428,4 @@ void CColon::Draw(void)
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-}
-//=============================================================================
-// コロンの位置取得処理
-//=============================================================================
-D3DXVECTOR3 CColon::GetPos(void)
-{
-	// 使わない
-	return D3DXVECTOR3();
 }

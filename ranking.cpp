@@ -13,6 +13,9 @@
 #include "input.h"
 #include "result.h"
 #include "background.h"
+#include "rankingmanager.h"
+#include "ranktime.h"
+#include "rankitem.h"
 
 
 //=============================================================================
@@ -21,8 +24,8 @@
 CRanking::CRanking() : CScene(CScene::MODE_RANKING)
 {
 	// 値のクリア
-	m_pRankingManager	= nullptr;
-	m_pRankItem			= nullptr;
+	m_pRankingManager	= nullptr;		// ランキングマネージャーへのポインタ
+	m_pRankItem			= nullptr;		// ランクアイテムへのポインタ
 }
 //=============================================================================
 // デストラクタ

@@ -84,7 +84,8 @@ private:
 	void NormalizeRotY(void);// 角度の正規化 Y軸
 
 private:
-	static constexpr float SHAKE_DISTANCE = 1300.0f;// 振動する距離
+	static constexpr float SHAKE_DISTANCE	= 1300.0f;	// 振動する距離
+	static constexpr float GAMECAM_DISTANCE = 580.0f;	// ゲームカメラ時の距離
 
 	D3DXVECTOR3 m_posV;					// 視点
 	D3DXVECTOR3 m_posVDest;				// 目的の視点
@@ -106,10 +107,10 @@ private:
 	bool		m_isDirection;			// 演出カメラかどうか
 	bool		m_isCameraShakeOn;		// カメラシェイクのON/OFF
 
+	int			m_currentKey;			// ムービーカメラの現在のキー
+	int			m_directionFrame;		// ムービーカメラのカウンタ
+	int			m_delayFrame;			// 遅延
 	std::vector<CameraKeyFrame> m_camKeys;
-	int   m_currentKey;					// ムービーカメラの現在のキー
-	int   m_directionFrame;				// ムービーカメラのカウンタ
-	int	  m_delayFrame;					// 遅延
 };
 
 #endif

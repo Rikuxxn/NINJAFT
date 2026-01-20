@@ -17,7 +17,9 @@
 #include "manager.h"
 #include "motion.h"
 
+//*****************************************************************************
 // 前方宣言
+//*****************************************************************************
 class CEnemyLeader_StandState;
 class CEnemyLeader_MoveState;
 class CEnemyLeader_CloseAttackState1;
@@ -45,15 +47,8 @@ public:
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= 0.95f; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		// サブ敵が追跡状態だったら
 		if (pEnemy->IsSubAction(CEnemy::AI_CHASE) && !pEnemy->IsCooldown())
@@ -152,10 +147,8 @@ public:
 		toTarget.y = 0;
 		D3DXVec3Normalize(&toTarget, &toTarget);
 
-		float speedRate = 1.5f;
-
 		// モーションスピードを早くする
-		pEnemy->GetMotion()->SetMotionSpeedRate(speedRate);
+		pEnemy->GetMotion()->SetMotionSpeedRate(MOTION_SPEED_RATE);
 
 		// 目標速度計算
 		float moveSpeed = CEnemyLeader::SPEED;
@@ -173,11 +166,10 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemyLeader::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemyLeader::ACCEL_RATE;
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
@@ -200,7 +192,7 @@ public:
 		// ----------------------
 		if (pEnemy->HasReachedTarget())
 		{
-			if ((rand() % 100) < 55)
+			if ((rand() % 100) < PROBABILITY)
 			{
 				// 今到達した巡回ポイントの到達判定がずっと通ってしまうため、次の巡回ポイントを設定しておく
 				pEnemy->ChooseNextPatrolPoint();
@@ -210,7 +202,7 @@ public:
 			}
 			else
 			{
-				if ((rand() % 100) < 55)
+				if ((rand() % 100) < PROBABILITY)
 				{
 					// 埋蔵金の調査状態
 					m_pMachine->ChangeState<CEnemyLeader_TreasureInvestigateState>();
@@ -231,7 +223,8 @@ public:
 	}
 
 private:
-
+	static constexpr float	MOTION_SPEED_RATE	= 1.5f;	// モーションのスピードレート
+	static constexpr int	PROBABILITY			= 55;	// 確率
 };
 
 //*****************************************************************************
@@ -289,19 +282,10 @@ public:
 		// 正規化
 		D3DXVec3Normalize(&dir, &dir);
 
-		float dashPower = 60.0f;// スライドパワー
-
-		D3DXVECTOR3 move = dir * dashPower;
+		D3DXVECTOR3 move = dir * SLIDE_POWER;
 
 		// 現在の移動量に上書き
 		pEnemy->SetMove(move);
-
-		// 物理速度にも即反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setY(-100.3f);// 段差で飛ばないように上の力を下げる
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
@@ -311,17 +295,16 @@ public:
 		D3DXVECTOR3 move = pEnemy->GetMove();
 
 		// モーション前半だけ前方移動を維持
-		if (motionRate < 0.2f)
+		if (motionRate < MOTIONRATE_THRESHOLD)
 		{
 			D3DXVECTOR3 forwardDir = pEnemy->GetForward();
 			D3DXVec3Normalize(&forwardDir, &forwardDir);
 
-			float forwardPower = 20.0f; // 滑る速度
-			move = forwardDir * forwardPower;
+			move = forwardDir * FORWARD_POWER;
 		}
 		else
 		{
-			move *= 0.82f; // 減速率
+			move *= CEnemyLeader::DECELERATION_RATE; // 減速率
 			if (fabsf(move.x) < 0.01f) move.x = 0;
 			if (fabsf(move.z) < 0.01f) move.z = 0;
 		}
@@ -348,7 +331,7 @@ public:
 			if (pPlayer)
 			{
 				// プレイヤーに当たったか判定する
-				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f);
+				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f, 30.0f);
 			}
 		}
 
@@ -368,6 +351,9 @@ public:
 	}
 
 private:
+	static constexpr float SLIDE_POWER			= 60.0f;	// スライドパワー
+	static constexpr float MOTIONRATE_THRESHOLD = 0.2f;		// モーションレートの閾値
+	static constexpr float FORWARD_POWER		= 20.0f;	// 滑る速度
 
 };
 
@@ -412,19 +398,10 @@ public:
 		// 正規化
 		D3DXVec3Normalize(&dir, &dir);
 
-		float dashPower = 20.0f;// スライドパワー
-
-		D3DXVECTOR3 move = dir * dashPower;
+		D3DXVECTOR3 move = dir * SLIDE_POWER;
 
 		// 現在の移動量に上書き
 		pEnemy->SetMove(move);
-
-		// 物理速度にも即反映
-		btVector3 velocity = pEnemy->GetRigidBody()->getLinearVelocity();
-		velocity.setX(move.x);
-		velocity.setY(-100.3f);// 段差で飛ばないように上の力を下げる
-		velocity.setZ(move.z);
-		pEnemy->GetRigidBody()->setLinearVelocity(velocity);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
@@ -434,17 +411,16 @@ public:
 		D3DXVECTOR3 move = pEnemy->GetMove();
 
 		// モーション前半だけ前方移動を維持
-		if (motionRate < 0.2f)
+		if (motionRate < MOTIONRATE_THRESHOLD)
 		{
 			D3DXVECTOR3 forwardDir = pEnemy->GetForward();
 			D3DXVec3Normalize(&forwardDir, &forwardDir);
 
-			float forwardPower = 10.0f; // 滑る速度
-			move = forwardDir * forwardPower;
+			move = forwardDir * FORWARD_POWER;
 		}
 		else
 		{
-			move *= 0.82f; // 減速率
+			move *= CEnemyLeader::DECELERATION_RATE; // 減速率
 			if (fabsf(move.x) < 0.01f) move.x = 0;
 			if (fabsf(move.z) < 0.01f) move.z = 0;
 		}
@@ -471,7 +447,7 @@ public:
 			if (pPlayer)
 			{
 				// プレイヤーに当たったか判定する
-				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f);
+				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f, 30.0f);
 			}
 		}
 
@@ -489,7 +465,9 @@ public:
 	}
 
 private:
-
+	static constexpr float SLIDE_POWER			= 20.0f;	// スライドパワー
+	static constexpr float FORWARD_POWER		= 10.0f;	// 滑る速度
+	static constexpr float MOTIONRATE_THRESHOLD = 0.2f;		// モーションレートの閾値
 };
 
 //*****************************************************************************
@@ -537,23 +515,16 @@ public:
 		// 視界内判定をするためにプレイヤーを取得
 		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= 0.82f; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		// リーダー敵の位置を取得
 		D3DXVECTOR3 pos = pEnemy->GetPos();
-		pos.y += 40.0f;// 少し上げる
+		pos.y += EFFECT_OFFSET;// 少し上げる
 
 		m_timer++;
 
-		if (m_timer >= 15)
+		if (m_timer >= EFFECT_INTERVAL)
 		{
 			m_timer = 0;
 
@@ -591,6 +562,9 @@ public:
 	}
 
 private:
+	static constexpr float	EFFECT_OFFSET	= 40.0f;// エフェクト生成位置オフセット
+	static constexpr int	EFFECT_INTERVAL = 15;	// エフェクト生成インターバル
+
 	int m_timer;// エフェクト用生成タイマー
 };
 
@@ -649,11 +623,10 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemyLeader::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemyLeader::ACCEL_RATE;
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
@@ -746,11 +719,10 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemyLeader::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemyLeader::ACCEL_RATE;
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
@@ -809,15 +781,8 @@ public:
 		// 視界内判定をするためにプレイヤーを取得
 		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= 0.95f; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		// モーション中にプレイヤーが視界に入ったら
 		if (pEnemy->IsPlayerInSight(pPlayer))
@@ -880,15 +845,8 @@ public:
 		// 視界内判定のためにプレイヤーを取得
 		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= 0.95f; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		// 音源のポイントに向く
 		D3DXVECTOR3 toTarget = pEnemy->GetLastHeardSoundPos() - pEnemy->GetPos();
@@ -968,17 +926,17 @@ public:
 		CModel** models = pEnemy->GetModels();
 		int num = pEnemy->GetNumModels();// モデル数
 
-		for (int i = 0; i < num; i++)
+		for (int nCnt = 0; nCnt < num; nCnt++)
 		{
 			// アウトラインを赤にする
-			models[i]->SetOutlineColor(VEC4_RED);
+			models[nCnt]->SetOutlineColor(VEC4_RED);
 		}
 
 		// サブ敵が追跡中なら、リーダーも追跡継続
 		if (!pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
 			// サブ敵が追跡していなくて、距離が離れたら警戒へ
-			if (distance > 280.0f)
+			if (distance > CAUTION_DISTANCE)
 			{
 				// 警戒状態
 				m_pMachine->ChangeState<CEnemyLeader_CautionState>();
@@ -987,7 +945,7 @@ public:
 		}
 
 		// 一定距離になったら
-		if (distance < 130.0f)
+		if (distance < ATTACK_DISTANCE)
 		{
 			if (!pEnemy->IsCooldown()) // クールダウン中でなければ攻撃へ
 			{
@@ -1019,11 +977,10 @@ public:
 		}
 
 		// 現在速度との補間（イージング）
-		const float accelRate = 0.15f;
 		D3DXVECTOR3 currentMove = pEnemy->GetMove();
 
-		currentMove.x += (targetMove.x - currentMove.x) * accelRate;
-		currentMove.z += (targetMove.z - currentMove.z) * accelRate;
+		currentMove.x += (targetMove.x - currentMove.x) * CEnemyLeader::ACCEL_RATE;
+		currentMove.z += (targetMove.z - currentMove.z) * CEnemyLeader::ACCEL_RATE;
 
 		// 補間後の速度をプレイヤーにセット
 		pEnemy->SetMove(currentMove);
@@ -1047,15 +1004,16 @@ public:
 		CModel** models = pEnemy->GetModels();
 		int num = pEnemy->GetNumModels();// モデル数
 
-		for (int i = 0; i < num; i++)
+		for (int nCnt = 0; nCnt < num; nCnt++)
 		{
 			// アウトラインを通常(黒色)に戻す
-			models[i]->SetOutlineColor(VEC4_BLACK);
+			models[nCnt]->SetOutlineColor(VEC4_BLACK);
 		}
 	}
 
 private:
-	static constexpr float ATTACK_DISTANCE = 10.0f;
+	static constexpr float ATTACK_DISTANCE	= 130.0f;	// 攻撃モーション移行距離
+	static constexpr float CAUTION_DISTANCE = 280.0f;	// 警戒モーション移行距離
 };
 
 //*****************************************************************************
@@ -1102,21 +1060,14 @@ public:
 	{
 		// リーダー敵の位置を取得
 		D3DXVECTOR3 pos = pEnemy->GetPos();
-		pos.y += 40.0f;// 少し上げる
+		pos.y += EFFECT_OFFSET;// 少し上げる
 
-		// 移動量の取得
-		D3DXVECTOR3 move = pEnemy->GetMove();
-
-		move *= 0.82f; // 減速率
-		if (fabsf(move.x) < 0.01f) move.x = 0;
-		if (fabsf(move.z) < 0.01f) move.z = 0;
-
-		// 移動量を設定
-		pEnemy->SetMove(move);
+		// 減速処理
+		pEnemy->ApplyDeceleration();
 
 		m_timer++;
 
-		if (m_timer >= 10)
+		if (m_timer >= EFFECT_INTERVAL)
 		{
 			m_timer = 0;
 
@@ -1146,6 +1097,9 @@ public:
 	}
 
 private:
+	static constexpr float	EFFECT_OFFSET	= 40.0f;	// エフェクト生成位置オフセット
+	static constexpr int	EFFECT_INTERVAL = 10;		// エフェクト生成インターバル
+
 	int m_timer;// エフェクト用タイマー
 };
 

@@ -446,10 +446,10 @@ void CMeshField::CreateRiverLine(void)
 	}
 
 	// •½ŠŠ‰»(Ü‚êüŠ´‚ğ–³‚­‚·)
-	for (int i = 1; i < (int)m_riverLine.size() - 1; i++)
+	for (int nCnt = 1; nCnt < (int)m_riverLine.size() - 1; nCnt++)
 	{
-		m_riverLine[i] = 
-			(m_riverLine[i - 1] + m_riverLine[i] + m_riverLine[i + 1]) / 3.0f;
+		m_riverLine[nCnt] =
+			(m_riverLine[nCnt - 1] + m_riverLine[nCnt] + m_riverLine[nCnt + 1]) / 3.0f;
 	}
 }
 //=============================================================================

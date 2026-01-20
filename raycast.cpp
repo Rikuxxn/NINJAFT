@@ -67,12 +67,12 @@ bool CRayCast::IntersectAABB(const D3DXVECTOR3& rayOrigin,
     float tMin = 0.0f;
     float tMax = FLT_MAX;
 
-    for (int i = 0; i < 3; ++i)
+    for (int nCnt = 0; nCnt < 3; ++nCnt)
     {
-        float rayOrig = ((float*)&rayOrigin)[i];
-        float rayDirI = ((float*)&rayDir)[i];
-        float bMin = ((float*)&boxMin)[i];
-        float bMax = ((float*)&boxMax)[i];
+        float rayOrig = ((float*)&rayOrigin)[nCnt];
+        float rayDirI = ((float*)&rayDir)[nCnt];
+        float bMin = ((float*)&boxMin)[nCnt];
+        float bMax = ((float*)&boxMax)[nCnt];
 
         if (fabsf(rayDirI) < EPSILON)
         {
@@ -137,13 +137,13 @@ bool CRayCast::IntersectOBB(
     float tmin = -FLT_MAX;
     float tmax = FLT_MAX;
 
-    // 各軸ごとにスラブ法（Slab method）で交差計算
-    for (int i = 0; i < 3; i++)
+    // 各軸ごとに交差計算
+    for (int nCnt = 0; nCnt < 3; nCnt++)
     {
-        float origin = ((float*)&localOrigin)[i];
-        float dir = ((float*)&localDir)[i];
-        float min = ((float*)&boxMin)[i];
-        float max = ((float*)&boxMax)[i];
+        float origin = ((float*)&localOrigin)[nCnt];
+        float dir = ((float*)&localDir)[nCnt];
+        float min = ((float*)&boxMin)[nCnt];
+        float max = ((float*)&boxMax)[nCnt];
 
         if (fabsf(dir) < 1e-6f)
         {

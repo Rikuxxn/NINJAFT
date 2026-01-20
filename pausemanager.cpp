@@ -18,9 +18,9 @@
 CPauseManager::CPauseManager()
 {
     // 値のクリア
-    m_pVtxBuff      = nullptr;
-    m_SelectedIndex = 0;
-    m_inputLock        = false;
+    m_pVtxBuff      = nullptr;  // 頂点バッファへのポインタ
+    m_SelectedIndex = 0;        // 選択したインデックス
+    m_inputLock     = false;    // 入力制限フラグ
 }
 //=============================================================================
 // デストラクタ
@@ -81,12 +81,12 @@ void CPauseManager::Init(void)
     m_Items.clear();
 
     // 仮の初期位置（Updateで上書き）
-    for (int i = 0; i < ITEM_NUM; i++)
+    for (int nCnt = 0; nCnt < ITEM_NUM; nCnt++)
     {
         CPause* pause = nullptr;
 
         // ポーズ項目の生成
-        switch (i)
+        switch (nCnt)
         {
         case CPause::MENU_CONTINUE:
             pause = CPause::Create(CPause::MENU_CONTINUE, {}, ITEM_W, ITEM_H);
@@ -149,19 +149,19 @@ void CPauseManager::Update(void)
     float spacingY = screenH * SPACING_YRATE;
 
     // 項目の位置更新
-    for (int i = 0; i < (int)m_Items.size(); i++)
+    for (int nCnt = 0; nCnt < (int)m_Items.size(); nCnt++)
     {
         // サイズの更新
-        m_Items[i]->SetSize(itemW, itemH);
+        m_Items[nCnt]->SetSize(itemW, itemH);
 
         D3DXVECTOR3 pos(
             baseX - itemW * 0.5f,
-            startY + i * spacingY,
+            startY + nCnt * spacingY,
             0.0f
         );
 
         // 位置の更新
-        m_Items[i]->SetPos(pos);
+        m_Items[nCnt]->SetPos(pos);
     }
 
     int mouseOver = GetMouseOverIndex();
@@ -238,12 +238,12 @@ void CPauseManager::Update(void)
     }
 
     // 選択状態更新
-    for (size_t i = 0; i < m_Items.size(); i++)
+    for (size_t nCnt = 0; nCnt < m_Items.size(); nCnt++)
     {
-        m_Items[i]->SetSelected(i == static_cast<size_t>(m_SelectedIndex));
+        m_Items[nCnt]->SetSelected(nCnt == static_cast<size_t>(m_SelectedIndex));
 
         // ポーズの更新処理
-        m_Items[i]->Update();
+        m_Items[nCnt]->Update();
     }
 }
 //=============================================================================
@@ -279,11 +279,11 @@ void CPauseManager::Draw(void)
 //=============================================================================
 int CPauseManager::GetMouseOverIndex(void) const
 {
-    for (size_t i = 0; i < m_Items.size(); i++)
+    for (size_t nCnt = 0; nCnt < m_Items.size(); nCnt++)
     {
-        if (m_Items[i]->IsMouseOver())
+        if (m_Items[nCnt]->IsMouseOver())
         {
-            return (int)i;
+            return (int)nCnt;
         }
     }
 

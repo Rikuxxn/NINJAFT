@@ -165,6 +165,11 @@ public:
     void SetUVDirtyUse(bool flag) { m_isUVDirty = flag; }
 
 private:
+    static constexpr float UV_1 = 0.25f;    // UV座標1
+    static constexpr float UV_2 = 0.5f;     // UV座標2
+    static constexpr float UV_3 = 0.75f;    // UV座標3
+
+
     bool m_isUVDirty;
 };
 
@@ -190,11 +195,11 @@ public:
     void SetFontSize(int size);
 
 private:
-    std::string     m_text;
-    D3DXCOLOR       m_color;
-    int             m_fontSize;
-    LPD3DXFONT      m_pFont;
-    RECT            m_drawRect;
+    std::string     m_text;         // 文字
+    D3DXCOLOR       m_color;        // 色
+    int             m_fontSize;     // フォントサイズ
+    LPD3DXFONT      m_pFont;        // フォントへのポインタ
+    RECT            m_drawRect;     // RECT
 };
 
 #endif

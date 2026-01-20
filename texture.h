@@ -22,7 +22,6 @@ public:
 
 	HRESULT Load(void);
 	void Unload(void);
-	int Register(const char* pFilename);
 	int RegisterDynamic(const char* pFilename);
 	LPDIRECT3DTEXTURE9 GetAddress(int nIdx);
 

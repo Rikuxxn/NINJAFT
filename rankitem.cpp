@@ -21,11 +21,11 @@ CRankItem::CRankItem(int nPriority) : CObject(nPriority)
 {
 	// 値のクリア
 	memset(m_apNumber, 0, sizeof(m_apNumber));	// 各桁の数字表示用
-	memset(m_apRank, 0, sizeof(m_apRank));	// 各桁の順位表示用
-	m_digitWidth = 0.0f;		// 数字1桁あたりの幅
-	m_digitHeight = 0.0f;		// 数字1桁あたりの高さ
-	m_basePos = INIT_VEC3;		// 表示の開始位置
-	m_nIdxTexture = 0;			// テクスチャインデックス
+	memset(m_apRank, 0, sizeof(m_apRank));		// 各桁の順位表示用
+	m_digitWidth	= 0.0f;						// 数字1桁あたりの幅
+	m_digitHeight	= 0.0f;						// 数字1桁あたりの高さ
+	m_basePos		= INIT_VEC3;				// 表示の開始位置
+	m_nIdxTexture	= 0;						// テクスチャインデックス
 }
 //=============================================================================
 // デストラクタ
@@ -67,25 +67,25 @@ CRankItem* CRankItem::Create(float anchorX, float anchorY, float digitWidthRate,
 HRESULT CRankItem::Init(void)
 {
 	// 5位まで生成する
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
 		// 順位UIの生成
 		float UIbaseX = m_basePos.x + m_digitWidth;
-		float UIbaseY = m_basePos.y + i * (m_digitHeight + 50.0f);
+		float UIbaseY = m_basePos.y + nCnt * (m_digitHeight + 50.0f);
 
 		// 順位表示
-		m_apRank[i] = CRank::Create(D3DXVECTOR3(UIbaseX, UIbaseY, 0.0f), m_digitWidth / 2, m_digitHeight, (float)i);
+		m_apRank[nCnt] = CRank::Create(D3DXVECTOR3(UIbaseX, UIbaseY, 0.0f), m_digitWidth / 2, m_digitHeight, (float)nCnt);
 
 		// 順位UIの幅
 		float rankWidth = (m_digitWidth / 2) + 30.0f;
 
 		// アイテム数の桁生成
-		for (int n = 0; n < MAX_DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < MAX_DIGITS; nCnt2++)
 		{
-			float x = UIbaseX + rankWidth + n * m_digitWidth;
+			float x = UIbaseX + rankWidth + nCnt2 * m_digitWidth;
 			float y = UIbaseY;
 
-			m_apNumber[i][n] = CNumber::Create(x, y, m_digitWidth, m_digitHeight);
+			m_apNumber[nCnt][nCnt2] = CNumber::Create(x, y, m_digitWidth, m_digitHeight);
 		}
 	}
 
@@ -100,17 +100,17 @@ HRESULT CRankItem::Init(void)
 //=============================================================================
 void CRankItem::Uninit(void)
 {
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
-		for (int n = 0; n < MAX_DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < MAX_DIGITS; nCnt2++)
 		{
-			if (m_apNumber[i][n])
+			if (m_apNumber[nCnt][nCnt2])
 			{
 				// ナンバーの終了処理
-				m_apNumber[i][n]->Uninit();
+				m_apNumber[nCnt][nCnt2]->Uninit();
 
-				delete m_apNumber[i][n];
-				m_apNumber[i][n] = nullptr;
+				delete m_apNumber[nCnt][nCnt2];
+				m_apNumber[nCnt][nCnt2] = nullptr;
 			}
 		}
 	}
@@ -134,34 +134,34 @@ void CRankItem::Update(void)
 	float startX = sw * m_layout.anchorX;
 	float startY = sh * m_layout.anchorY;
 
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
 		// 表示する桁数（0でも1桁表示）
-		int value = m_nDig[i][0] * 100 + m_nDig[i][1] * 10 + m_nDig[i][2];
+		int value = m_nDig[nCnt][0] * 100 + m_nDig[nCnt][1] * 10 + m_nDig[nCnt][2];
 		int digitCount = (value == 0) ? 1 : DigitNum(value);
 
 		float totalWidth = digitW * digitCount;
 		float x = startX - totalWidth * 0.5f;
-		float y = startY + i * lineH;
+		float y = startY + nCnt * lineH;
 
 		// 順位UI
-		if (m_apRank[i])
+		if (m_apRank[nCnt])
 		{
-			m_apRank[i]->SetPos({ x - digitW, y, 0.0f });
-			m_apRank[i]->SetSize(digitW * 0.5f, digitH);
-			m_apRank[i]->Update();
+			m_apRank[nCnt]->SetPos({ x - digitW, y, 0.0f });
+			m_apRank[nCnt]->SetSize(digitW * 0.5f, digitH);
+			m_apRank[nCnt]->Update();
 		}
 
-		for (int n = 0; n < MAX_DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < MAX_DIGITS; nCnt2++)
 		{
 			// 位置を代入
 			D3DXVECTOR3 pos(x + digitW * SPACING_RANK_X, y, 0.0f);
 
-			m_apNumber[i][n]->SetPos(pos);
-			m_apNumber[i][n]->SetSize(digitW, digitH);
+			m_apNumber[nCnt][nCnt2]->SetPos(pos);
+			m_apNumber[nCnt][nCnt2]->SetSize(digitW, digitH);
 
 			// ナンバー更新
-			m_apNumber[i][n]->Update();
+			m_apNumber[nCnt][nCnt2]->Update();
 		}
 	}
 }
@@ -176,18 +176,18 @@ void CRankItem::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	for (int i = 0; i < MaxRanking; i++)
+	for (int nCnt = 0; nCnt < MaxRanking; nCnt++)
 	{
 		bool drawStarted = false;
 
-		for (int n = 0; n < MAX_DIGITS; n++)
+		for (int nCnt2 = 0; nCnt2 < MAX_DIGITS; nCnt2++)
 		{
-			int digit = m_nDig[i][n]; // 各桁の値
+			int digit = m_nDig[nCnt][nCnt2]; // 各桁の値
 
 			// 先頭0をスキップ
 			if (!drawStarted)
 			{
-				if (digit == 0 && n != MAX_DIGITS - 1)
+				if (digit == 0 && nCnt2 != MAX_DIGITS - 1)
 				{
 					continue;
 				}
@@ -195,19 +195,19 @@ void CRankItem::Draw(void)
 				drawStarted = true;
 			}
 
-			if (!m_apNumber[i][n])
+			if (!m_apNumber[nCnt][nCnt2])
 			{
 				continue;
 			}
 
 			// 桁の設定
-			m_apNumber[i][n]->SetDigit(digit);
+			m_apNumber[nCnt][nCnt2]->SetDigit(digit);
 
 			// テクスチャの設定
 			pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
 
 			// ナンバーの描画
-			m_apNumber[i][n]->Draw();
+			m_apNumber[nCnt][nCnt2]->Draw();
 		}
 	}
 }
@@ -235,17 +235,17 @@ int CRankItem::DigitNum(int nCount)
 //=============================================================================
 void CRankItem::SetRankList(const std::vector<int>& itemList)
 {
-	for (size_t i = 0; i < itemList.size() && i < MaxRanking; i++)
+	for (size_t nCnt = 0; nCnt < itemList.size() && nCnt < MaxRanking; nCnt++)
 	{
-		int value = (i < itemList.size()) ? itemList[i] : 0;
+		int value = (nCnt < itemList.size()) ? itemList[nCnt] : 0;
 
 		// 最大 999 に制限
 		value = std::min(value, 999);
 
 		// 桁分解
-		m_nDig[i][0] = (value / 100) % 10;
-		m_nDig[i][1] = (value / 10) % 10;
-		m_nDig[i][2] = value % 10;
+		m_nDig[nCnt][0] = (value / 100) % 10;
+		m_nDig[nCnt][1] = (value / 10) % 10;
+		m_nDig[nCnt][2] = value % 10;
 	}
 }
 //=============================================================================
@@ -258,12 +258,12 @@ void CRankItem::ShowNewRankEffect(int rankIndex)
 		return;
 	}
 
-	for (int n = 0; n < MAX_DIGITS; n++)
+	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
-		if (m_apNumber[rankIndex][n])
+		if (m_apNumber[rankIndex][nCnt])
 		{
 			// ランクインのスケールアニメーション
-			m_apNumber[rankIndex][n]->SetScaleAnim();
+			m_apNumber[rankIndex][nCnt]->SetScaleAnim();
 		}
 	}
 }

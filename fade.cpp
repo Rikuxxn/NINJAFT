@@ -71,8 +71,8 @@ HRESULT CFade::Init(CScene::MODE mode)
 
 	// ‰Šú‰»
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_fWidth = 1920.0f;
-	m_fHeight = 1080.0f;
+	m_fWidth = FHD_WIDTH;
+	m_fHeight = FHD_HEIGHT;
 
 	m_fade = FADE_IN;
 	m_SceneNext = mode;	//Ÿ‚Ì‰æ–Ê

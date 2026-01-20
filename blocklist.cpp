@@ -276,7 +276,7 @@ CBuriedTreasureBlock::CBuriedTreasureBlock()
 	m_guageRate				= 0.0f;		// ゲージの最大量
 	m_guageDecreaseSpeed	= 0.0f;		// ゲージの減る量
 	m_bUiActive				= false;	// UIが表示されているか
-	m_getCount				= 0;		// 取得数
+	m_isFinished			= false;	// 取得し終えたか
 }
 //=============================================================================
 // 埋蔵金ブロックのデストラクタ
@@ -303,6 +303,9 @@ HRESULT CBuriedTreasureBlock::Init(void)
 
 	m_guageRate = GUAGE_RATE;
 	m_guageDecreaseSpeed = GUAGE_DECREASE_SPEED; // 1フレームで減る割合
+
+	// リセットしておく
+	m_getCount = 0;
 
 	return S_OK;
 }
@@ -409,8 +412,13 @@ void CBuriedTreasureBlock::Update(void)
 			pSound->Play(CSound::SOUND_LABEL_ITEMGET);
 		}
 
-		// 取得カウントを増やす
-		m_getCount++;
+		if (!m_isFinished)
+		{
+			m_isFinished = true;
+
+			// 取得カウントを増やす
+			m_getCount++;
+		}
 
 		// リーダー敵の取得
 		CEnemyLeader* pEnemyLeader = CCharacterManager::GetInstance().GetCharacter<CEnemyLeader>();
@@ -598,9 +606,9 @@ bool CExitBlock::IsHitPlayer(CPlayer* pPlayer)
 	obb.axis[2] = D3DXVECTOR3(world._31, world._32, world._33);
 
 	// 軸は念のため正規化
-	for (int i = 0; i < 3; i++)
+	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
-		D3DXVec3Normalize(&obb.axis[i], &obb.axis[i]);
+		D3DXVec3Normalize(&obb.axis[nCnt], &obb.axis[nCnt]);
 	}
 
 	// モデルサイズとスケール適用

@@ -38,9 +38,9 @@ bool CCollision::CheckCylinderAABBCollisionWithHitDistance(
 	// 頂点群を軸方向に射影して最小最大を求める（軸方向の範囲）
 	float minProj = FLT_MAX;
 	float maxProj = -FLT_MAX;
-	for (int i = 0; i < 8; i++)
+	for (int nCnt = 0; nCnt < 8; nCnt++)
 	{
-		D3DXVECTOR3 v = verts[i] - cylinderCenter;
+		D3DXVECTOR3 v = verts[nCnt] - cylinderCenter;
 		float proj = D3DXVec3Dot(&v, &axis);
 		if (proj < minProj) minProj = proj;
 		if (proj > maxProj) maxProj = proj;
@@ -82,9 +82,9 @@ bool CCollision::CheckCylinderAABBCollisionWithHitDistance(
 	// AABBの頂点を断面座標系に変換して、最小最大を求める（2D長方形の境界）
 	float minX = FLT_MAX, maxX = -FLT_MAX;
 	float minY = FLT_MAX, maxY = -FLT_MAX;
-	for (int i = 0; i < 8; i++)
+	for (int nCnt = 0; nCnt < 8; nCnt++)
 	{
-		D3DXVECTOR3 v = verts[i] - closestPointOnAxis;
+		D3DXVECTOR3 v = verts[nCnt] - closestPointOnAxis;
 		float x = D3DXVec3Dot(&v, &right);
 		float y = D3DXVec3Dot(&v, &forward);
 		if (x < minX) minX = x;

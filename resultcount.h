@@ -45,7 +45,7 @@ public:
 private:
 	static const int MAX_DIGITS = 3;		// 桁数
 
-	CNumber* m_apNumber[MAX_DIGITS];		// 各桁の数字表示用
+	CNumber*	m_apNumber[MAX_DIGITS];		// 各桁の数字表示用
 	int			m_nCount;					// 数
 	int			m_nDig[MAX_DIGITS];			// 桁表示
 	float		m_digitWidth;				// 数字1桁あたりの幅

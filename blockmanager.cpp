@@ -39,11 +39,13 @@ CBlock* CBlockManager::m_selectedBlock = {};// 選択したブロック
 CBlockManager::CBlockManager()
 {
 	// 値のクリア
-	m_selectedBlock				= nullptr;	// 選択中のブロック
-	m_prevSelectedIdx			= -1;		// 前回の選択中のインデックス
-	m_pDebug3D					= nullptr;	// 3Dデバッグ表示へのポインタ
-	m_autoUpdateColliderSize	= true;		// コライダー自動更新フラグ
-	m_isDragging				= false;	// ドラッグ中かどうか
+	m_selectedBlock				= nullptr;		// 選択中のブロック
+	m_prevSelectedIdx			= -1;			// 前回の選択中のインデックス
+	m_pDebug3D					= nullptr;		// 3Dデバッグ表示へのポインタ
+	m_autoUpdateColliderSize	= true;			// コライダー自動更新フラグ
+	m_isDragging				= false;		// ドラッグ中かどうか
+	m_thumbWidth				= THUMB_WIDTH;	// サムネイルの幅
+	m_thumbHeight				= THUMB_HEIGHT;	// サムネイルの高さ
 }
 //=============================================================================
 // デストラクタ
@@ -235,20 +237,20 @@ void CBlockManager::GenerateThumbnailsForResources(void)
 	m_thumbnailTextures.clear();
 	m_thumbnailTextures.resize((size_t)CBlock::TYPE_MAX, nullptr);
 
-	for (size_t i = 0; i < (int)CBlock::TYPE_MAX; ++i)
+	for (size_t nCnt = 0; nCnt < (int)CBlock::TYPE_MAX; ++nCnt)
 	{
 		// 一時ブロック生成（位置は原点）
-		CBlock::TYPE payloadType = static_cast<CBlock::TYPE>(i);
+		CBlock::TYPE payloadType = static_cast<CBlock::TYPE>(nCnt);
 		CBlock* pTemp = CreateBlock(payloadType, D3DXVECTOR3(0, 0, 0));
 		if (!pTemp)
 		{
 			continue;
 		}
 
-		if (!m_thumbnailTextures[i])
+		if (!m_thumbnailTextures[nCnt])
 		{
 			// サムネイル作成
-			m_thumbnailTextures[i] = RenderThumbnail(pTemp);
+			m_thumbnailTextures[nCnt] = RenderThumbnail(pTemp);
 		}
 
 		pTemp->Kill();                 // 削除フラグを立てる
@@ -310,19 +312,19 @@ void CBlockManager::Uninit(void)
 //=============================================================================
 void CBlockManager::CleanupDeadBlocks(void)
 {
-	for (int i = (int)m_blocks.size() - 1; i >= 0; i--)
+	for (int nCnt = (int)m_blocks.size() - 1; nCnt >= 0; nCnt--)
 	{
-		CBlock* pBlock = m_blocks[i];
+		CBlock* pBlock = m_blocks[nCnt];
 
-		if (m_blocks[i]->IsDead())
+		if (m_blocks[nCnt]->IsDead())
 		{
 			// m_blocksByTypeからも削除
 			auto& list = m_blocksByType[pBlock->GetType()];
 			list.erase(std::remove(list.begin(), list.end(), pBlock), list.end());
 
 			// ブロックの終了処理
-			m_blocks[i]->Uninit();
-			m_blocks.erase(m_blocks.begin() + i);
+			m_blocks[nCnt]->Uninit();
+			m_blocks.erase(m_blocks.begin() + nCnt);
 		}
 	}
 }
@@ -431,24 +433,24 @@ void CBlockManager::UpdateInfo(void)
 
 		int numTypes = (int)CBlock::TYPE_MAX;
 
-		for (int i = 0; i < numTypes; i++)
+		for (int nCnt = 0; nCnt < numTypes; nCnt++)
 		{
-			IDirect3DTexture9* pThumb = GetThumbnailTexture(i); // サムネイル取得
+			IDirect3DTexture9* pThumb = GetThumbnailTexture(nCnt); // サムネイル取得
 
 			if (!pThumb)
 			{
 				continue; // nullptr はスキップ
 			}
 
-			ImGui::PushID(i);
+			ImGui::PushID(nCnt);
 			ImGui::Image(reinterpret_cast<ImTextureID>(pThumb), ImVec2(m_thumbWidth, m_thumbHeight));
 
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 			{
 				m_isDragging = true;// ドラッグ中
-				CBlock::TYPE payloadType = static_cast<CBlock::TYPE>(i);
+				CBlock::TYPE payloadType = static_cast<CBlock::TYPE>(nCnt);
 				ImGui::SetDragDropPayload("BLOCK_TYPE", &payloadType, sizeof(payloadType));
-				ImGui::Text("Block Type %d", i);
+				ImGui::Text("Block Type %d", nCnt);
 				ImGui::Image(reinterpret_cast<ImTextureID>(pThumb), ImVec2(m_thumbWidth, m_thumbHeight));
 				ImGui::EndDragDropSource();
 			}
@@ -787,9 +789,9 @@ void CBlockManager::PickBlockFromMouseClick(void)
 	float minDist = FLT_MAX;
 	int hitIndex = -1;
 
-	for (size_t i = 0; i < m_blocks.size(); ++i)
+	for (size_t nCnt = 0; nCnt < m_blocks.size(); ++nCnt)
 	{
-		CBlock* block = m_blocks[i];
+		CBlock* block = m_blocks[nCnt];
 
 		// ワールド行列の取得（位置・回転・拡大を含む）
 		D3DXMATRIX world = block->GetWorldMatrix();
@@ -808,7 +810,7 @@ void CBlockManager::PickBlockFromMouseClick(void)
 			if (dist < minDist)
 			{
 				minDist = dist;
-				hitIndex = i;
+				hitIndex = nCnt;
 			}
 		}
 	}

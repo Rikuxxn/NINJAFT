@@ -33,6 +33,7 @@ public:
 	void SetGhostObject(bool flag) { m_isGhostObject = flag; }
 	void SetPath(const char* path)
 	{
+		// nullptr‚¾‚Á‚½‚ç
 		if (path == nullptr)
 		{
 			path = " ";

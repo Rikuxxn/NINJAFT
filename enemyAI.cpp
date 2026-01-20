@@ -28,8 +28,8 @@ CEnemyAI_Leader::CEnemyAI_Leader()
 	// 値のクリア
     m_logTimer = 0;                 // 記録タイマー
     m_prevInSight = false;			// 直前に視界に入ったか
-    m_soundTimer = 0;
-    m_soundCount = 0;
+    m_soundTimer = 0;               // サウンドタイマー
+    m_soundCount = 0;               // 音の発生数
 }
 //=============================================================================
 // リーダー敵AIデストラクタ
@@ -231,7 +231,7 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
 CEnemyAI_Sub::CEnemyAI_Sub()
 {
     // 値のクリア
-    m_logTimer = 0;
+    m_logTimer = 0;                 // 記録タイマー
     m_prevInSight = false;			// 直前に視界に入ったか
 }
 //=============================================================================

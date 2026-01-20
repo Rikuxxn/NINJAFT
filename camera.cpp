@@ -309,7 +309,7 @@ void CCamera::GameCamera(void)
 	m_rot.y = D3DX_PI;
 
 	// 距離設定
-	m_fDistance = 580.0f; // 適宜調整
+	m_fDistance = GAMECAM_DISTANCE;
 
 	// カメラ位置計算
 	m_posV.x = m_posR.x + sinf(m_rot.y) * cosf(m_rot.x) * m_fDistance;

@@ -13,12 +13,6 @@
 
 
 //*****************************************************************************
-// マクロ定義
-//*****************************************************************************
-#define NUM_KEY_MAX (256)	// キーの最大数
-
-
-//*****************************************************************************
 // 入力クラス
 //*****************************************************************************
 class CInput
@@ -27,10 +21,13 @@ public:
 	CInput();
 	virtual ~CInput();
 
+	static constexpr int NUM_KEY_MAX = 256;	// キーの最大数
+
 	virtual HRESULT Init(HINSTANCE hInstance);
 	virtual void Uninit(void);
 	virtual void Update(void) = 0;
 	LPDIRECTINPUTDEVICE8 GetDevice(void) { return m_pDevice; }
+
 protected:
 	static LPDIRECTINPUT8	m_pInput;		// DirectInputオブジェクトへのポインタ
 	LPDIRECTINPUTDEVICE8	m_pDevice;		// 入力デバイスへのポインタ

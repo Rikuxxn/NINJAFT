@@ -356,9 +356,9 @@ HRESULT CEnemyLeader::Init(void)
 		m_pWeaponCollider = std::make_unique<CWeaponCollider>();
 
 #ifdef _DEBUG
-		// 武器コライダーモデルの生成
-		m_pTipModel = CObjectX::Create("data/MODELS/weapon_collider.x", m_pWeaponCollider->GetCurrentTipPos(), INIT_VEC3, D3DXVECTOR3(1.0f, 1.0f, 1.0f));
-		m_pBaseModel = CObjectX::Create("data/MODELS/weapon_collider.x", m_pWeaponCollider->GetCurrentBasePos(), INIT_VEC3, D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+		//// 武器コライダーモデルの生成
+		//m_pTipModel = CObjectX::Create("data/MODELS/weapon_collider.x", m_pWeaponCollider->GetCurrentTipPos(), INIT_VEC3, D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+		//m_pBaseModel = CObjectX::Create("data/MODELS/weapon_collider.x", m_pWeaponCollider->GetCurrentBasePos(), INIT_VEC3, D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 #endif
 	}
 
@@ -406,12 +406,12 @@ void CEnemyLeader::Update(void)
 	}
 
 #ifdef _DEBUG
-	if (m_pWeaponCollider != nullptr)
-	{
-		// 武器コライダー用モデルの位置更新
-		m_pTipModel->SetPos(m_pWeaponCollider->GetCurrentTipPos());
-		m_pBaseModel->SetPos(m_pWeaponCollider->GetCurrentBasePos());
-	}
+	//if (m_pWeaponCollider != nullptr)
+	//{
+	//	// 武器コライダー用モデルの位置更新
+	//	m_pTipModel->SetPos(m_pWeaponCollider->GetCurrentTipPos());
+	//	m_pBaseModel->SetPos(m_pWeaponCollider->GetCurrentBasePos());
+	//}
 #endif
 	if (m_pShadowS != nullptr)
 	{

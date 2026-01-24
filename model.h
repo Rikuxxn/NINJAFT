@@ -66,10 +66,6 @@ private:
 	char					m_Path[MAX_PATH];		// ファイルパス
 	D3DXVECTOR3				m_OffsetPos;			// オフセット
 	D3DXVECTOR3				m_OffsetRot;			// オフセット
-	LPDIRECT3DVERTEXSHADER9 m_pOutlineVS;			// 頂点シェーダ
-	LPDIRECT3DPIXELSHADER9  m_pOutlinePS;			// ピクセルシェーダ
-	LPD3DXCONSTANTTABLE     m_pVSConsts;			// 頂点シェーダコンスタントテーブル
-	LPD3DXCONSTANTTABLE     m_pPSConsts;			// ピクセルシェーダコンスタントテーブル
 	D3DXVECTOR4				m_outlineColor;			// アウトラインカラー
 };
 

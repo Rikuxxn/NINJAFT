@@ -74,7 +74,7 @@ protected:
 
 	StateMachine<OwnerType>* m_pMachine = nullptr; // このステートを管理しているステートマシンのポインタを保存
 
-	// 
+	// オーナーのポインタ
 	OwnerType* m_pOwner = nullptr;
 };
 

@@ -68,6 +68,10 @@ public:
 	D3DXCOLOR GetBgCol(void) { return m_bgCol; }
 	UINT GetBackBufferWidth(void) { return m_d3dpp.BackBufferWidth; }
 	UINT GetBackBufferHeight(void) { return m_d3dpp.BackBufferHeight; }
+	LPDIRECT3DVERTEXSHADER9 GetOutlineVS(void) { return m_pOutlineVS; }
+	LPDIRECT3DPIXELSHADER9 GetOutlinePS(void) { return m_pOutlinePS; }
+	LPD3DXCONSTANTTABLE GetVSConsts(void) { return m_pVSConsts; }
+	LPD3DXCONSTANTTABLE GetPSConsts(void) { return m_pPSConsts; }
 
 private:
 	LPDIRECT3D9				m_pD3D;				// DirectX3Dオブジェクトへのポインタ
@@ -79,5 +83,10 @@ private:
 	UINT					m_ResizeHeight;		// 再設定用の画面の高さ
 	D3DPRESENT_PARAMETERS	m_d3dpp;			// 再設定用のパラメーター
 	static int				m_nFPS;				// FPS値の代入用
+	LPDIRECT3DVERTEXSHADER9 m_pOutlineVS;		// 頂点シェーダ
+	LPDIRECT3DPIXELSHADER9  m_pOutlinePS;		// ピクセルシェーダ
+	LPD3DXCONSTANTTABLE     m_pVSConsts;		// 頂点シェーダコンスタントテーブル
+	LPD3DXCONSTANTTABLE     m_pPSConsts;		// ピクセルシェーダコンスタントテーブル
+
 };
 #endif

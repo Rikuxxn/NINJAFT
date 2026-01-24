@@ -218,12 +218,16 @@ void CPlayer::Update(void)
 		for (int nCnt = 0; nCnt < EFFECT_CREATE_NUM; nCnt++)
 		{
 			D3DXVECTOR3 pos = GetPos();
-			pos.y += nCnt * 30.0f;
+
+			// ‚‚³‚ð™X‚Éã‚°‚é
+			pos.y += static_cast<float>(nCnt) * HEIGHT_STEP;
 
 			CParticle::Create<CSmokeParticle>(
-				INIT_VEC3, pos,
-				D3DXCOLOR(nCnt, nCnt, nCnt, nCnt),
-				120, 8
+				INIT_VEC3,
+				pos,
+				INIT_XCOL_WHITE,
+				120,
+				8
 				);
 		}
 

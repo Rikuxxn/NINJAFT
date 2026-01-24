@@ -62,6 +62,7 @@ public:
 private:
 	static constexpr int WAIT_TIME			= 190;			// 初回の待機時間
 	static constexpr int NUM_SUB_ENEMIES	= 30;			// サブ敵の生成数
+	static constexpr int BLOSSOM_INTERVAL	= 15;			// 桜の生成インターバル
 
 	std::unique_ptr<CRankingManager> m_pRankingManager;		// ランキングへのポインタ
 	CPlayer*						 m_pPlayer;				// プレイヤーへのポインタ

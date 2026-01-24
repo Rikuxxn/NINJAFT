@@ -28,6 +28,10 @@ CWaterField::CWaterField(int nPriority) : CObject(nPriority)
 	m_rot			= INIT_VEC3;	// 向き
 	m_mtxWorld		= {};			// ワールドマトリックス
 	m_WaterFiled	= {};			// 構造体変数
+	m_UVOffsetU		= 0.0f;			// UVのオフセット(U)
+	m_UVOffsetV		= 0.0f;			// UVのオフセット(V)
+	m_FlowDir		= INIT_VEC3;	// 川の流れる方向
+	m_FlowSpeed		= FLOW_SPEED;	// 川の流れる速度
 }
 //=============================================================================
 // デストラクタ
@@ -78,7 +82,7 @@ HRESULT CWaterField::Init(void)
 	CTexture* pTexture = CManager::GetTexture();
 
 	// テクスチャ割り当て
-	m_WaterFiled.nTexIdx = pTexture->RegisterDynamic("data/TEXTURE/.jpg");
+	m_WaterFiled.nTexIdx = pTexture->RegisterDynamic("data/TEXTURE/river.jpg");
 
 	// 頂点計算
 	m_WaterFiled.nNumAllVtx = ((m_WaterFiled.nNumX + 1) * (m_WaterFiled.nNumZ + 1)); // 頂点数
@@ -135,7 +139,7 @@ HRESULT CWaterField::Init(void)
 			pVtx[nCnt].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 			// 頂点カラーの設定
-			pVtx[nCnt].col = D3DXCOLOR(0.0f, 0.5f, 1.0f, 0.5f);// 半透明の水色;
+			pVtx[nCnt].col = D3DXCOLOR(0.0f, 0.6f, 1.0f, 0.5f);// 半透明の水色;
 
 			// テクスチャ座標の設定
 			pVtx[nCnt].tex = D3DXVECTOR2(fTexX * nCntX, nCntZ * fTexY);
@@ -209,6 +213,18 @@ void CWaterField::Uninit(void)
 //=============================================================================
 void CWaterField::Update(void)
 {
+	//============================
+	// UV スクロール
+	//============================
+
+	// X方向 → U、Z方向 → V に対応させる
+	m_UVOffsetU += m_FlowDir.x * m_FlowSpeed;
+	m_UVOffsetV += m_FlowDir.z * m_FlowSpeed;
+
+	// 0～1 にラップ
+	m_UVOffsetU = fmodf(m_UVOffsetU, 1.0f);
+	m_UVOffsetV = fmodf(m_UVOffsetV, 1.0f);
+
 	// 頂点情報のポインタを宣言
 	VERTEX_3D* pVtx = nullptr;
 
@@ -216,8 +232,8 @@ void CWaterField::Update(void)
 	m_pVtx->Lock(0, 0, (void**)&pVtx, 0);
 
 	// テクスチャ座標を計算する変数
-	float fTexX = 1.0f / m_WaterFiled.nNumX;
-	float fTexY = 1.0f / m_WaterFiled.nNumZ;
+	float fTexX = UV_RATE_X / m_WaterFiled.nNumX;
+	float fTexY = UV_RATE_Y / m_WaterFiled.nNumZ;
 	int nCnt = 0;
 
 	D3DXVECTOR3 MathPos = m_pos;
@@ -240,10 +256,12 @@ void CWaterField::Update(void)
 			pVtx[nCnt].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 			// 頂点カラーの設定
-			pVtx[nCnt].col = D3DXCOLOR(0.0f, 0.5f, 1.0f, 0.5f);// 半透明の水色
+			pVtx[nCnt].col = D3DXCOLOR(0.0f, 0.6f, 1.0f, 0.5f);// 半透明の水色
 
 			// テクスチャ座標の設定
-			pVtx[nCnt].tex = D3DXVECTOR2(fTexX * nCntX, nCntZ * fTexY);
+			pVtx[nCnt].tex = D3DXVECTOR2(
+				fTexX * nCntX + m_UVOffsetU,
+				nCntZ * fTexY + m_UVOffsetV);
 
 			// 加算
 			nCnt++;
@@ -291,6 +309,7 @@ void CWaterField::Update(void)
 	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 	D3DXVECTOR3 playerPos = pPlayer->GetPos();
 
+	// 水の中にいたら
 	if (IsInWater(playerPos))
 	{
 		// 波紋生成
@@ -364,7 +383,7 @@ void CWaterField::SpawnCylinder(void)
 	{
 		// プレイヤーの位置
 		D3DXVECTOR3 pos = pPlayer->GetPos();
-		pos.y += 10.0f;
+		pos.y += OFFSET_POS;
 
 		// 半径を決めてランダム位置にスポーン
 		float radiusMax = SPAWN_RADIUS;
@@ -380,7 +399,7 @@ void CWaterField::SpawnCylinder(void)
 
 		// 位置
 		pos.x = pos.x + cosf(angle) * radius;
-		pos.y += 2.0f;
+		pos.y += OFFSET_POS;
 		pos.z = pos.z + sinf(angle) * radius;
 
 		// 水SEの再生
@@ -404,6 +423,9 @@ void CWaterField::SpawnCylinder(void)
 	// プレイヤー条件フラグ
 	bool playerCondition = playerConditionSpec.IsSatisfiedBy(*pPlayer);
 
+	// ジョイパッドの取得
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
 	if (pPlayer && playerCondition)
 	{
 		// 水SEの再生
@@ -411,11 +433,17 @@ void CWaterField::SpawnCylinder(void)
 			pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 1, 20))
 		{
 			spawnCylinder();
+
+			// 振動させる
+			pJoypad->SetVibration(10000, 10000, 10);
 		}
 		else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9) ||
 			pPlayer->GetMotion()->EventMotionRange(CPlayer::INJURY, 3, 20))
 		{
 			spawnCylinder();
+
+			// 振動させる
+			pJoypad->SetVibration(10000, 10000, 10);
 		}
 	}
 }

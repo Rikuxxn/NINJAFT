@@ -232,8 +232,8 @@ void CMeshField::Update(void)
 	m_pVtx->Lock(0, 0, (void**)&pVtx, 0);
 
 	// テクスチャ座標を計算する変数
-	float fTexX = 8.0f / m_MeshFiled.nNumX;
-	float fTexY = 8.0f / m_MeshFiled.nNumZ;
+	float fTexX = UV_RATE_X / m_MeshFiled.nNumX;
+	float fTexY = UV_RATE_Y / m_MeshFiled.nNumZ;
 	int nCnt = 0;
 
 	D3DXVECTOR3 MathPos = m_pos;
@@ -618,4 +618,19 @@ float CMeshField::GetHeight(float worldX, float worldZ) const
 	float h = h0 + (h1 - h0) * tz;
 
 	return h;
+}
+//=============================================================================
+// 川の流れる方向を取得する関数
+//=============================================================================
+D3DXVECTOR3 CMeshField::GetRiverFlowDir(void) const
+{
+	switch (m_riverDir)
+	{
+	case RIVER_X:
+		return D3DXVECTOR3(1.0f, 0.0f, 0.0f); // +X に流れる
+	case RIVER_Z:
+		return D3DXVECTOR3(0.0f, 0.0f, 1.0f); // +Z に流れる
+	default:
+		return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	}
 }

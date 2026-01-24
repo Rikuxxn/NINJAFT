@@ -297,8 +297,8 @@ public:
 	~CEnemyLeader();
 
 	static constexpr float SPEED				= 7.0f;		// 移動スピード
-	static constexpr float INVESTIGATE_SPEED	= 15.0f;	// 調査時の移動スピード
-	static constexpr float CHASE_SPEED			= 15.0f;	// 追跡時の移動スピード
+	static constexpr float INVESTIGATE_SPEED	= 14.0f;	// 調査時の移動スピード
+	static constexpr float CHASE_SPEED			= 14.0f;	// 追跡時の移動スピード
 	static constexpr float DECELERATION_RATE	= 0.85f;	// 減速率
 	static constexpr float ACCEL_RATE			= 0.15f;	// 補間率
 

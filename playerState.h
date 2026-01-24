@@ -46,6 +46,9 @@ public:
 		// 入力を取得
 		CPlayer::InputData input = pPlayer->GatherInput();
 
+		// 入力状態を更新
+		pPlayer->UpdateMovementFlags(input.moveDir);
+
 		// プレイヤーHPが少ない
 		IsHpFew hpFew;
 
@@ -53,7 +56,7 @@ public:
 		pPlayer->ApplyDeceleration();
 
 		// 移動入力とステルスボタンが押されていたら
-		if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && input.stealth)
+		if (pPlayer->GetIsMoving() && input.stealth)
 		{
 			// 忍び足移動状態へ移行
 			m_pMachine->ChangeState<CPlayer_StealthMoveState>();
@@ -61,7 +64,7 @@ public:
 			return;
 		}
 		// 移動入力のみだったら移動ステートに移行
-		else if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && !input.stealth)
+		else if (pPlayer->GetIsMoving() && !input.stealth)
 		{
 			if (hpFew.IsSatisfiedBy(*pPlayer))
 			{
@@ -223,7 +226,8 @@ public:
 		// プレイヤーの位置取得
 		D3DXVECTOR3 pos = pPlayer->GetPos();
 
-		if (input.stealth && (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f))
+		// ステルスかつ移動していたら
+		if (input.stealth && pPlayer->GetIsMoving())
 		{
 			// 忍び足移動状態へ移行
 			m_pMachine->ChangeState<CPlayer_StealthMoveState>();
@@ -349,7 +353,8 @@ public:
 			}
 		}
 
-		if (input.stealth && (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f))
+		// ステルスかつ移動していたら
+		if (input.stealth && pPlayer->GetIsMoving())
 		{
 			// 忍び足移動状態へ移行
 			m_pMachine->ChangeState<CPlayer_StealthMoveState>();
@@ -423,7 +428,7 @@ public:
 		pPlayer->SetMove(currentMove);
 
 		// 移動入力があれば移動ステートに移行
-		if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && !input.stealth)
+		if (pPlayer->GetIsMoving() && !input.stealth)
 		{
 			// 移動状態へ移行
 			m_pMachine->ChangeState<CPlayer_MoveState>();
@@ -646,18 +651,21 @@ public:
 		// 入力を取得
 		CPlayer::InputData input = pPlayer->GatherInput();
 
+		// 入力の更新
+		pPlayer->UpdateMovementFlags(input.moveDir);
+
 		// プレイヤーHPが少ない
 		IsHpFew hpFew;
 
 		// 移動入力とステルスボタンが押されていたら
-		if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f) && input.stealth)
+		if (pPlayer->GetIsMoving() && input.stealth)
 		{
 			// 忍び足移動状態へ移行
 			m_pMachine->ChangeState<CPlayer_StealthMoveState>();
 			return;
 		}
 		// 移動入力のみだったら移動ステートに移行
-		else if ((input.moveDir.x != 0.0f || input.moveDir.z != 0.0f))
+		else if (pPlayer->GetIsMoving())
 		{
 			if (hpFew.IsSatisfiedBy(*pPlayer))
 			{

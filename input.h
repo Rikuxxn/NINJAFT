@@ -103,6 +103,7 @@ public:
 	XINPUT_STATE* GetStickAngle(void);
 	XINPUT_STATE GetState(void) { return m_joyKeyState; }
 	void SetVibration(WORD left, WORD right);
+	void SetVibration(WORD left, WORD right, int nTimer);
 	void StopVibration(void);
 
 private:
@@ -111,6 +112,8 @@ private:
 	XINPUT_STATE m_joyKeyStateRelease;			// ジョイパッドのリリース情報
 	XINPUT_STATE m_aOldJoyKeyState;				// ジョイパッドの前回の情報
 	bool		 m_joyKeyFlag[JOYKEY_MAX];		// ジョイパッドのフラグ
+	bool		 m_bVibration;					// 振動フラグ
+	int			 m_VibrationTimer;				// 振動時間
 };
 
 //*****************************************************************************

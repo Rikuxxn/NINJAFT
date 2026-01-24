@@ -784,12 +784,7 @@ void CGateBlock::GameGateUpdate(void)
 	if (bShaking && pJoypad)
 	{
 		// U“®‚³‚¹‚é
-		pJoypad->SetVibration(20000, 20000);
-	}
-	else
-	{
-		// U“®’âŽ~
-		pJoypad->StopVibration();
+		pJoypad->SetVibration(20000, 20000, 60);
 	}
 
 	// ˆÊ’u‚ðŽæ“¾‚µ‚Ä”½‰f‚·‚é

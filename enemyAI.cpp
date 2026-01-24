@@ -26,10 +26,10 @@
 CEnemyAI_Leader::CEnemyAI_Leader()
 {
 	// 値のクリア
-    m_logTimer = 0;                 // 記録タイマー
-    m_prevInSight = false;			// 直前に視界に入ったか
-    m_soundTimer = 0;               // サウンドタイマー
-    m_soundCount = 0;               // 音の発生数
+    m_logTimer      = 0;            // 記録タイマー
+    m_prevInSight   = false;		// 直前に視界に入ったか
+    m_soundTimer    = 0;            // サウンドタイマー
+    m_soundCount    = 0;            // 音の発生数
 }
 //=============================================================================
 // リーダー敵AIデストラクタ
@@ -121,9 +121,9 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
 
         // プレイヤーの位置を取得
         D3DXVECTOR3 pos = pPlayer->GetPos();
-        pos.y += 40.0f;// 少し上げる
+        pos.y += OFFSET_POS;// 少し上げる
 
-        if (m_soundTimer <= 15)
+        if (m_soundTimer <= INTERVAL)
         {
             return;
         }

@@ -36,10 +36,13 @@ void CGenerateMap::GenerateRandomMap(int seed)
 	const float offsetZ = -(GRID_Z * AREA_SIZE) / 2.0f + AREA_SIZE / 2.0f;
 
 	// メッシュフィールド(地形)の生成
-	m_pMeshField = CMeshField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 800.0f, 800.0f, 100, 100);
+	m_pMeshField = CMeshField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, MAP_DIV_X, MAP_DIV_Z);
 
 	// 水フィールドの生成
-	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, -4.0f, 0.0f), 800.0f, 800.0f, 10, 10);
+	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, WATER_HEIGHT, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, WATER_DIV_X, WATER_DIV_Z);
+
+	// 川の流れる方向の設定
+	m_pWater->SetFlowDir(m_pMeshField->GetRiverFlowDir());
 
 	// クラスタ生成
 	GenerateClusters(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ);
@@ -56,8 +59,7 @@ void CGenerateMap::GenerateRandomMap(int seed)
 
 	// 巡回ポイントの生成
 	D3DXVECTOR3 mapCenter(0.0f, 0.0f, 0.0f);
-	const float gap = 210.0f; // ポイント間の間隔
-	GeneratePatrolPoints(mapCenter, gap, torchPositions, 120.0f, m_patrolPoints);
+	GeneratePatrolPoints(mapCenter, PATROL_GAP, torchPositions, PATROL_SAFE_DISTANCE, m_patrolPoints);
 }
 //=============================================================================
 // 地形ランダム生成処理
@@ -67,10 +69,13 @@ void CGenerateMap::GenerateRandomTerrain(int seed)
 	srand(seed);
 
 	// メッシュフィールド(地形)の生成
-	m_pMeshField = CMeshField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 800.0f, 800.0f, 100, 100);
+	m_pMeshField = CMeshField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, MAP_DIV_X, MAP_DIV_Z);
 
 	// 水フィールドの生成
-	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, -4.0f, 0.0f), 800.0f, 800.0f, 100, 100);
+	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, WATER_HEIGHT, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, WATER_DIV_X, WATER_DIV_Z);
+
+	// 川の流れる方向の設定
+	m_pWater->SetFlowDir(m_pMeshField->GetRiverFlowDir());
 }
 //=============================================================================
 // クラスタ生成処理
@@ -82,8 +87,8 @@ void CGenerateMap::GenerateClusters(int gridX, int gridZ, float areaSize,
 	{
 		float centerX = offsetX + (rand() % gridX) * areaSize;
 		float centerZ = offsetZ + (rand() % gridZ) * areaSize;
-		float radius = 50.0f + rand() % 80;
-		int count = 8 + rand() % 3;
+		float radius = CLUSTER_RADIUS_MIN + rand() % CLUSTER_RADIUS_VAR;
+		int count = CLUSTER_ELEMENT_MIN + rand() % CLUSTER_ELEMENT_VAR;
 
 		for (int nCnt2 = 0; nCnt2 < count; nCnt2++)
 		{
@@ -105,16 +110,16 @@ void CGenerateMap::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 	int gridX, int gridZ, float offsetX, float offsetZ)
 {
 	// --- マップの中心座標を求める ---
-	const float mapCenterX = offsetX + (gridX - 1) * areaSize / 2.0f;
-	const float mapCenterZ = offsetZ + (gridZ - 1) * areaSize / 2.0f;
-	const float halfWidth = (gridX * areaSize) / 2.0f;
+	const float mapCenterX = offsetX + (gridX - 1) * areaSize * HALF_RATE;
+	const float mapCenterZ = offsetZ + (gridZ - 1) * areaSize * HALF_RATE;
+	const float halfWidth = (gridX * areaSize) * HALF_RATE;
 
 	// --- 中心からの距離を計算 ---
 	float distX = fabsf(pos.x - mapCenterX);
 	float distZ = fabsf(pos.z - mapCenterZ);
 
 	// 外周 → 草
-	if (distX > halfWidth * 0.9f || distZ > halfWidth * 0.9f)
+	if (distX > halfWidth * OUTER_GRASS_THRESHOLD_RATE || distZ > halfWidth * OUTER_GRASS_THRESHOLD_RATE)
 	{
 		CreateGrassCluster(pos, areaSize, gridX, gridZ, offsetX, offsetZ);
 		return;
@@ -145,40 +150,44 @@ void CGenerateMap::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 void CGenerateMap::EnsureTorchCount(int gridX, int gridZ, float areaSize,
 	float offsetX, float offsetZ, std::vector<D3DXVECTOR3>& torchPositions)
 {
-	const float startX = offsetX + areaSize * 0.5f;
-	const float startZ = offsetZ + areaSize * 0.5f;
+	const float startX = offsetX + areaSize * HALF_RATE;
+	const float startZ = offsetZ + areaSize * HALF_RATE;
 	const float endX = offsetX + (gridX - 1) * areaSize;
 	const float endZ = offsetZ + (gridZ - 1) * areaSize;
 
-	const float INWARD_OFFSET = areaSize * 0.5f; // 壁から離す距離
-	const float variation = areaSize * 0.6f;
+	const float INWARD_OFFSET = areaSize * TORCH_INWARD_RATE; // 壁から離す距離
+	const float variation = areaSize * TORCH_VARIATION_RATE;
+
 	auto randVar = [&]()
 	{
-		return ((rand() / (float)RAND_MAX) - 0.5f) * 2.0f * variation;
+		return ((rand() / (float)RAND_MAX) - HALF_RATE) * 2.0f * variation;
 	};
 
-	// 3辺からランダムに2つ選ぶ
-	std::vector<int> sides = { 0, 1, 2 }; // 0 = 下,1 = 左,2 = 右
+	// 出口正面3辺からランダムに2つ選ぶ
+	std::vector<TorchSide> sides =
+	{
+		TORCH_BOTTOM,	// 下
+		TORCH_LEFT,		// 左
+		TORCH_RIGHT		// 右
+	};
+
 	std::shuffle(sides.begin(), sides.end(), std::mt19937{ std::random_device{}() });
 	sides.resize(MAX_TORCH);
 
 	for (int side : sides)
 	{
-		D3DXVECTOR3 pos;
+		D3DXVECTOR3 pos{};
 
 		switch (side)
 		{
-		case 0: // 下
-			pos = { (startX + endX) * 3.0f + randVar(), 0.0f, startZ + INWARD_OFFSET };
+		case TORCH_BOTTOM: // 下
+			pos = { (startX + endX) * TORCH_FRONT_X_RATE + randVar(), 0.0f, startZ + INWARD_OFFSET };
 			break;
-		//case 1: // 上
-		//	pos = { (startX + endX) * 0.8f + randVar(), 0.0f, endZ - INWARD_OFFSET };
-		//	break;
-		case 1: // 左
-			pos = { startX + INWARD_OFFSET, 0.0f, (startZ + endZ) * 0.8f + randVar() };
+		case TORCH_LEFT: // 左
+			pos = { startX + INWARD_OFFSET, 0.0f, (startZ + endZ) * TORCH_SIDE_Z_RATE + randVar() };
 			break;
-		case 2: // 右
-			pos = { endX - INWARD_OFFSET, 0.0f, (startZ + endZ) * 0.8f + randVar() };
+		case TORCH_RIGHT: // 右
+			pos = { endX - INWARD_OFFSET, 0.0f, (startZ + endZ) * TORCH_SIDE_Z_RATE + randVar() };
 			break;
 		}
 
@@ -212,15 +221,13 @@ void CGenerateMap::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSiz
 	std::vector<D3DXVECTOR3>& treasurePositions)
 {
 	// 埋蔵金同士の最低距離(クラスター用)
-	const float MIN_CLUSTER_DISTANCE = 0.4f * areaSize;
+	const float MIN_CLUSTER_DISTANCE = TREASURE_CLUSTER_MIN_DIST_RATE * areaSize;
 
 	// 埋蔵金同士の最低距離(通常)
-	const float MIN_NORMAL_DISTANCE = 2.0f * areaSize;
+	const float MIN_NORMAL_DISTANCE = TREASURE_NORMAL_MIN_DIST_RATE * areaSize;
 
 	const int TOTAL_TREASURE = MAX_TREASURE;
-	const int CLUSTER_MIN = 3;
-	const int CLUSTER_MAX = 4;
-	const float CLUSTER_RADIUS = areaSize * 0.8f;
+	const float CLUSTER_RADIUS = areaSize * TREASURE_CLUSTER_RADIUS_RATE;
 
 	const float SAFE_MARGIN = CLUSTER_RADIUS; // 壁、ブロック余白
 
@@ -229,7 +236,7 @@ void CGenerateMap::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSiz
 	float minZ = offsetZ + SAFE_MARGIN;
 	float maxZ = offsetZ + (gridZ - 1) * areaSize - SAFE_MARGIN;
 
-	int clusterSize = CLUSTER_MIN + rand() % (CLUSTER_MAX - CLUSTER_MIN + 1);
+	int clusterSize = TREASURE_CLUSTER_MIN + rand() % (TREASURE_CLUSTER_MAX - TREASURE_CLUSTER_MIN + 1);
 
 	// クラスター中心を決める
 	D3DXVECTOR3 clusterCenter;
@@ -374,33 +381,41 @@ void CGenerateMap::EnsureBuriedTreasureCount(int gridX, int gridZ, float areaSiz
 #endif
 }
 //=============================================================================
-// 外周部に草の連続クラスタを生成
+// 外周部に草を生成
 //=============================================================================
 void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 	float offsetX, float offsetZ)
 {
-	const float startX = offsetX + areaSize * 0.2f;// 内側に少しずらす
-	const float startZ = offsetZ + areaSize * 0.2f;
+	const float startX = offsetX + areaSize * INWARD_OFFSET_RATE;// 内側に少しずらす
+	const float startZ = offsetZ + areaSize * INWARD_OFFSET_RATE;
 	const float endX = offsetX + (gridX - 1) * areaSize;
 	const float endZ = offsetZ + (gridZ - 1) * areaSize;
 
-	const int clusterPerCell = 2 + rand() % 3;		// 1マスあたりの群れの数
-	const float step = areaSize / 2.0f;			// 1マス内で複数生成するためのステップ
-	const float variation = areaSize * 0.5f;		// ランダムばらつき幅
+	const int clusterPerCell = MIN_CLUSTER_PER_CELL + rand() % CLUSTER_PER_CELL_RANGE;		// 1マスあたりの群れの数
+	const float step = areaSize * HALF_RATE;				// 1マス内で複数生成するためのステップ
+	const float variation = areaSize * HALF_RATE;		// ランダムばらつき幅
 
-	auto getVariation = [&]() { return ((rand() / (float)RAND_MAX) - 0.5f) * 2.0f * variation; };
+	auto getVariation = [&]() { return ((rand() / (float)RAND_MAX) - HALF_RATE) * 2.0f * variation; };
 
 	// 生成する辺をランダムに選ぶ（4辺のうち3つ）
-	std::vector<int> sides = { 0, 1, 2, 3 }; // 0=下, 1=上, 2=左, 3=右
+	std::vector<int> sides = 
+	{ 
+		GRASS_BOTTOM,	// 下
+		GRASS_TOP,		// 上
+		GRASS_LEFT,		// 左
+		GRASS_RIGHT,	// 右
+		GRASS_MAX
+	};
+
 	std::random_device rd;
 	std::mt19937 g(rd());
 	std::shuffle(sides.begin(), sides.end(), g);
-	sides.resize(3); // 上位3つだけ残す
+	sides.resize(GRASS_MAX - 1); // 上位3つだけ残す
 
-	if (std::find(sides.begin(), sides.end(), 0) != sides.end())
+	if (std::find(sides.begin(), sides.end(), GRASS_BOTTOM) != sides.end())
 	{
 		// --- 下辺 ---
-		for (float x = startX; x <= endX; x += areaSize / 2.0f)
+		for (float x = startX; x <= endX; x += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
@@ -421,10 +436,10 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		}
 	}
 
-	if (std::find(sides.begin(), sides.end(), 1) != sides.end())
+	if (std::find(sides.begin(), sides.end(), GRASS_TOP) != sides.end())
 	{
 		// --- 上辺 ---
-		for (float x = startX; x <= endX; x += areaSize / 2.0f)
+		for (float x = startX; x <= endX; x += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
@@ -445,10 +460,10 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		}
 	}
 
-	if (std::find(sides.begin(), sides.end(), 2) != sides.end())
+	if (std::find(sides.begin(), sides.end(), GRASS_LEFT) != sides.end())
 	{
 		// --- 左辺 ---
-		for (float z = startZ + areaSize / 2.0f; z < endZ; z += areaSize / 2.0f)
+		for (float z = startZ + areaSize * HALF_RATE; z < endZ; z += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
@@ -469,10 +484,10 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 		}
 	}
 
-	if (std::find(sides.begin(), sides.end(), 3) != sides.end())
+	if (std::find(sides.begin(), sides.end(), GRASS_RIGHT) != sides.end())
 	{
 		// --- 右辺 ---
-		for (float z = startZ + areaSize / 2.0f; z < endZ; z += areaSize / 2.0f)
+		for (float z = startZ + areaSize * HALF_RATE; z < endZ; z += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
 			{
@@ -500,13 +515,13 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 void CGenerateMap::CreateGrassCluster(const D3DXVECTOR3& centerPos, float areaSize,
 	int gridX, int gridZ, float offsetX, float offsetZ)
 {
-	int grassLength = 3 + rand() % 3;    // 草を連続配置する数
+	int grassLength = GRASS_SET_NUM + rand() % GRASS_SET_NUM_VAL;		// 草を連続配置する数
 
 	// --- マップ中心を取得 ---
-	const float mapCenterX = offsetX + (gridX - 1) * areaSize / 2.0f;
-	const float mapCenterZ = offsetZ + (gridZ - 1) * areaSize / 2.0f;
-	const float mapHalfX = (gridX * areaSize) / 2.0f;
-	const float mapHalfZ = (gridZ * areaSize) / 2.0f;
+	const float mapCenterX = offsetX + (gridX - 1) * areaSize * HALF_RATE;
+	const float mapCenterZ = offsetZ + (gridZ - 1) * areaSize * HALF_RATE;
+	const float mapHalfX = (gridX * areaSize) * HALF_RATE;
+	const float mapHalfZ = (gridZ * areaSize) * HALF_RATE;
 
 	// --- 中心からの方向に応じて外向き配置 ---
 	D3DXVECTOR3 dir = { 0, 0, 0 };
@@ -560,7 +575,7 @@ void CGenerateMap::GeneratePatrolPoints(
 	// リストのクリア
 	outPatrolPoints.clear();
 
-	float offsets[3] = { -gap, 0.0f, gap };
+	float offsets[PATROL_POINT_X] = { -gap, 0.0f, gap };
 
 	auto isNearObstacle = [&](const D3DXVECTOR3& pos) -> bool
 	{
@@ -577,9 +592,9 @@ void CGenerateMap::GeneratePatrolPoints(
 		return false;
 	};
 
-	for (int z = 0; z < 3; z++)
+	for (int z = 0; z < PATROL_POINT_X; z++)
 	{
-		for (int x = 0; x < 3; x++)
+		for (int x = 0; x < PATROL_POINT_Z; x++)
 		{
 			D3DXVECTOR3 pos = origin;
 			pos.x += offsets[x];
@@ -616,8 +631,8 @@ bool CGenerateMap::IsCollidingWithTorch(const D3DXVECTOR3& pos, float areaSize, 
 {
 	for (auto& wp : torchPositions)
 	{
-		if (fabs(wp.x - pos.x) < areaSize * 0.5f &&
-			fabs(wp.z - pos.z) < areaSize * 0.5f)
+		if (fabs(wp.x - pos.x) < areaSize * HALF_RATE &&
+			fabs(wp.z - pos.z) < areaSize * HALF_RATE)
 		{
 			// 重なった
 			return true;
@@ -632,8 +647,8 @@ bool CGenerateMap::IsCollidingWithTorch(const D3DXVECTOR3& pos, float areaSize, 
 //=============================================================================
 void CGenerateMap::ApplyRandomGrassTransform(CBlock* block)
 {
-	float scaleX = 1.5f + (rand() / (float)RAND_MAX) * 0.8f;
-	float scaleY = 1.3f + (rand() / (float)RAND_MAX) * 0.3f;
+	float scaleX = GRASS_SCALE_X_MIN + (rand() / (float)RAND_MAX) * GRASS_SCALE_X_VAR;
+	float scaleY = GRASS_SCALE_Y_MIN + (rand() / (float)RAND_MAX) * GRASS_SCALE_Y_VAR;
 	float rotY = (rand() % 360) * D3DX_PI / 180.0f;
 
 	block->SetSize(D3DXVECTOR3(scaleX, scaleY, scaleX));

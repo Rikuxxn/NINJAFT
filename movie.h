@@ -41,17 +41,20 @@ public:
 	static CTime* GetTime(void) { return m_pTime; }
 
 private:
-	static constexpr int FADE_TIME = 960;	// 画面遷移までの時間
+	static constexpr int	FADE_TIME			= 960;		// 画面遷移までの時間
+	static constexpr int	EFFECT_CREATE_NUM	= 3;		// エフェクト生成数
+	static constexpr float	HEIGHT_STEP			= 30.0f;	// 高さの増加量
+	static constexpr int	BLOSSOM_INTERVAL	= 15;		// 桜の生成インターバル
 
-	CBlockManager*	m_pBlockManager;		// ブロックマネージャーへのポインタ
-	CLight*			m_pLight;				// ライトへのポインタ
-	static CTime*	m_pTime;				// タイムへのポインタ
-	int				m_timer;				// 画面遷移タイマー
-	int				m_particleTimer;		// パーティクル生成タイマー
-	CDummyPlayer*	m_pDummyPlayer;			// ダミープレイヤー
-	int				m_smokeTimer;			// 煙発生時間
-	int				m_delayTime;			// 煙発生までの遅延時間
-	bool			m_smokeActive;			// 煙発生フラグ
+	CBlockManager*	m_pBlockManager;						// ブロックマネージャーへのポインタ
+	CLight*			m_pLight;								// ライトへのポインタ
+	static CTime*	m_pTime;								// タイムへのポインタ
+	int				m_timer;								// 画面遷移タイマー
+	int				m_particleTimer;						// パーティクル生成タイマー
+	CDummyPlayer*	m_pDummyPlayer;							// ダミープレイヤー
+	int				m_smokeTimer;							// 煙発生時間
+	int				m_delayTime;							// 煙発生までの遅延時間
+	bool			m_smokeActive;							// 煙発生フラグ
 };
 
 #endif

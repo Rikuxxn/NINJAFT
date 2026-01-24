@@ -37,6 +37,9 @@ CRenderer::CRenderer()
 	m_ResizeHeight	= 0;
 	m_d3dpp			= {};
 	m_bgCol			= INIT_XCOL;
+	m_pOutlineVS	= nullptr;				// 頂点シェーダ
+	m_pVSConsts		= nullptr;				// 頂点シェーダコンスタントテーブル
+	m_pPSConsts		= nullptr;				// ピクセルシェーダコンスタントテーブル
 }
 //=============================================================================
 // デストラクタ
@@ -132,6 +135,13 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	// 3Dデバッグ表示の初期化
 	m_pDebug3D->Init();
 
+
+	// 頂点シェーダをコンパイル
+	CompileVertexShader("data/Shader/OutlineVS.hlsl", "VSMain", &m_pOutlineVS, &m_pVSConsts);
+
+	// ピクセルシェーダをコンパイル
+	CompilePixelShader("data/Shader/OutlinePS.hlsl", "PSMain", &m_pOutlinePS, &m_pPSConsts);
+
 	return S_OK;
 }
 //=============================================================================
@@ -158,6 +168,12 @@ void CRenderer::Uninit(void)
 		m_pD3D->Release();
 		m_pD3D = nullptr;
 	}
+
+	// シェーダーの破棄
+	if (m_pOutlineVS) { m_pOutlineVS->Release(); m_pOutlineVS = nullptr; }
+	if (m_pOutlinePS) { m_pOutlinePS->Release(); m_pOutlinePS = nullptr; }
+	if (m_pVSConsts) { m_pVSConsts->Release();  m_pVSConsts = nullptr; }
+	if (m_pPSConsts) { m_pPSConsts->Release();  m_pPSConsts = nullptr; }
 }
 //=============================================================================
 // 更新処理

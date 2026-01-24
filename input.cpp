@@ -215,10 +215,12 @@ bool CInputKeyboard::GetRepeat(int nKey)
 CInputJoypad::CInputJoypad()
 {
 	// 値のクリア
-	m_joyKeyState = {};					// ジョイパッドのプレス情報
-	m_joyKeyStateTrigger = {};			// ジョイパッドのトリガー情報
-	m_joyKeyStateRelease = {};			// ジョイパッドのリリース情報
-	m_aOldJoyKeyState = {};				// ジョイパッドの前回の情報
+	m_joyKeyState			= {};			// ジョイパッドのプレス情報
+	m_joyKeyStateTrigger	= {};			// ジョイパッドのトリガー情報
+	m_joyKeyStateRelease	= {};			// ジョイパッドのリリース情報
+	m_aOldJoyKeyState		= {};			// ジョイパッドの前回の情報
+	m_bVibration			= false;		// 振動フラグ
+	m_VibrationTimer		= 0;			// 振動時間
 
 	for (int nCnt = 0; nCnt < JOYKEY_MAX; nCnt++)
 	{
@@ -294,6 +296,22 @@ void CInputJoypad::Update(void)
 		memset(&m_joyKeyState, 0, sizeof(XINPUT_STATE));
 		memset(&m_joyKeyStateTrigger, 0, sizeof(XINPUT_STATE));
 		memset(&m_joyKeyStateRelease, 0, sizeof(XINPUT_STATE));
+	}
+
+	if (!m_bVibration)
+	{
+		return;
+	}
+
+	m_VibrationTimer--;
+
+	if (m_VibrationTimer <= 0)
+	{
+		m_bVibration = false;
+		m_VibrationTimer = 0;
+
+		// 振動停止
+		StopVibration();
 	}
 }
 //=============================================================================
@@ -390,13 +408,36 @@ XINPUT_STATE* CInputJoypad::GetStickAngle(void)
 	return &m_joyKeyState;
 }
 //=============================================================================
-// ジョイパッド振動
+// ジョイパッド振動(永続的)
 //=============================================================================
 void CInputJoypad::SetVibration(WORD left, WORD right)
 {
 	XINPUT_VIBRATION vibration = {};
 	vibration.wLeftMotorSpeed = left;   // 0～65535
 	vibration.wRightMotorSpeed = right;  // 0～65535
+
+	XInputSetState(0, &vibration);
+}
+//=============================================================================
+// ジョイパッド振動(一定時間)
+//=============================================================================
+void CInputJoypad::SetVibration(WORD left, WORD right, int nTimer)
+{
+	// すでに振動中なら無視
+	if (m_bVibration && m_VibrationTimer > 0)
+	{
+		return;
+	}
+
+	XINPUT_VIBRATION vibration = {};
+	vibration.wLeftMotorSpeed = left;   // 0～65535
+	vibration.wRightMotorSpeed = right;  // 0～65535
+
+	// 振動時間の設定
+	m_VibrationTimer = nTimer;
+
+	// 振動フラグをON
+	m_bVibration = true;
 
 	XInputSetState(0, &vibration);
 }

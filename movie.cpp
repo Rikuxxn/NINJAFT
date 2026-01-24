@@ -183,7 +183,7 @@ void CMovie::Update(void)
 {
 	m_particleTimer++;
 
-	if (m_particleTimer >= 15)// 一定間隔で生成
+	if (m_particleTimer >= BLOSSOM_INTERVAL)// 一定間隔で生成
 	{// 桜の生成
 		// リセット
 		m_particleTimer = 0;
@@ -240,16 +240,19 @@ void CMovie::Update(void)
 	{
 		m_delayTime = 0;
 
-		for (int i = 0; i < 3; i++)
+		for (int nCnt = 0; nCnt < EFFECT_CREATE_NUM; nCnt++)
 		{
-			//D3DXVECTOR3 pos = m_pDummyPlayer->GetPos();
 			D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 700.0f);
-			pos.y += i * 30.0f;
+
+			// 高さを徐々に上げる
+			pos.y += static_cast<float>(nCnt) * HEIGHT_STEP;
 
 			CParticle::Create<CSmokeParticle>(
-				INIT_VEC3, pos,
-				D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-				120, 8
+				INIT_VEC3,
+				pos,
+				INIT_XCOL_WHITE,
+				120,
+				8
 				);
 		}
 

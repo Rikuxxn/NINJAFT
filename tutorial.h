@@ -51,7 +51,8 @@ public:
 	static CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
 
 private:
-	static constexpr int TUTORIAL_SEED = 1767579496;// チュートリアルで使うお気に入りのシード値
+	static constexpr int TUTORIAL_SEED		= 1767579496;	// チュートリアルで使うお気に入りのシード値
+	static constexpr int BLOSSOM_INTERVAL	= 15;			// 桜の生成インターバル
 
 	CPlayer*				m_pPlayer;			// プレイヤーへのポインタ
 	static CTime*			m_pTime;			// タイムへのポインタ

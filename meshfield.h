@@ -75,11 +75,14 @@ public:
 	float GetRiverDepth(float dist) const;
 	float GetRiverDistance(float worldX, float worldZ) const;
 	float GetHeight(float worldX, float worldZ) const;
+	D3DXVECTOR3 GetRiverFlowDir(void) const;
 
 private:
 	static constexpr float EXIT_HALF_WIDTH	= 80.0f;	// 出口ハーフ幅
 	static constexpr float RIVER_WIDTH		= 65.0f;	// 川の幅
 	static constexpr float RIVER_DEPTH		= 20.0f;	// 川の深さ
+	static constexpr float UV_RATE_X		= 8.0f;		// テクスチャ座標の割合X
+	static constexpr float UV_RATE_Y		= 8.0f;		// テクスチャ座標の割合Y
 
 	LPDIRECT3DINDEXBUFFER9	m_pIdx;						// インデックスバッファ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtx;						// 頂点バッファ

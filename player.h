@@ -127,6 +127,7 @@ private:
 	static constexpr float	RESPAWN_HEIGHT		= -280.0f;	// リスポーンする高さ
 	static constexpr float	COLLIDER_OFFSET		= 35.0f;	// コライダーオフセット位置
 	static constexpr int	EFFECT_CREATE_NUM	= 3;		// エフェクト生成数
+	static constexpr float	HEIGHT_STEP			= 30.0f;	// 高さの増加量
 
 	D3DXMATRIX				m_mtxWorld;						// ワールドマトリックス
 	CModel*					m_apModel[MAX_PARTS];			// モデル(パーツ)へのポインタ

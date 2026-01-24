@@ -31,10 +31,6 @@ CModel::CModel()
 	m_dwNumMat		= NULL;						// マテリアル数
 	m_mtxWorld		= {};						// ワールドマトリックス
 	m_pParent		= nullptr;					// 親モデルへのポインタ
-	m_pOutlineVS	= nullptr;					// 頂点シェーダ
-	m_pOutlinePS	= nullptr;					// ピクセルシェーダ
-	m_pVSConsts		= nullptr;					// 頂点シェーダコンスタントテーブル
-	m_pPSConsts		= nullptr;					// ピクセルシェーダコンスタントテーブル
 	m_outlineColor	= D3DXVECTOR4(0, 0, 0, 1);	// アウトラインカラー
 }
 //=============================================================================
@@ -167,15 +163,6 @@ HRESULT CModel::Init(void)
 		}
 	}
 
-	// レンダラーの取得
-	CRenderer* pRenderer = CManager::GetRenderer();
-
-	// 頂点シェーダをコンパイル
-	pRenderer->CompileVertexShader("data/Shader/OutlineVS.hlsl", "VSMain", &m_pOutlineVS, &m_pVSConsts);
-
-	// ピクセルシェーダをコンパイル
-	pRenderer->CompilePixelShader("data/Shader/OutlinePS.hlsl", "PSMain", &m_pOutlinePS, &m_pPSConsts);
-
 	return S_OK;
 }
 //=============================================================================
@@ -203,12 +190,6 @@ void CModel::Uninit(void)
 		m_pBuffMat->Release();
 		m_pBuffMat = nullptr;
 	}
-
-	// シェーダーの破棄
-	if (m_pOutlineVS) { m_pOutlineVS->Release(); m_pOutlineVS = nullptr; }
-	if (m_pOutlinePS) { m_pOutlinePS->Release(); m_pOutlinePS = nullptr; }
-	if (m_pVSConsts) { m_pVSConsts->Release();  m_pVSConsts = nullptr; }
-	if (m_pPSConsts) { m_pPSConsts->Release();  m_pPSConsts = nullptr; }
 }
 //=============================================================================
 // 更新処理
@@ -225,8 +206,11 @@ void CModel::Update(void)
 //=============================================================================
 void CModel::Draw(void)
 {
+	// レンダラーの取得
+	CRenderer* pRenderer = CManager::GetRenderer();
+
 	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	// 計算用マトリックス
 	D3DXMATRIX mtxRot, mtxTrans;
@@ -262,8 +246,8 @@ void CModel::Draw(void)
 
 	// ===== アウトライン描画 =====
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW); // カリング反転
-	pDevice->SetVertexShader(m_pOutlineVS);
-	pDevice->SetPixelShader(m_pOutlinePS);
+	pDevice->SetVertexShader(pRenderer->GetOutlineVS());
+	pDevice->SetPixelShader(pRenderer->GetOutlinePS());
 
 	// 定数の設定処理
 	SetOutlineShaderConstants(pDevice);
@@ -333,6 +317,21 @@ void CModel::DrawNormal(LPDIRECT3DDEVICE9 pDevice)
 //=============================================================================
 void CModel::SetOutlineShaderConstants(LPDIRECT3DDEVICE9 pDevice)
 {
+	// レンダラーの取得
+	CRenderer* pRenderer = CManager::GetRenderer();
+
+	// アウトライン頂点シェーダーの取得
+	LPDIRECT3DVERTEXSHADER9 pOutlineVS = pRenderer->GetOutlineVS();
+
+	// アウトラインピクセルシェーダーの取得
+	LPDIRECT3DPIXELSHADER9 pOutlinePS = pRenderer->GetOutlinePS();
+
+	// アウトライン頂点シェーダーのコンスタントテーブルの取得
+	LPD3DXCONSTANTTABLE pVSConsts = pRenderer->GetVSConsts();
+
+	// アウトラインピクセルシェーダーのコンスタントテーブルの取得
+	LPD3DXCONSTANTTABLE pPSConsts = pRenderer->GetPSConsts();
+
 	// 行列を取得
 	D3DXMATRIX view, proj, wvp;
 	pDevice->GetTransform(D3DTS_WORLD, &m_mtxWorld);
@@ -342,16 +341,16 @@ void CModel::SetOutlineShaderConstants(LPDIRECT3DDEVICE9 pDevice)
 	wvp = m_mtxWorld * view * proj;
 
 	// 定数をシェーダに渡す
-	if (m_pVSConsts) // 頂点シェーダ定数テーブル
+	if (pOutlineVS) // 頂点シェーダ定数テーブル
 	{
-		m_pVSConsts->SetMatrix(pDevice, "g_mWorld", &m_mtxWorld);
-		m_pVSConsts->SetMatrix(pDevice, "g_mWorldViewProj", &wvp);
-		m_pVSConsts->SetFloat(pDevice, "g_OutlineWidth", 0.2f); // アウトライン太さ
+		pVSConsts->SetMatrix(pDevice, "g_mWorld", &m_mtxWorld);
+		pVSConsts->SetMatrix(pDevice, "g_mWorldViewProj", &wvp);
+		pVSConsts->SetFloat(pDevice, "g_OutlineWidth", 0.2f); // アウトライン太さ
 	}
 
-	if (m_pPSConsts) // ピクセルシェーダ定数テーブル
+	if (pOutlinePS) // ピクセルシェーダ定数テーブル
 	{
 		// アウトラインの色を設定
-		m_pPSConsts->SetVector(pDevice, "g_OutlineColor", &m_outlineColor);
+		pPSConsts->SetVector(pDevice, "g_OutlineColor", &m_outlineColor);
 	}
 }

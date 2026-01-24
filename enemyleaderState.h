@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "manager.h"
 #include "motion.h"
+#include "specbase.h"
 
 //*****************************************************************************
 // 前方宣言
@@ -33,7 +34,7 @@ class CEnemyLeader_ChaseState;
 class CEnemyLeader_DiscoverState;
 
 //*****************************************************************************
-// 待機状態
+// リーダー敵の待機状態
 //*****************************************************************************
 class CEnemyLeader_StandState :public StateBase<CEnemyLeader>
 {
@@ -99,7 +100,7 @@ private:
 };
 
 //*****************************************************************************
-// 移動状態
+// リーダー敵の移動状態
 //*****************************************************************************
 class CEnemyLeader_MoveState :public StateBase<CEnemyLeader>
 {
@@ -228,7 +229,7 @@ private:
 };
 
 //*****************************************************************************
-// 近距離攻撃状態1
+// リーダー敵の近距離攻撃状態1
 //*****************************************************************************
 class CEnemyLeader_CloseAttackState1 :public StateBase<CEnemyLeader>
 {
@@ -351,14 +352,14 @@ public:
 	}
 
 private:
-	static constexpr float SLIDE_POWER			= 60.0f;	// スライドパワー
+	static constexpr float SLIDE_POWER			= 55.0f;	// スライドパワー
 	static constexpr float MOTIONRATE_THRESHOLD = 0.2f;		// モーションレートの閾値
 	static constexpr float FORWARD_POWER		= 20.0f;	// 滑る速度
 
 };
 
 //*****************************************************************************
-// 近距離攻撃状態2
+// リーダー敵の近距離攻撃状態2
 //*****************************************************************************
 class CEnemyLeader_CloseAttackState2 :public StateBase<CEnemyLeader>
 {
@@ -471,7 +472,7 @@ private:
 };
 
 //*****************************************************************************
-// 疑い状態
+// リーダー敵の疑い状態
 //*****************************************************************************
 class CEnemyLeader_DoubtState :public StateBase<CEnemyLeader>
 {
@@ -569,7 +570,7 @@ private:
 };
 
 //*****************************************************************************
-// 音源の調査状態
+// リーダー敵の音源の調査状態
 //*****************************************************************************
 class CEnemyLeader_SoundInvestigateState :public StateBase<CEnemyLeader>
 {
@@ -665,7 +666,7 @@ private:
 };
 
 //*****************************************************************************
-// 埋蔵金の調査状態
+// リーダー敵の埋蔵金の調査状態
 //*****************************************************************************
 class CEnemyLeader_TreasureInvestigateState :public StateBase<CEnemyLeader>
 {
@@ -764,7 +765,7 @@ private:
 };
 
 //*****************************************************************************
-// 警戒状態
+// リーダー敵の警戒状態
 //*****************************************************************************
 class CEnemyLeader_CautionState :public StateBase<CEnemyLeader>
 {
@@ -781,11 +782,17 @@ public:
 		// 視界内判定をするためにプレイヤーを取得
 		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
+		// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
+		CBlockManager* pBlockManager = CGame::GetBlockManager();
+
+		// 草むらの中か判定
+		bool playerInGrass = pBlockManager->IsPlayerInGrass();
+
 		// 減速処理
 		pEnemy->ApplyDeceleration();
 
 		// モーション中にプレイヤーが視界に入ったら
-		if (pEnemy->IsPlayerInSight(pPlayer))
+		if (pEnemy->IsPlayerInSight(pPlayer) && !playerInGrass)
 		{
 			// 追跡状態
 			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
@@ -828,7 +835,7 @@ private:
 };
 
 //*****************************************************************************
-// 命令状態
+// リーダー敵の命令状態
 //*****************************************************************************
 class CEnemyLeader_OrderState :public StateBase<CEnemyLeader>
 {
@@ -900,7 +907,7 @@ private:
 };
 
 //*****************************************************************************
-// 追跡状態
+// リーダー敵の追跡状態
 //*****************************************************************************
 class CEnemyLeader_ChaseState :public StateBase<CEnemyLeader>
 {
@@ -942,6 +949,23 @@ public:
 				m_pMachine->ChangeState<CEnemyLeader_CautionState>();
 				return;
 			}
+		}
+
+		// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
+		CBlockManager* pBlockManager = CGame::GetBlockManager();
+
+		// 草むらの中か判定
+		bool playerInGrass = pBlockManager->IsPlayerInGrass();
+
+		// ステルス状態
+		IsStealthSpec stealth;
+
+		// プレイヤーがステルス中に草むらに潜んだら
+		if (playerInGrass && stealth.IsSatisfiedBy(*pPlayer))
+		{
+			// 警戒状態へ移行
+			m_pMachine->ChangeState<CEnemyLeader_CautionState>();
+			return;
 		}
 
 		// 一定距離になったら
@@ -1017,7 +1041,7 @@ private:
 };
 
 //*****************************************************************************
-// 発見状態
+// リーダー敵の発見状態
 //*****************************************************************************
 class CEnemyLeader_DiscoverState :public StateBase<CEnemyLeader>
 {

@@ -94,7 +94,7 @@ HRESULT CGame::Init(void)
 	// リーダー敵の生成
 	CEnemyLeader* pLeader =
 		CEnemy::CreateTyped<CEnemyLeader>(
-			D3DXVECTOR3(0.0f, 20.0f, 300.0f),
+			D3DXVECTOR3(0.0f, 15.0f, 300.0f),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 			);
 	m_pEnemy = pLeader;
@@ -104,12 +104,12 @@ HRESULT CGame::Init(void)
 
 	// サブ敵生成
 	std::vector<CEnemy*> subEnemies;
-	for (int i = 0; i < NUM_SUB_ENEMIES; i++)
+	for (int nCnt = 0; nCnt < NUM_SUB_ENEMIES; nCnt++)
 	{
 		// リーダーの周囲に配置
 		D3DXVECTOR3 offset(
 			(float)(rand() % 200 - 100),  // -100～100
-			50.0f,
+			40.0f,
 			(float)(rand() % 200 - 100)
 		);
 
@@ -230,7 +230,7 @@ void CGame::Update(void)
 {
 	m_timer++;
 
-	if (m_timer >= 15)// 一定間隔で生成
+	if (m_timer >= BLOSSOM_INTERVAL)// 一定間隔で生成
 	{// 桜の生成
 		// リセット
 		m_timer = 0;

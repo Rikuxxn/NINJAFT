@@ -56,6 +56,13 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRaiusZ(float fRadius) { m_WaterFiled.fRadiusZ = fRadius; }
 	void SetRaiusX(float fRadius) { m_WaterFiled.fRadiusX = fRadius; }
+	void SetFlowDir(const D3DXVECTOR3& dir)
+	{
+		m_FlowDir = dir;
+
+		// 正規化する
+		D3DXVec3Normalize(&m_FlowDir, &m_FlowDir);
+	}
 
 	//*************************************************************************
 	// getter関数
@@ -67,13 +74,21 @@ public:
 private:
 	static constexpr int	SPAWN_TIME		= 7;		// 生成間隔(フレーム)
 	static constexpr float	SPAWN_RADIUS	= 10.0f;	// 生成半径
+	static constexpr float	UV_RATE_X		= 5.0f;		// テクスチャ座標の割合X
+	static constexpr float	UV_RATE_Y		= 5.0f;		// テクスチャ座標の割合Y
+	static constexpr float	OFFSET_POS		= 10.0f;	// 波紋生成オフセット位置
+	static constexpr float	FLOW_SPEED		= 0.002f;	// 川の流れる速度
 
-	LPDIRECT3DINDEXBUFFER9	m_pIdx;			// インデックスバッファ
-	LPDIRECT3DVERTEXBUFFER9 m_pVtx;			// 頂点バッファ
-	D3DXVECTOR3				m_pos;			// 座標
-	D3DXVECTOR3				m_rot;			// 角度
-	D3DXMATRIX				m_mtxWorld;		// ワールドマトリックス
-	WaterField				m_WaterFiled;	// 構造体変数
+	LPDIRECT3DINDEXBUFFER9	m_pIdx;						// インデックスバッファ
+	LPDIRECT3DVERTEXBUFFER9 m_pVtx;						// 頂点バッファ
+	D3DXVECTOR3				m_pos;						// 座標
+	D3DXVECTOR3				m_rot;						// 角度
+	D3DXMATRIX				m_mtxWorld;					// ワールドマトリックス
+	WaterField				m_WaterFiled;				// 構造体変数
+	float					m_UVOffsetU;				// UVのオフセット(U)
+	float					m_UVOffsetV;				// UVのオフセット(V)
+	D3DXVECTOR3				m_FlowDir;					// 川の流れる方向
+	float					m_FlowSpeed;				// 川の流れる速度
 };
 
 #endif

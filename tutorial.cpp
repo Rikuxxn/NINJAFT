@@ -180,7 +180,7 @@ void CTutorial::Update(void)
 {
 	m_timer++;
 
-	if (m_timer >= 15)// ˆê’èŠÔŠu‚Å¶¬
+	if (m_timer >= BLOSSOM_INTERVAL)// ˆê’èŠÔŠu‚Å¶¬
 	{// ÷‚Ì¶¬
 		// ƒŠƒZƒbƒg
 		m_timer = 0;

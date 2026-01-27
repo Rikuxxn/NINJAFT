@@ -41,7 +41,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void UIUpdate(void);
-	virtual void UpdateLight(void);
+	virtual void ResetLight(void);
 	void Draw(void);
 	void OnDeviceReset(void) override;
 	void ReleaseThumbnail(void) override;

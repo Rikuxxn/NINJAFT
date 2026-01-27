@@ -120,8 +120,8 @@ public:
 
     bool IsMouseOver(void);
 
-    // 親子 UI
-    void AddChild(CUIBase* child);
+    //// 親子 UI
+    //void AddChild(CUIBase* child);
 
 protected:
     void ApplyAlpha(void); // alphaをSetColへ反映

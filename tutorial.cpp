@@ -60,6 +60,9 @@ HRESULT CTutorial::Init(void)
 	// ライトの初期化
 	m_pLight->Init();
 
+	// ライトの設定処理
+	ResetLight();
+
 	// 配置情報の読み込み
 	m_pBlockManager->LoadFromJson("data/tutorial_blockinfo.json");
 
@@ -185,6 +188,15 @@ void CTutorial::Update(void)
 		// リセット
 		m_timer = 0;
 
+		// プレイヤーの位置を基準に生成
+		D3DXVECTOR3 playerPos(0.0f, 0.0f, 0.0f);
+
+		if (m_pPlayer)
+		{
+			// プレイヤーの位置を取得
+			playerPos = m_pPlayer->GetPos();
+		}
+
 		// パーティクル生成
 		CParticle::Create<CBlossomParticle>(INIT_VEC3, m_pPlayer->GetPos(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
 	}
@@ -225,11 +237,11 @@ void CTutorial::Update(void)
 		stealth_keyboard->Show();
 	}
 
-	// UIの更新
-	UIUpdate();
-
-	// ライトの更新
-	UpdateLight();
+	if (m_pPlayer)
+	{
+		// UIの更新
+		UIUpdate();
+	}
 
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
@@ -294,96 +306,44 @@ void CTutorial::Update(void)
 
 }
 //=============================================================================
-// ライトの色更新処理
+// ライトの設定処理
 //=============================================================================
-void CTutorial::UpdateLight(void)
+void CTutorial::ResetLight(void)
 {
-	float progress = m_pTime->GetProgress(); // 0.0～0.1
-
-	// ======== 各時間帯のメインライト色 ========
+	// メインライト色
 	D3DXCOLOR evening(1.0f, 0.65f, 0.35f, 1.0f); // 夕方
-	D3DXCOLOR night(0.15f, 0.18f, 0.35f, 1.0f);  // 夜
-	D3DXCOLOR morning(0.95f, 0.8f, 0.7f, 1.0f);  // 明け方
 
-	D3DXCOLOR mainColor;
-
-	// ======== 時間帯ごとに補間 ========
-	if (progress < 0.30f)
-	{// 夕方
-		float t = progress / 0.30f;
-		D3DXColorLerp(&mainColor, &evening, &night, t);
-	}
-	else if (progress < 0.90f)
-	{// 夜
-		float t = (progress - 0.30f) / (0.90f - 0.30f);
-		D3DXColorLerp(&mainColor, &night, &morning, t);
-	}
-	else
-	{// 明け方
-		float t = (progress - 0.90f) / (1.0f - 0.90f);
-		D3DXColorLerp(&mainColor, &morning, &evening, t);
-	}
-
-	// ======== 光の向き補間 ========
+	// 光の向き
 	D3DXVECTOR3 dirEvening(0.5f, -1.0f, 0.3f);
-	D3DXVECTOR3 dirNight(0.0f, -1.0f, 0.0f);
-	D3DXVECTOR3 dirMorning(-0.3f, -1.0f, -0.2f);
-	D3DXVECTOR3 mainDir;
-
-	if (progress < 0.5f)
-	{
-		float t = progress / 0.5f;
-		D3DXVec3Lerp(&mainDir, &dirEvening, &dirNight, t);
-	}
-	else
-	{
-		float t = (progress - 0.5f) / 0.5f;
-		D3DXVec3Lerp(&mainDir, &dirNight, &dirMorning, t);
-	}
-	D3DXVec3Normalize(&mainDir, &mainDir);
 
 	// 再設定
 	CLight::Uninit();
 
+	// ブロックマネージャーの更新処理
 	m_pBlockManager->UpdateLight();
 
 	// メインライト
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,
-		mainColor,
-		mainDir,
+		evening,
+		dirEvening,
 		D3DXVECTOR3(0.0f, 300.0f, 0.0f)
 	);
 
 	// サブライト
 	D3DXCOLOR skyEvening(0.4f, 0.45f, 0.8f, 1.0f);
-	D3DXCOLOR skyNight(0.1f, 0.15f, 0.3f, 1.0f);
-	D3DXCOLOR skyMorning(0.6f, 0.7f, 1.0f, 1.0f);
-	D3DXCOLOR skyColor;
-
-	if (progress < 0.5f)
-	{
-		D3DXColorLerp(&skyColor, &skyEvening, &skyNight, progress / 0.5f);
-	}
-	else
-	{
-		D3DXColorLerp(&skyColor, &skyNight, &skyMorning, (progress - 0.5f) / 0.5f);
-	}
 
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,
-		skyColor,
+		skyEvening,
 		D3DXVECTOR3(0.0f, -1.0f, 0.0f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 	);
 
 	// 補助光
-	float warmFactor = 1.0f - fabs(progress - 0.5f) * 2.0f;
-	warmFactor = std::max(0.0f, warmFactor);
-
 	CLight::AddLight(
 		D3DLIGHT_DIRECTIONAL,
-		D3DXCOLOR(0.5f + 0.2f * warmFactor, 0.3f, 0.25f, 1.0f),
+		D3DXCOLOR(0.7f, 0.3f, 0.25f, 1.0f),
 		D3DXVECTOR3(-0.3f, 0.0f, -0.7f),
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 	);
@@ -452,8 +412,8 @@ void CTutorial::Draw(void)
 //=============================================================================
 void CTutorial::OnDeviceReset(void)
 {
-	// ゲームライトの更新処理
-	UpdateLight();
+	// ライトの設定処理
+	ResetLight();
 }
 //=============================================================================
 // サムネイルリリース通知

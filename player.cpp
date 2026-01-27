@@ -46,6 +46,7 @@ CPlayer::CPlayer()
 	m_isGameStartSmoke	= true;							// ゲーム開始フラグ
 	m_isDead			= false;						// 死亡したか
 	m_bDamagePhysics	= false;						// ダメージ時に重力を使うか
+	m_HeartbeatCnt		= 0;							// 心音カウンター
 }
 //=============================================================================
 // デストラクタ
@@ -166,16 +167,17 @@ void CPlayer::Update(void)
 	// カメラの角度の取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();
 
+	// ゲームパッドの取得
+	CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
 	// メッシュフィールドの取得
 	CMeshField* pMeshField = CGenerateMap::GetInstance()->GetMeshField();
 
-	if (!pMeshField)
+	if (pMeshField)
 	{
-		return;
+		// 接地判定
+		m_bOnGround = OnGroundMesh(pMeshField, 35.0f);
 	}
-
-	// 接地判定
-	m_bOnGround = OnGroundMesh(pMeshField, 35.0f);
 
 	// ステートマシン更新
 	m_stateMachine.Update();
@@ -184,6 +186,7 @@ void CPlayer::Update(void)
 	InputData input = GatherInput();
 
 #ifdef _DEBUG
+	// キーボードの取得
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 
 	if (pKeyboard->GetTrigger(DIK_1))
@@ -199,6 +202,22 @@ void CPlayer::Update(void)
 
 #endif
 	
+	// プレイヤーHPが少ない
+	IsHpFew hpFew;
+	
+	if (hpFew.IsSatisfiedBy(*this) && !m_isDead)
+	{
+		m_HeartbeatCnt++;
+
+		if (m_HeartbeatCnt >= HEARTBEART_INTERVAL)
+		{
+			m_HeartbeatCnt = 0;
+
+			// 振動
+			pJoypad->SetVibration(5000, 5000, 20);
+		}
+	}
+
 	// 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
 	CBlockManager* pBlockManager = CGame::GetBlockManager();
 
@@ -253,7 +272,6 @@ void CPlayer::Update(void)
 		SetRotDest(rotDest);
 	}
 
-
 	// Bullet現在位置取得
 	btTransform trans;
 	btRigidBody* pRigidBody = GetRigidBody();
@@ -263,7 +281,7 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 RigidPos;
 	btVector3 vel = pRigidBody->getLinearVelocity();
 
-	if (m_bOnGround && !m_bDamagePhysics)	// 接地中
+	if (pMeshField && m_bOnGround && !m_bDamagePhysics)	// 接地中
 	{
 		// 見た目位置を地形に吸着
 		float groundY = pMeshField->GetHeight(btPos.getX(), btPos.getZ());
@@ -304,19 +322,16 @@ void CPlayer::Update(void)
 		m_pShadowS->SetPosition(GetPos());
 	}
 
-	// 時間の割合を取得
-	float progress = 0.0f; // 0.0～0.1
+	// 時間の取得
+	CTime* pTime = CGame::GetTime();
 
-	if (CManager::GetMode() == CScene::MODE_TUTORIAL)
-	{
-		progress = CTutorial::GetTime()->GetProgress(); // 0.0～0.1
-	}
-	else if (CManager::GetMode() == CScene::MODE_GAME)
-	{
-		progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
-	}
+	bool isNight = false;
 
-	bool isNight = (progress > 0.30f && progress <= 0.90f);
+	if (pTime)
+	{
+		// 夜か判定
+		isNight = pTime->IsNight();
+	}
 
 	// 特定のブロックに当たっているか判定する
 	bool playerInTorch = pBlockManager->IsPlayerInTorch() && isNight;
@@ -488,56 +503,6 @@ D3DXVECTOR3 CPlayer::GetForward(void)
 	D3DXVec3Normalize(&forward, &forward);
 
 	return forward;
-}
-//=============================================================================
-// プレイヤーの前方レイ判定処理
-//=============================================================================
-CBlock* CPlayer::FindFrontBlockByRaycast(float rayLength)
-{
-	btDiscreteDynamicsWorld* world = CManager::GetPhysicsWorld();
-
-	if (!world)
-	{
-		return nullptr;
-	}
-
-	D3DXVECTOR3 from = GetPos() + D3DXVECTOR3(0.0f,20.0f,0.0f);
-	D3DXVECTOR3 to = from + GetForward() * rayLength;
-
-	btVector3 btFrom(from.x, from.y, from.z);
-	btVector3 btTo(to.x, to.y, to.z);
-
-	struct RayResultCallback : public btCollisionWorld::ClosestRayResultCallback
-	{
-		RayResultCallback(const btVector3& from, const btVector3& to)
-			: btCollisionWorld::ClosestRayResultCallback(from, to) {}
-
-		virtual btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace)
-		{
-			// ブロック以外を無視する場合はここでフィルターしてもいい
-			return ClosestRayResultCallback::addSingleResult(rayResult, normalInWorldSpace);
-		}
-	};
-
-	RayResultCallback rayCallback(btFrom, btTo);
-	world->rayTest(btFrom, btTo, rayCallback);
-
-	if (rayCallback.hasHit())
-	{
-		void* userPtr = rayCallback.m_collisionObject->getUserPointer();
-
-		if (userPtr)
-		{
-			CBlock* pBlock = static_cast<CBlock*>(userPtr);
-
-			if (pBlock->IsDynamicBlock())
-			{
-				return pBlock; // 動的なブロックが前方にあった
-			}
-		}
-	}
-
-	return nullptr;
 }
 //=============================================================================
 // 入力判定取得関数

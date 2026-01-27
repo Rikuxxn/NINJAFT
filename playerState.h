@@ -154,9 +154,14 @@ public:
 		// 埋蔵金の取得数に応じてスピードを遅くする
 		int treasureCount = CBuriedTreasureBlock::GetTreasureCount();
 
+		// 水に入ったか
+		bool playerInWater = CGenerateMap::GetInstance()->GetWaterField()->IsInWater(pPlayer->GetPos());
+
+		// 入力処理の取得
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();	// キーボードの取得
 		CInputJoypad* pJoypad = CManager::GetInputJoypad();			// ジョイパッドの取得
 
+		// 埋蔵金取得量に応じたスピード
 		float speedRate = 1.0f - treasureCount * DEC_SPEED_RATE;// 5%ずつ低下
 		speedRate = std::max(speedRate, MAX_DEC_RATE); // 最大50%
 
@@ -166,7 +171,7 @@ public:
 		{
 			m_dushTimer++;
 
-			if (m_dushTimer >= DASH_PARTICLE_INTERVAL)
+			if (m_dushTimer >= DASH_PARTICLE_INTERVAL && !playerInWater)
 			{
 				m_dushTimer = 0;
 
@@ -305,27 +310,8 @@ public:
 		// 補間後の速度をプレイヤーにセット
 		pPlayer->SetMove(currentMove);
 
-		// 音の取得
-		CSound* pSound = CManager::GetSound();
-
 		// 位置を取得
 		D3DXVECTOR3 playerPos = pPlayer->GetPos();
-
-		// 特定のブロックに当たっているか判定する
-		bool playerInWater = CGenerateMap::GetInstance()->GetWaterField()->IsInWater(playerPos);
-
-		if (pSound && !playerInWater)
-		{
-			// 足音SEの再生
-			if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 1, 9))
-			{
-				pSound->Play(CSound::SOUND_LABEL_STEP);
-			}
-			else if (pPlayer->GetMotion()->EventMotionRange(CPlayer::MOVE, 3, 9))
-			{
-				pSound->Play(CSound::SOUND_LABEL_STEP);
-			}
-		}
 
 		// プレイヤーの位置取得
 		D3DXVECTOR3 pos = pPlayer->GetPos();

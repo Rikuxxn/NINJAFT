@@ -57,9 +57,16 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
     // 特定のブロックに当たったか判定するため、ブロックマネージャーを取得する
     CBlockManager* pBlockManager = CGame::GetBlockManager();
 
-    // 時間の割合を取得
-    float progress = CGame::GetTime()->GetProgress(); // 0.0～0.1
-    bool isNight = (progress >= 0.30f && progress < 0.90f);
+    // 時間の取得
+    CTime* pTime = CGame::GetTime();
+
+    bool isNight = false;
+
+    if (pTime)
+    {
+        // 夜か判定
+        isNight = pTime->IsNight();
+    }
 
     // プレイヤーとの距離を算出
     D3DXVECTOR3 diff = playerPos - pEnemy->GetPos();
@@ -160,7 +167,7 @@ void CEnemyAI_Leader::Update(CEnemy* pEnemy, CPlayer* pPlayer)
         pEnemy->SetRequestedAction(CEnemy::AI_MOVE);
     }
 
-    // 視界に入ったら
+    // 視界に入ったらまたは一定距離近づいたら
     if (pEnemy->IsPlayerInSight(pPlayer) || distance < TRIGGER_DISTANCE)
     {
         // 発見状態

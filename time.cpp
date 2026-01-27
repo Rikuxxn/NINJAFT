@@ -275,6 +275,21 @@ float CTime::GetProgress(void) const
 
 	return progress;
 }
+//=============================================================================
+// –é‚Ì”»’èˆ—
+//=============================================================================
+bool CTime::IsNight(void) const
+{
+	// Œo‰ßŽžŠÔ‚ÌŠ„‡‚ðŽæ“¾
+	float progress = GetProgress();
+
+	if (progress >= NIGHT_START_RATE && progress < NIGHT_END_RATE)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 
 //=============================================================================

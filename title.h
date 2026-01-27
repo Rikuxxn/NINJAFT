@@ -36,7 +36,7 @@ public:
 	void Update(void);
 	void UpdateLogoVertex(void);
 	void Draw(void);
-	static void ResetLight(void);
+	virtual void ResetLight(void);
 	void OnDeviceReset(void) override;
 	void ReleaseThumbnail(void) override;
 	void ResetThumbnail(void) override;

@@ -28,6 +28,9 @@ public:
 	CTime(int nPriority = 6);
 	~CTime();
 
+	static constexpr float	NIGHT_START_RATE	= 0.30f;	// 夜開始割合
+	static constexpr float	NIGHT_END_RATE		= 0.90f;	// 夜終了割合
+
 	static CTime* Create(int minutes, int seconds, float baseX, float baseY, float digitWidth, float digitHeight, bool visibleFlag);
 	HRESULT Init(void);
 	void Uninit(void);
@@ -37,6 +40,7 @@ public:
 	void Draw(void);
 
 	bool IsTimeUp(void) { return m_isTimeUp; }
+	bool IsNight(void) const;
 
 	void SetActiveFlag(bool flag) { m_isActive = flag; }
 	void SetVisibleFlag(bool flag) { m_isVisible = flag; }
@@ -46,7 +50,7 @@ public:
 	int GetnSeconds(void) { return m_nSeconds; }
 
 private:
-	static constexpr int DIGITS = 4;		// 桁数(分2,秒2)
+	static constexpr int	DIGITS				= 4;		// 桁数(分2,秒2)
 
 	CNumber*	m_apNumber[DIGITS];			// ナンバーへのポインタ
 	int			m_nMinutes;					// 分

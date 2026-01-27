@@ -59,7 +59,7 @@ public:
 
 private:
 	static constexpr float	PROBABILITY_THRESHOLD	= 0.75f;	// 音の閾値
-	static constexpr float	TRIGGER_DISTANCE		= 50.0f;	// 通常の距離
+	static constexpr float	TRIGGER_DISTANCE		= 100.0f;	// 通常の距離
 	static constexpr int	LOG_TIME				= 25;		// 記録時間
 	static constexpr float	OFFSET_POS				= 40.0f;	// 生成オフセット位置
 	static constexpr int	INTERVAL				= 15;		// インターバル

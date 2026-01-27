@@ -15,6 +15,7 @@
 #include "player.h"
 #include "specbase.h"
 #include "motion.h"
+#include "particle.h"
 
 //=============================================================================
 // コンストラクタ
@@ -307,6 +308,14 @@ void CWaterField::Update(void)
 
 	// プレイヤーの位置を取得して、波紋を生成する
 	CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+
+	// nullptrだったら飛ばす
+	if (!pPlayer)
+	{
+		return;
+	}
+
+	// 位置取得
 	D3DXVECTOR3 playerPos = pPlayer->GetPos();
 
 	// 水の中にいたら
@@ -411,6 +420,10 @@ void CWaterField::SpawnCylinder(void)
 
 		// 波紋の生成
 		CMeshCylinder::Create(pos, D3DXCOLOR(0.3f, 0.7f, 1.0f, 0.9f), 5.0f, 8.0f, 0.5f, 50, 0.03f);
+
+		// 水しぶきパーティクル生成
+		CParticle::Create<CWaterParticle>(INIT_VEC3, pos, D3DXCOLOR(0.3f, 0.6f, 1.0f, 0.8f), 120, 10);
+		CParticle::Create<CWaterParticle>(INIT_VEC3, pos, D3DXCOLOR(0.3f, 0.5f, 1.0f, 0.5f), 120, 10);
 	};
 
 	IsNotStealthSpec        notStealth;								// ステルス中じゃない

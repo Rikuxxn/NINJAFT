@@ -203,11 +203,8 @@ void CCamera::EditCamera(void)
 	// 現在のカーソル位置を保存（次のフレームでの比較用）
 	prevCursorPos = cursorPos;
 
-	// マウス感度
-	const float mouseSensitivity = 0.004f;
-
-	deltaX *= mouseSensitivity;
-	deltaY *= mouseSensitivity;
+	deltaX *= MOUSE_SENSITIVITY;
+	deltaY *= MOUSE_SENSITIVITY;
 
 	//====================================
 	// マウスホイールでズームイン・アウト
@@ -239,14 +236,14 @@ void CCamera::EditCamera(void)
 		NormalizeRotY();
 
 		// 垂直回転の制限
-		if (m_rot.x > 1.57f)
+		if (m_rot.x > PI_HALF)
 		{
-			m_rot.x = 1.57f;
+			m_rot.x = PI_HALF;
 		}
 
-		if (m_rot.x < -1.57f)
+		if (m_rot.x < -PI_HALF)
 		{
-			m_rot.x = -1.57f;
+			m_rot.x = -PI_HALF;
 		}
 
 		// 視点の更新（カメラの方向を適用）
@@ -264,13 +261,13 @@ void CCamera::EditCamera(void)
 		NormalizeRotY();
 
 		// 垂直回転の制限
-		if (m_rot.x > 1.57f)
+		if (m_rot.x > PI_HALF)
 		{
-			m_rot.x = 1.57f;
+			m_rot.x = PI_HALF;
 		}
-		if (m_rot.x < -1.57f)
+		if (m_rot.x < -PI_HALF)
 		{
-			m_rot.x = -1.57f;
+			m_rot.x = -PI_HALF;
 		}
 
 		// 注視点の更新

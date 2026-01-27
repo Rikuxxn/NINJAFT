@@ -181,7 +181,7 @@ C3DGuage::C3DGuage(int nPriority) : CObjectBillboard(nPriority)
 {
 	// 値のクリア
 	m_type		= TYPE_NONE;			// ゲージの種類
-	m_bVisible	= false;
+	m_bVisible	= false;				// 表示中かどうか
 }
 //=============================================================================
 // コンストラクタ
@@ -196,6 +196,12 @@ C3DGuage::~C3DGuage()
 C3DGuage* C3DGuage::Create(GUAGETYPE type, D3DXVECTOR3 pos, float fWidth, float fHeight)
 {
 	C3DGuage* pGuage = new C3DGuage;
+
+	// nullptrだったら
+	if (pGuage == nullptr)
+	{
+		return nullptr;
+	}
 
 	// 設定
 	pGuage->SetPos(pos);

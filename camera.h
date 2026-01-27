@@ -84,8 +84,10 @@ private:
 	void NormalizeRotY(void);// 角度の正規化 Y軸
 
 private:
-	static constexpr float SHAKE_DISTANCE	= 1300.0f;	// 振動する距離
-	static constexpr float GAMECAM_DISTANCE = 580.0f;	// ゲームカメラ時の距離
+	static constexpr float SHAKE_DISTANCE		= 1300.0f;	// 振動する距離
+	static constexpr float MOUSE_SENSITIVITY	= 0.004f;	// マウス感度
+	static constexpr float GAMECAM_DISTANCE		= 580.0f;	// ゲームカメラ時の距離
+	static constexpr float PI_HALF				= 1.57f;	// 円周率の半分
 
 	D3DXVECTOR3 m_posV;					// 視点
 	D3DXVECTOR3 m_posVDest;				// 目的の視点

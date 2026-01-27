@@ -300,6 +300,7 @@ private:
 	static constexpr float PRE_SHAKE_RANGE		= 0.02f;	// 予兆揺れ境界(～%手前から揺らす)
 	static constexpr float SIDE_OFFSET			= 30.0f;	// 埃パーティクル生成位置オフセット
 	static constexpr float CLOSE_DURATION		= 20.0f;	// 閉じるフレーム数
+	static constexpr float SPAWN_OFFPOS			= 60.0f;	// 生成オフセット位置
 
 	float m_baseRotY;										// 基準の角度
 	float m_startPosX;										// 開始位置

@@ -105,7 +105,6 @@ public:
 	bool GetIsMoving(void) const { return m_bIsMoving; }
 	D3DXVECTOR3 GetForward(void);
 	InputData GatherInput(void);
-	CBlock* FindFrontBlockByRaycast(float rayLength);
 	bool IsStealth(void) const { return m_isStealth; }
 	CModel** GetModels(void) { return m_apModel; }
 	int GetNumModels(void) { return m_nNumModel; }
@@ -128,6 +127,7 @@ private:
 	static constexpr float	COLLIDER_OFFSET		= 35.0f;	// コライダーオフセット位置
 	static constexpr int	EFFECT_CREATE_NUM	= 3;		// エフェクト生成数
 	static constexpr float	HEIGHT_STEP			= 30.0f;	// 高さの増加量
+	static constexpr int	HEARTBEART_INTERVAL = 60;		// 心音のインターバル
 
 	D3DXMATRIX				m_mtxWorld;						// ワールドマトリックス
 	CModel*					m_apModel[MAX_PARTS];			// モデル(パーツ)へのポインタ
@@ -148,6 +148,7 @@ private:
 	bool					m_isGameStartSmoke;				// ゲーム開始フラグ
 	bool					m_isDead;						// 死亡したか
 	bool					m_bDamagePhysics;				// ダメージ時に重力を使うか
+	int						m_HeartbeatCnt;					// 心音カウンター
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CPlayer> m_stateMachine;

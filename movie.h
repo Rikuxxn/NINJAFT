@@ -32,7 +32,7 @@ public:
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
-	virtual void UpdateLight(void);
+	virtual void ResetLight(void);
 	void Draw(void);
 	void OnDeviceReset(void) override;
 	void ReleaseThumbnail(void) override;

@@ -32,8 +32,8 @@ void CGenerateMap::GenerateRandomMap(int seed)
 	srand(seed);
 
 	// 原点を中心に配置するためのオフセット計算
-	const float offsetX = -(GRID_X * AREA_SIZE) / 2.0f + AREA_SIZE / 2.0f;
-	const float offsetZ = -(GRID_Z * AREA_SIZE) / 2.0f + AREA_SIZE / 2.0f;
+	const float offsetX = -(GRID_X * AREA_SIZE) * HALF_RATE + AREA_SIZE * HALF_RATE;
+	const float offsetZ = -(GRID_Z * AREA_SIZE) * HALF_RATE + AREA_SIZE * HALF_RATE;
 
 	// メッシュフィールド(地形)の生成
 	m_pMeshField = CMeshField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, MAP_DIV_X, MAP_DIV_Z);
@@ -41,8 +41,11 @@ void CGenerateMap::GenerateRandomMap(int seed)
 	// 水フィールドの生成
 	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, WATER_HEIGHT, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, WATER_DIV_X, WATER_DIV_Z);
 
-	// 川の流れる方向の設定
-	m_pWater->SetFlowDir(m_pMeshField->GetRiverFlowDir());
+	if (m_pWater)
+	{
+		// 川の流れる方向の設定
+		m_pWater->SetFlowDir(m_pMeshField->GetRiverFlowDir());
+	}
 
 	// クラスタ生成
 	GenerateClusters(GRID_X, GRID_Z, AREA_SIZE, offsetX, offsetZ);
@@ -74,8 +77,11 @@ void CGenerateMap::GenerateRandomTerrain(int seed)
 	// 水フィールドの生成
 	m_pWater = CWaterField::Create(D3DXVECTOR3(0.0f, WATER_HEIGHT, 0.0f), MAP_SIZE_X, MAP_SIZE_Z, WATER_DIV_X, WATER_DIV_Z);
 
-	// 川の流れる方向の設定
-	m_pWater->SetFlowDir(m_pMeshField->GetRiverFlowDir());
+	if (m_pWater)
+	{
+		// 川の流れる方向の設定
+		m_pWater->SetFlowDir(m_pMeshField->GetRiverFlowDir());
+	}
 }
 //=============================================================================
 // クラスタ生成処理
@@ -87,6 +93,7 @@ void CGenerateMap::GenerateClusters(int gridX, int gridZ, float areaSize,
 	{
 		float centerX = offsetX + (rand() % gridX) * areaSize;
 		float centerZ = offsetZ + (rand() % gridZ) * areaSize;
+
 		float radius = CLUSTER_RADIUS_MIN + rand() % CLUSTER_RADIUS_VAR;
 		int count = CLUSTER_ELEMENT_MIN + rand() % CLUSTER_ELEMENT_VAR;
 
@@ -109,12 +116,12 @@ void CGenerateMap::GenerateClusters(int gridX, int gridZ, float areaSize,
 void CGenerateMap::CreateClusterElement(const D3DXVECTOR3& pos, float areaSize,
 	int gridX, int gridZ, float offsetX, float offsetZ)
 {
-	// --- マップの中心座標を求める ---
+	// マップの中心座標を求める
 	const float mapCenterX = offsetX + (gridX - 1) * areaSize * HALF_RATE;
 	const float mapCenterZ = offsetZ + (gridZ - 1) * areaSize * HALF_RATE;
 	const float halfWidth = (gridX * areaSize) * HALF_RATE;
 
-	// --- 中心からの距離を計算 ---
+	// 中心からの距離を計算
 	float distX = fabsf(pos.x - mapCenterX);
 	float distZ = fabsf(pos.z - mapCenterZ);
 
@@ -414,7 +421,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 
 	if (std::find(sides.begin(), sides.end(), GRASS_BOTTOM) != sides.end())
 	{
-		// --- 下辺 ---
+		// 下辺
 		for (float x = startX; x <= endX; x += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
@@ -438,7 +445,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 
 	if (std::find(sides.begin(), sides.end(), GRASS_TOP) != sides.end())
 	{
-		// --- 上辺 ---
+		// 上辺
 		for (float x = startX; x <= endX; x += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
@@ -462,7 +469,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 
 	if (std::find(sides.begin(), sides.end(), GRASS_LEFT) != sides.end())
 	{
-		// --- 左辺 ---
+		// 左辺
 		for (float z = startZ + areaSize * HALF_RATE; z < endZ; z += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
@@ -486,7 +493,7 @@ void CGenerateMap::GenerateOuterGrassBelt(int gridX, int gridZ, float areaSize,
 
 	if (std::find(sides.begin(), sides.end(), GRASS_RIGHT) != sides.end())
 	{
-		// --- 右辺 ---
+		// 右辺
 		for (float z = startZ + areaSize * HALF_RATE; z < endZ; z += areaSize * HALF_RATE)
 		{
 			for (int nCnt = 0; nCnt < clusterPerCell; ++nCnt)
@@ -517,13 +524,13 @@ void CGenerateMap::CreateGrassCluster(const D3DXVECTOR3& centerPos, float areaSi
 {
 	int grassLength = GRASS_SET_NUM + rand() % GRASS_SET_NUM_VAL;		// 草を連続配置する数
 
-	// --- マップ中心を取得 ---
+	// マップ中心を取得
 	const float mapCenterX = offsetX + (gridX - 1) * areaSize * HALF_RATE;
 	const float mapCenterZ = offsetZ + (gridZ - 1) * areaSize * HALF_RATE;
 	const float mapHalfX = (gridX * areaSize) * HALF_RATE;
 	const float mapHalfZ = (gridZ * areaSize) * HALF_RATE;
 
-	// --- 中心からの方向に応じて外向き配置 ---
+	// 中心からの方向に応じて外向き配置
 	D3DXVECTOR3 dir = { 0, 0, 0 };
 	if (fabsf(centerPos.x - mapCenterX) > fabsf(centerPos.z - mapCenterZ))
 	{

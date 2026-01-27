@@ -430,8 +430,8 @@ void CInputJoypad::SetVibration(WORD left, WORD right, int nTimer)
 	}
 
 	XINPUT_VIBRATION vibration = {};
-	vibration.wLeftMotorSpeed = left;   // 0Å`65535
-	vibration.wRightMotorSpeed = right;  // 0Å`65535
+	vibration.wLeftMotorSpeed = left;		// 0Å`65535
+	vibration.wRightMotorSpeed = right;		// 0Å`65535
 
 	// êUìÆéûä‘ÇÃê›íË
 	m_VibrationTimer = nTimer;

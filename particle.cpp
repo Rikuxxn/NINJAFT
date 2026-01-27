@@ -154,26 +154,26 @@ void CWaterParticle::Update(void)
 
 		// ランダムな角度で横に広がる
 		float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-		float speed = (rand() % 200) / 30.0f + 0.2f;
+		float speed = (rand() % 200) / 80.0f + 0.2f;
 
 		desc.move.x = cosf(angle) * speed;
 		desc.move.z = sinf(angle) * speed;
-		desc.move.y = (rand() % 300) / 50.0f + 0.05f; // 少しだけ上方向
+		desc.move.y = (rand() % 300) / 70.0f + 0.05f; // 少しだけ上方向
 
 		// 色の設定
 		desc.col = GetCol();
 
 		// 半径の設定
-		desc.fRadius = 15.0f + (rand() % 30);
+		desc.fRadius = 4.0f + (rand() % 5);
 
 		// 寿命の設定
 		desc.nLife = GetLife();
 
 		// 重力の設定
-		desc.fGravity = 0.2f;
+		desc.fGravity = -0.13f;
 
 		// 半径の減衰量の設定
-		desc.fDecRadius = 1.0f;
+		desc.fDecRadius = 0.1f;
 
 		// エフェクトの設定
 		CEffect::Create(desc);

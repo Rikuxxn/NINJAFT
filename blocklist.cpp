@@ -180,19 +180,19 @@ void CTorchBlock::UpdateLight(void)
 	float torchIntensity = 0.0f;
 
 	// 夜になる手前（夕方）でフェードイン
-	if (progress >= 0.25f && progress < 0.30f)
+	if (progress >= 0.25f && progress < CTime::NIGHT_START_RATE)
 	{
-		torchIntensity = (progress - 0.25f) / (0.30f - 0.25f);
+		torchIntensity = (progress - 0.25f) / (CTime::NIGHT_START_RATE - 0.25f);
 	}
 	// 夜中は最大
-	else if (progress >= 0.30f && progress < 0.90f)
+	else if (progress >= CTime::NIGHT_START_RATE && progress < CTime::NIGHT_END_RATE)
 	{
 		torchIntensity = 1.0f;
 	}
 	// 明け方でフェードアウト
-	else if (progress >= 0.90f && progress < 1.0f)
+	else if (progress >= CTime::NIGHT_END_RATE && progress < 1.0f)
 	{
-		torchIntensity = 1.0f - (progress - 0.90f) / (1.0f - 0.90f); // 1→0
+		torchIntensity = 1.0f - (progress - CTime::NIGHT_END_RATE) / (1.0f - CTime::NIGHT_END_RATE); // 1→0
 	}
 	// それ以外は消灯
 	else
@@ -718,7 +718,7 @@ void CGateBlock::GameGateUpdate(void)
 
 		// 少し下げた位置に生成
 		D3DXVECTOR3 spawnBase = GetPos();
-		spawnBase.y -= 60.0f;
+		spawnBase.y -= SPAWN_OFFPOS;
 
 		// 中心
 		D3DXVECTOR3 spawnCenter = spawnBase;
@@ -827,7 +827,7 @@ void CGateBlock::MovieGateUpdate(void)
 
 			// 少し下げた位置に生成
 			D3DXVECTOR3 spawnBase = GetPos();
-			spawnBase.y -= 60.0f;
+			spawnBase.y -= SPAWN_OFFPOS;
 
 			D3DXVECTOR3 spawnCenter = spawnBase;
 

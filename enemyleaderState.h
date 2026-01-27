@@ -332,7 +332,7 @@ public:
 			if (pPlayer)
 			{
 				// プレイヤーに当たったか判定する
-				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f, 30.0f);
+				pEnemy->GetWeaponCollider()->CheckHit(pPlayer, 2.5f, 25.0f);
 			}
 		}
 
@@ -352,9 +352,9 @@ public:
 	}
 
 private:
-	static constexpr float SLIDE_POWER			= 55.0f;	// スライドパワー
+	static constexpr float SLIDE_POWER			= 45.0f;	// スライドパワー
 	static constexpr float MOTIONRATE_THRESHOLD = 0.2f;		// モーションレートの閾値
-	static constexpr float FORWARD_POWER		= 20.0f;	// 滑る速度
+	static constexpr float FORWARD_POWER		= 15.0f;	// 滑る速度
 
 };
 
@@ -939,7 +939,7 @@ public:
 			models[nCnt]->SetOutlineColor(VEC4_RED);
 		}
 
-		// サブ敵が追跡中なら、リーダーも追跡継続
+		// サブ敵が追跡中じゃなかったら
 		if (!pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
 			// サブ敵が追跡していなくて、距離が離れたら警戒へ
@@ -961,7 +961,8 @@ public:
 		IsStealthSpec stealth;
 
 		// プレイヤーがステルス中に草むらに潜んだら
-		if (playerInGrass && stealth.IsSatisfiedBy(*pPlayer))
+		if (playerInGrass && stealth.IsSatisfiedBy(*pPlayer) && 
+			!pEnemy->IsSubAction(CEnemy::AI_CHASE))
 		{
 			// 警戒状態へ移行
 			m_pMachine->ChangeState<CEnemyLeader_CautionState>();

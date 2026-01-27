@@ -43,7 +43,7 @@
 #pragma comment(lib,"X3DAudio.lib")								// 3Dサウンド処理に必要
 
 // Bullet Physics
-#include <btBulletDynamicsCommon.h>
+#include "btBulletDynamicsCommon.h"
 
 //*****************************************************************************
 // マクロ定義

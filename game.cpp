@@ -131,14 +131,14 @@ HRESULT CGame::Init(void)
 	CMeshDome::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1000);
 
 	// ルールUI生成
-	auto rule = CUITexture::Create("data/TEXTURE/ui_rule.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.15f, 0.12f);
+	auto rule = CUITexture::Create("data/TEXTURE/ui_rule.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), 0.15f, 0.12f);
 
 	// 任務失敗UI生成
-	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.15f, 0.12f);
+	auto mission_failure = CUITexture::Create("data/TEXTURE/ui_mission_failure.png", 0.57f, 0.57f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), 0.15f, 0.12f);
 
 	// 脱出UI生成
-	auto escape_xinput = CUITexture::Create("data/TEXTURE/ui_escape_xinput.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, 0.06f);
-	auto escape_keyboard = CUITexture::Create("data/TEXTURE/ui_escape_keyboard.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, 0.06f);
+	auto escape_xinput = CUITexture::Create("data/TEXTURE/ui_escape_xinput.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), 0.1f, 0.06f);
+	auto escape_keyboard = CUITexture::Create("data/TEXTURE/ui_escape_keyboard.png", 0.57f, 0.85f, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), 0.1f, 0.06f);
 
 	// ルールUI登録
 	CUIManager::GetInstance()->AddUI("Rule", rule);
@@ -236,7 +236,13 @@ void CGame::Update(void)
 		m_timer = 0;
 
 		// プレイヤーの位置を基準に生成
-		D3DXVECTOR3 playerPos = m_pPlayer->GetPos();
+		D3DXVECTOR3 playerPos(0.0f,0.0f,0.0f);
+
+		if (m_pPlayer)
+		{
+			// プレイヤー位置を取得
+			playerPos = m_pPlayer->GetPos();
+		}
 
 		// パーティクル生成
 		CParticle::Create<CBlossomParticle>(INIT_VEC3, playerPos, D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
@@ -246,6 +252,7 @@ void CGame::Update(void)
 	CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();
 	CInputJoypad* pJoypad = CManager::GetInputJoypad();
 
+	// ライトの更新
 	UpdateLight();
 
 	// TABキーでポーズON/OFF
@@ -275,12 +282,21 @@ void CGame::Update(void)
 	// ブロックマネージャーの更新処理
 	m_pBlockManager->Update();
 
-	// UIの更新
-	UIUpdate();
+	if (m_pPlayer)
+	{
+		// UIの更新
+		UIUpdate();
+	}
 
 	// 脱出UIの取得
 	auto escape_xinput = CUIManager::GetInstance()->GetUI("Escape_XInput");
 	auto escape_keyboard = CUIManager::GetInstance()->GetUI("Escape_Keyboard");
+
+	// 音発生数
+	int count = 0;
+
+	// 発見数
+	int insightCount = 0;
 
 	// --- 脱出したか確認 ---
 	auto exitBlocks = CBlockManager::GetBlocksOfType<CExitBlock>();
@@ -303,11 +319,14 @@ void CGame::Update(void)
 			CResult::SetClearRank(rankIndex);// アニメーション用に順位のインデックスを渡す
 			//CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
 
-			// 音発生数の取得
-			int count = m_pEnemy->GetSoundCount();
+			if (m_pEnemy)
+			{
+				// 音発生数の取得
+				count = m_pEnemy->GetSoundCount();
 
-			// 発見数の取得
-			int insightCount = m_pEnemy->GetInsightCount();
+				// 発見数の取得
+				insightCount = m_pEnemy->GetInsightCount();
+			}
 
 			// 宝の獲得数の設定
 			CResult::SetTreasureCount(treasureCount);
@@ -367,11 +386,14 @@ void CGame::Update(void)
 		CResult::SetClearRank(rankIndex);// アニメーション用に順位のインデックスを渡す
 		//CResult::SetClearTime(m_pTime->GetMinutes(), m_pTime->GetnSeconds());
 
-		// 音発生数の取得
-		int count = m_pEnemy->GetSoundCount();
+		if (m_pEnemy)
+		{
+			// 音発生数の取得
+			count = m_pEnemy->GetSoundCount();
 
-		// 発見数の取得
-		int insightCount = m_pEnemy->GetInsightCount();
+			// 発見数の取得
+			insightCount = m_pEnemy->GetInsightCount();
+		}
 
 		// 宝の獲得数の設定
 		CResult::SetTreasureCount(treasureCount);
@@ -402,19 +424,19 @@ void CGame::UpdateLight(void)
 	D3DXCOLOR mainColor;
 
 	// ======== 時間帯ごとに補間 ========
-	if (progress < 0.30f)
+	if (progress < CTime::NIGHT_START_RATE)
 	{// 夕方
-		float t = progress / 0.30f;
+		float t = progress / CTime::NIGHT_START_RATE;
 		D3DXColorLerp(&mainColor, &evening, &night, t);
 	}
-	else if (progress < 0.90f)
+	else if (progress < CTime::NIGHT_END_RATE)
 	{// 夜
-		float t = (progress - 0.30f) / (0.90f - 0.30f);
+		float t = (progress - CTime::NIGHT_START_RATE) / (CTime::NIGHT_END_RATE - CTime::NIGHT_START_RATE);
 		D3DXColorLerp(&mainColor, &night, &morning, t);
 	}
 	else
 	{// 明け方
-		float t = (progress - 0.90f) / (1.0f - 0.90f);
+		float t = (progress - CTime::NIGHT_END_RATE) / (1.0f - CTime::NIGHT_END_RATE);
 		D3DXColorLerp(&mainColor, &morning, &evening, t);
 	}
 
@@ -503,6 +525,7 @@ void CGame::Draw(void)
 //=============================================================================
 void CGame::UIUpdate(void)
 {
+	// フェードの取得
 	CFade* pFade = CManager::GetFade();
 
 	// UIの取得

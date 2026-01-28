@@ -532,8 +532,8 @@ CExitBlock::CExitBlock(int nPriority) : CBlock(nPriority)
 	SetGhostObject(true);
 
 	// 値のクリア
-	m_isEscape = false;
-	m_isIn = false;
+	m_isEscape	= false;	// 脱出したか
+	m_isIn		= false;	// 範囲内か
 }
 //=============================================================================
 // 出口判定ブロックのデストラクタ

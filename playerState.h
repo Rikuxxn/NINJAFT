@@ -16,6 +16,7 @@
 #include "specbase.h"
 #include "generateMap.h"
 #include "waterfield.h"
+#include "meshOrbit.h"
 
 //*****************************************************************************
 // 前方宣言
@@ -261,7 +262,7 @@ private:
 	static constexpr float	DEC_NEWSPEED_RATE		= 0.08f;	// 埋蔵金取得時のダッシュスピードの減少率
 	static constexpr float	MAX_DEC_RATE			= 0.5f;		// 減少する最大割合(%)
 
-	int m_dushTimer;
+	int			m_dushTimer;
 };
 
 //*****************************************************************************

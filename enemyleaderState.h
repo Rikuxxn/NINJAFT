@@ -17,6 +17,7 @@
 #include "manager.h"
 #include "motion.h"
 #include "specbase.h"
+#include "meshOrbit.h"
 
 //*****************************************************************************
 // 前方宣言
@@ -48,6 +49,9 @@ public:
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
+		// 視界内判定のするため、プレイヤーを取得する
+		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
+
 		// 減速処理
 		pEnemy->ApplyDeceleration();
 
@@ -56,6 +60,14 @@ public:
 		{
 			// 追跡状態
 			m_pMachine->ChangeState<CEnemyLeader_ChaseState>();
+			return;
+		}
+
+		// 視界に入ったら
+		if (pPlayer && pEnemy->IsPlayerInSight(pPlayer) && !pEnemy->IsCooldown())
+		{
+			// 発見状態
+			m_pMachine->ChangeState<CEnemyLeader_DiscoverState>();
 			return;
 		}
 
@@ -287,10 +299,31 @@ public:
 
 		// 現在の移動量に上書き
 		pEnemy->SetMove(move);
+
+		// 生成開始位置1を決める
+		D3DXVECTOR3 startPos1 = pEnemy->GetWeaponCollider()->GetCurrentTipPos();// 剣の先
+
+		// 生成開始位置2を決める
+		D3DXVECTOR3 startPos2 = pEnemy->GetWeaponCollider()->GetCurrentBasePos();// 剣の根元
+
+		// メッシュの軌跡の生成
+		m_pOrbit = CMeshOrbit::Create(startPos1, startPos2, D3DXCOLOR(0.7f, 0.3f, 1.0f, 0.8f), 50);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
+		// 軌跡の位置更新
+		if (m_pOrbit)
+		{
+			// 生成開始位置1を決める
+			D3DXVECTOR3 startPos1 = pEnemy->GetWeaponCollider()->GetCurrentTipPos();// 剣の先
+
+			// 生成開始位置2を決める
+			D3DXVECTOR3 startPos2 = pEnemy->GetWeaponCollider()->GetCurrentBasePos();// 剣の根元
+
+			m_pOrbit->SetStartPos(startPos1, startPos2);
+		}
+
 		// モーションの進行度を取得
 		float motionRate = pEnemy->GetMotion()->GetMotionRate(); // 0.0～1.0
 		D3DXVECTOR3 move = pEnemy->GetMove();
@@ -356,6 +389,8 @@ private:
 	static constexpr float MOTIONRATE_THRESHOLD = 0.2f;		// モーションレートの閾値
 	static constexpr float FORWARD_POWER		= 15.0f;	// 滑る速度
 
+	CMeshOrbit* m_pOrbit = nullptr;
+
 };
 
 //*****************************************************************************
@@ -403,10 +438,31 @@ public:
 
 		// 現在の移動量に上書き
 		pEnemy->SetMove(move);
+
+		// 生成開始位置1を決める
+		D3DXVECTOR3 startPos1 = pEnemy->GetWeaponCollider()->GetCurrentTipPos();// 剣の先
+
+		// 生成開始位置2を決める
+		D3DXVECTOR3 startPos2 = pEnemy->GetWeaponCollider()->GetCurrentBasePos();// 剣の根元
+
+		// メッシュの軌跡の生成
+		m_pOrbit = CMeshOrbit::Create(startPos1, startPos2, D3DXCOLOR(0.7f, 0.3f, 1.0f, 0.8f), 50);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
+		// 軌跡の位置更新
+		if (m_pOrbit)
+		{
+			// 生成開始位置1を決める
+			D3DXVECTOR3 startPos1 = pEnemy->GetWeaponCollider()->GetCurrentTipPos();// 剣の先
+
+			// 生成開始位置2を決める
+			D3DXVECTOR3 startPos2 = pEnemy->GetWeaponCollider()->GetCurrentBasePos();// 剣の根元
+
+			m_pOrbit->SetStartPos(startPos1, startPos2);
+		}
+
 		// モーションの進行度を取得
 		float motionRate = pEnemy->GetMotion()->GetMotionRate(); // 0.0～1.0
 		D3DXVECTOR3 move = pEnemy->GetMove();
@@ -469,6 +525,8 @@ private:
 	static constexpr float SLIDE_POWER			= 20.0f;	// スライドパワー
 	static constexpr float FORWARD_POWER		= 10.0f;	// 滑る速度
 	static constexpr float MOTIONRATE_THRESHOLD = 0.2f;		// モーションレートの閾値
+
+	CMeshOrbit* m_pOrbit = nullptr;
 };
 
 //*****************************************************************************
@@ -917,10 +975,38 @@ public:
 	{
 		// 追跡モーション
 		pEnemy->GetMotion()->StartBlendMotion(CEnemyLeader::CHASE, 10);
+
+		// 生成開始位置1を決める
+		D3DXVECTOR3 startPos1 = pEnemy->GetPos();
+		startPos1.y += ORBIT_OFFSET_TOP;
+
+		// 生成開始位置2を決める
+		D3DXVECTOR3 startPos2 = pEnemy->GetPos();
+		startPos2.y += ORBIT_OFFSET_BOTTOM;
+
+		// メッシュの軌跡の生成
+		m_pOrbit = CMeshOrbit::Create(startPos1, startPos2, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f), 50);
 	}
 
 	void OnUpdate(CEnemyLeader* pEnemy)override
 	{
+		// 軌跡の位置更新
+		if (m_pOrbit)
+		{
+			// 生成開始位置1を決める
+			D3DXVECTOR3 startPos1 = pEnemy->GetPos();
+			startPos1.y += ORBIT_OFFSET_TOP;
+
+			// 生成開始位置2を決める
+			D3DXVECTOR3 startPos2 = pEnemy->GetPos();
+			startPos2.y += ORBIT_OFFSET_BOTTOM;
+
+			m_pOrbit->SetStartPos(startPos1, startPos2);
+		}
+
+		// モーションスピードを早くする
+		pEnemy->GetMotion()->SetMotionSpeedRate(1.4f);
+
 		// プレイヤーの取得
 		CPlayer* pPlayer = CCharacterManager::GetInstance().GetCharacter<CPlayer>();
 
@@ -1034,11 +1120,18 @@ public:
 			// アウトラインを通常(黒色)に戻す
 			models[nCnt]->SetOutlineColor(VEC4_BLACK);
 		}
+
+		// モーションスピードを通常に戻す
+		pEnemy->GetMotion()->SetMotionSpeedRate(1.0f);
 	}
 
 private:
-	static constexpr float ATTACK_DISTANCE	= 130.0f;	// 攻撃モーション移行距離
-	static constexpr float CAUTION_DISTANCE = 280.0f;	// 警戒モーション移行距離
+	static constexpr float ATTACK_DISTANCE		= 130.0f;	// 攻撃モーション移行距離
+	static constexpr float CAUTION_DISTANCE		= 280.0f;	// 警戒モーション移行距離
+	static constexpr float ORBIT_OFFSET_TOP		= 50.0f;	// 軌跡の上のオフセット位置
+	static constexpr float ORBIT_OFFSET_BOTTOM	= 20.0f;	// 軌跡の下のオフセット位置
+
+	CMeshOrbit* m_pOrbit = nullptr;
 };
 
 //*****************************************************************************
@@ -1125,7 +1218,7 @@ private:
 	static constexpr float	EFFECT_OFFSET	= 40.0f;	// エフェクト生成位置オフセット
 	static constexpr int	EFFECT_INTERVAL = 10;		// エフェクト生成インターバル
 
-	int m_timer;// エフェクト用タイマー
+	int m_timer;										// エフェクト用タイマー
 };
 
 #endif

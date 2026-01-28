@@ -108,10 +108,12 @@ void CBlood::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);         // ライトを無効にする
+
 	// αテストを有効
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);//デフォルトはfalse
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);// デフォルトはfalse
 	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);//0より大きかったら描画
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);// 0より大きかったら描画
 
 	// テクスチャの設定
 	pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
@@ -120,5 +122,7 @@ void CBlood::Draw(void)
 	CObject3D::Draw();
 
 	// αテストを無効に戻す
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);//デフォルトはfalse
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);// デフォルトはfalse
+
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);          // ライトを有効にする
 }

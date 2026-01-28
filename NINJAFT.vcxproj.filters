@@ -306,6 +306,12 @@
     <ClCompile Include="pausemanager.cpp">
       <Filter>ソース ファイル\Pause</Filter>
     </ClCompile>
+    <ClCompile Include="meshOrbit.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="meshbase.cpp">
+      <Filter>ソース ファイル\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="background.h">
@@ -556,6 +562,12 @@
     </ClInclude>
     <ClInclude Include="pausemanager.h">
       <Filter>ヘッダー ファイル\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="meshOrbit.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="meshbase.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

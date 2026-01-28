@@ -197,6 +197,7 @@ public:
 
 		for (CBuriedTreasureBlock* treasure : buriedTreasureBlocks)
 		{
+			// –„‘ ‹à‚ğæ“¾‚µ‚½‚©
 			if (treasure->IsGet())
 			{
 				return true;
@@ -247,6 +248,7 @@ public:
 
 		for (CBuriedTreasureBlock* treasure : buriedTreasureBlocks)
 		{
+			// –„‘ ‹à‚ğæ“¾‚µ‚½‚©
 			if (treasure->IsGet())
 			{
 				return true;
@@ -257,7 +259,7 @@ public:
 	}
 
 private:
-	static constexpr float TRIGGER_DISTACE = 110.0f;	// ”»’è‹——£
+	static constexpr float TRIGGER_DISTACE = 120.0f;	// ”»’è‹——£
 
 	bool m_isEscape;									// ’Eo‚µ‚½‚©‚Ç‚¤‚©
 	bool m_isIn;										// ”ÍˆÍ“àƒtƒ‰ƒO

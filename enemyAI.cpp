@@ -238,8 +238,8 @@ void CEnemyAI_Leader::RecordPlayerAction(CEnemy* pEnemy, CPlayer* pPlayer)
 CEnemyAI_Sub::CEnemyAI_Sub()
 {
     // 値のクリア
-    m_logTimer = 0;                 // 記録タイマー
-    m_prevInSight = false;			// 直前に視界に入ったか
+    m_logTimer      = 0;                // 記録タイマー
+    m_prevInSight   = false;			// 直前に視界に入ったか
 }
 //=============================================================================
 // サブ敵AIのデストラクタ

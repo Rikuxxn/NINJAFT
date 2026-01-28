@@ -90,7 +90,7 @@ private:
 
 
 //*****************************************************************************
-// プレイヤーのHPが少ない
+// プレイヤーのHPが少ない(半分以下)
 //*****************************************************************************
 class IsHpFew : public Specification <CPlayer>
 {
@@ -100,14 +100,41 @@ public:
 
 	bool IsSatisfiedBy(const CPlayer& player) const override
 	{
-		// HPの取得
-		float nLife = player.GetHp();
+		// HPの最大量に設定
+		const float nMaxLife = player.GetMaxHp();
 
-		return nLife <= LIFE_THRESHOLD;
+		// 現在のHPの取得
+		float currentLife = player.GetHp();
+
+		// 半分以下だったら
+		return currentLife <= nMaxLife * 0.5f;
 	}
 
 private:
-	static constexpr float LIFE_THRESHOLD = 5.0f;// HPの閾値
+};
+
+//*****************************************************************************
+// プレイヤーのHPがとても少ない
+//*****************************************************************************
+class IsHpVeryFew : public Specification <CPlayer>
+{
+public:
+	IsHpVeryFew() {}
+	~IsHpVeryFew() {}
+
+	bool IsSatisfiedBy(const CPlayer& player) const override
+	{
+		// HPの最大量に設定
+		const float nMaxLife = player.GetMaxHp();
+
+		// 現在のHPの取得
+		float currentLife = player.GetHp();
+
+		return currentLife <= VERYFEW_HP;
+	}
+
+private:
+	static constexpr float VERYFEW_HP = 2.5f;
 };
 
 //*****************************************************************************

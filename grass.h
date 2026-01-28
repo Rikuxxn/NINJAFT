@@ -29,14 +29,20 @@ public:
 	int GetCollisionFlags(void) const override { return btCollisionObject::CF_NO_CONTACT_RESPONSE; }
 	float GetMaxTiltDistance(void) const { return m_distMax; }
 private:
-	static constexpr float	DIST_MAX	= 35.0f;	// ”»’è‹——£
-	static constexpr int	MAX_ANG		= 60;		// Å‘åŒX‚«Šp“x
-	static constexpr float	STIFFNESS	= 0.12f;	// ƒoƒl‚Ì‹­‚³
-	static constexpr float	DAMPING		= 0.75f;	// Œ¸Š—¦
+	static constexpr float	DIST_MAX	= 35.0f;				// ”»’è‹——£
+	static constexpr int	MAX_ANG		= 60;					// Å‘åŒX‚«Šp“x
+	static constexpr float	STIFFNESS	= 0.12f;				// ƒoƒl‚Ì‹­‚³
+	static constexpr float	DAMPING		= 0.75f;				// Œ¸Š—¦
+	static constexpr float	WIND_AMP	= D3DXToRadian(4.0f);	// —h‚ê•
+	static constexpr float	WIND_FREQ	= 1.2f;					// —h‚ê‘¬“x
+	static constexpr float	WIND_SPEED	= 0.016f;				// ‰ÁZ—Ê(•—‚Ì‹­‚³)
+	static constexpr float	FREQ_RATE	= 0.5f;					// —h‚ê‚ÌŠÔŠu
 
 	D3DXVECTOR3 m_rotVel;	// ŒX‚«
 	float		m_distMax;	// ”»’è‹——£
 	bool		m_prevIn;	// ’¼‘O‚É“ü‚Á‚½‚©
+	float		m_windTime;	// ‘‚Ì—h‚êƒ^ƒCƒ}[
+
 };
 
 #endif

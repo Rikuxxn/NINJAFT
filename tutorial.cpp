@@ -198,7 +198,7 @@ void CTutorial::Update(void)
 		}
 
 		// パーティクル生成
-		CParticle::Create<CBlossomParticle>(INIT_VEC3, m_pPlayer->GetPos(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
+		CParticle::Create<CBlossomParticle>(INIT_VEC3, m_pPlayer->GetPos(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.8f), 0, 1);
 	}
 
 	CFade* pFade = CManager::GetFade();

@@ -127,7 +127,8 @@ private:
 	static constexpr float	COLLIDER_OFFSET		= 35.0f;	// コライダーオフセット位置
 	static constexpr int	EFFECT_CREATE_NUM	= 3;		// エフェクト生成数
 	static constexpr float	HEIGHT_STEP			= 30.0f;	// 高さの増加量
-	static constexpr int	HEARTBEART_INTERVAL = 60;		// 心音のインターバル
+	static constexpr int	HEARTBEART_INTERVAL_1 = 60;		// 心音のインターバル1段階目
+	static constexpr int	HEARTBEART_INTERVAL_2 = 30;		// 心音のインターバル2段階目
 
 	D3DXMATRIX				m_mtxWorld;						// ワールドマトリックス
 	CModel*					m_apModel[MAX_PARTS];			// モデル(パーツ)へのポインタ

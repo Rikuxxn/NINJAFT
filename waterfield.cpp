@@ -414,6 +414,7 @@ void CWaterField::SpawnCylinder(void)
 		// …SE‚ÌÄ¶
 		if (pSound)
 		{
+			// ’âŽ~‚µ‚ÄÄ¶
 			pSound->StopByLabel(CSound::SOUND_LABEL_WATER);
 			pSound->Play(CSound::SOUND_LABEL_WATER);
 		}

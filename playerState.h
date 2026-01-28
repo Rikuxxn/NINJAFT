@@ -455,6 +455,15 @@ public:
 		// 音の取得
 		CSound* pSound = CManager::GetSound();
 
+		// ジョイパッドの取得
+		CInputJoypad* pJoypad = CManager::GetInputJoypad();
+
+		if (pJoypad)
+		{
+			// 振動させる
+			pJoypad->SetVibration(20000, 20000, 40);
+		}
+
 		// ダメージSEの再生
 		if (pSound)
 		{

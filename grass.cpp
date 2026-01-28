@@ -20,8 +20,9 @@
 CGrassBlock::CGrassBlock(int nPriority) : CBlock(nPriority)
 {
 	// 値のクリア
-	m_rotVel = INIT_VEC3;
-	m_distMax = DIST_MAX;
+	m_rotVel	= INIT_VEC3;	// 傾き
+	m_distMax	= DIST_MAX;		// 判定距離
+	m_windTime	= 0.0f;			// 草の揺れタイマー
 }
 //=============================================================================
 // デストラクタ
@@ -42,6 +43,12 @@ void CGrassBlock::Update(void)
 	D3DXVECTOR3 thisPos = GetPos();
 	float fMaxTilt = D3DXToRadian(MAX_ANG);// 傾き最大角度
 
+	// 加算
+	m_windTime += WIND_SPEED;
+
+	float windX = sinf(m_windTime * WIND_FREQ) * WIND_AMP;
+	float windZ = cosf(m_windTime * WIND_FREQ * FREQ_RATE) * WIND_AMP;
+
 	//==================================
 	// 一番近いキャラを取得
 	//==================================
@@ -56,6 +63,7 @@ void CGrassBlock::Update(void)
 			return;
 		}
 
+		// 距離を求める
 		D3DXVECTOR3 diff = pChara->GetPos() - thisPos;
 		float dist = D3DXVec3Length(&diff);
 
@@ -87,6 +95,10 @@ void CGrassBlock::Update(void)
 		rot.x = -nearestDiff.z * tilt;
 		rot.z = nearestDiff.x * tilt;
 	}
+
+	// 風の揺れを加算
+	rot.x += windX;
+	rot.z += windZ;
 
 	// バネ
 	m_rotVel.x += (-rot.x) * STIFFNESS;

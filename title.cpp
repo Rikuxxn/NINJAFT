@@ -213,7 +213,7 @@ void CTitle::Update(void)
 		m_timer = 0;
 
 		// パーティクル生成
-		CParticle::Create<CBlossomParticle>(INIT_VEC3, CManager::GetCamera()->GetPosR(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
+		CParticle::Create<CBlossomParticle>(INIT_VEC3, CManager::GetCamera()->GetPosR(), D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.8f), 0, 1);
 	}
 
 	// 項目選択の更新処理

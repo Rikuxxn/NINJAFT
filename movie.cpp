@@ -195,7 +195,7 @@ void CMovie::Update(void)
 		D3DXVECTOR3 camPosR = CManager::GetCamera()->GetPosR();
 
 		// パーティクル生成
-		CParticle::Create<CBlossomParticle>(INIT_VEC3, camPosR, D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.4f), 0, 1);
+		CParticle::Create<CBlossomParticle>(INIT_VEC3, camPosR, D3DXCOLOR(0.8f, 0.8f, 0.8f, 0.8f), 0, 1);
 	}
 
 	// 入力処理の取得

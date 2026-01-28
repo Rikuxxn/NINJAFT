@@ -202,19 +202,35 @@ void CPlayer::Update(void)
 
 #endif
 	
-	// プレイヤーHPが少ない
+	// プレイヤーHPが少ない(半分以下)
 	IsHpFew hpFew;
 	
+	// プレイヤーHPがとても少ない
+	IsHpVeryFew hpVeryFew;
+
 	if (hpFew.IsSatisfiedBy(*this) && !m_isDead)
 	{
 		m_HeartbeatCnt++;
 
-		if (m_HeartbeatCnt >= HEARTBEART_INTERVAL)
+		if (hpVeryFew.IsSatisfiedBy(*this))
 		{
-			m_HeartbeatCnt = 0;
+			if (m_HeartbeatCnt >= HEARTBEART_INTERVAL_2)
+			{
+				m_HeartbeatCnt = 0;
 
-			// 振動
-			pJoypad->SetVibration(5000, 5000, 20);
+				// 振動
+				pJoypad->SetVibration(5000, 5000, 15);
+			}
+		}
+		else
+		{
+			if (m_HeartbeatCnt >= HEARTBEART_INTERVAL_1)
+			{
+				m_HeartbeatCnt = 0;
+
+				// 振動
+				pJoypad->SetVibration(5000, 5000, 20);
+			}
 		}
 	}
 

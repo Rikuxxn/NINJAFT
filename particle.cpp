@@ -376,6 +376,12 @@ void CBlossomParticle::Update(void)
 		// 半径の減衰量の設定
 		desc.fDecRadius = 0.03f;
 
+		// 回転フラグ
+		desc.bTurn = true;
+
+		// 回転スピード
+		desc.turnSpeed = 0.04f;
+
 		// エフェクトの設定
 		CEffect::Create(desc);
 	}
